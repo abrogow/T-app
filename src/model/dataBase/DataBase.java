@@ -1,4 +1,4 @@
-package Model;
+package model.dataBase;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -25,6 +25,11 @@ public class Record {
 		this.recordName = new SimpleStringProperty(recordName);
 		this.recordInfo = new SimpleStringProperty(recordInfo);
 		this.recordSequence = new SimpleStringProperty(recordSequence);
+
+	}
+
+	public Object[] toArray() {
+		return new Object[] { recordId, recordName, recordInfo, recordSequence };
 
 	}
 

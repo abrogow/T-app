@@ -1,9 +1,9 @@
 package view.mainWindow;
 
-import Model.Record;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.VBox;
+import model.Record;
 
 public abstract class TemplateTable extends VBox {
 
