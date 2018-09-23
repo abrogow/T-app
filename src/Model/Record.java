@@ -1,10 +1,11 @@
 package model;
 
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Record {
 
-	private String recordId;
+	private SimpleLongProperty recordId;
 	private SimpleStringProperty recordName;
 	private SimpleStringProperty recordInfo;
 	private SimpleStringProperty recordSequence;
@@ -18,7 +19,7 @@ public class Record {
 	 * @param sekwencja
 	 */
 	public Record(long recordId, String recordName, String recordInfo, String recordSequence) {
-		this.recordId = Long.toString(recordId);
+		this.recordId = new SimpleLongProperty(recordId);
 		this.recordName = new SimpleStringProperty(recordName);
 		this.recordInfo = new SimpleStringProperty(recordInfo);
 		this.recordSequence = new SimpleStringProperty(recordSequence);
@@ -33,7 +34,7 @@ public class Record {
 	/**
 	 * @return id
 	 */
-	public String getRecordId() {
+	public SimpleLongProperty getRecordId() {
 		return recordId;
 	}
 
@@ -41,7 +42,7 @@ public class Record {
 	 * @param id
 	 */
 	public void setRecordId(long recordId) {
-		this.recordId = Long.toString(recordId);
+		this.recordId.set(recordId);
 	}
 
 	/**

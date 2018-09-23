@@ -3,13 +3,8 @@ package Controller;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -17,9 +12,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import view.additionalWindows.DownloadDBGridPane;
 import view.additionalWindows.RecordGridPane;
@@ -54,14 +47,9 @@ public class Main extends Application {
 		primaryStage.setScene(new Scene(root, 1000, 600));
 		primaryStage.show();
 
-		// Stage filterStage = new Stage();
-		// Pane pane = new Pane();
-		// pane.getChildren().add(download);
-		// Scene scene = new Scene(pane);
-		// filterStage.setScene(scene);
-		// filterStage.show();
 	}
 
+	// wywalic to do widoku!!!!!!!!!!!!!
 	public BorderPane initializeGUI(ButtonsGridPane buttons, FilesTable filesTable, RecordsTable recordsTable,
 			FilterGridPane filter) {
 
@@ -92,39 +80,7 @@ public class Main extends Application {
 
 		// for filter
 		AnchorPane anchorFilter = new AnchorPane();
-		GridPane gridPane = new GridPane();
-
-		Label idLabel = new Label("Id: ");
-		Label nameLabel = new Label("Nazwa: ");
-		Label speciesLabel = new Label("Gatunek: ");
-
-		ChoiceBox idChoiceBox = new ChoiceBox();
-		ChoiceBox nameChoiceBox = new ChoiceBox();
-		ChoiceBox speciesChoiceBox = new ChoiceBox();
-
-		Button searchButton = new Button("Wyszukaj");
-		Button saveButton = new Button("Zapisz rekordy do pliku");
-
-		gridPane.setAlignment(Pos.CENTER);
-		gridPane.setHgap(50);
-		gridPane.setVgap(10);
-		gridPane.setPadding(new Insets(5, 5, 5, 5));
-
-		Text sceneTitle = new Text("Filtry wyszukiwania");
-		gridPane.add(sceneTitle, 0, 0, 2, 1);
-
-		gridPane.add(idLabel, 0, 1);
-		gridPane.add(nameLabel, 0, 2);
-		gridPane.add(speciesLabel, 0, 3);
-
-		gridPane.add(idChoiceBox, 1, 1);
-		gridPane.add(nameChoiceBox, 1, 2);
-		gridPane.add(speciesChoiceBox, 1, 3);
-
-		gridPane.add(searchButton, 0, 5, 3, 1);
-		gridPane.add(saveButton, 0, 6, 2, 1);
-
-		anchorFilter.getChildren().add(gridPane);
+		anchorFilter.getChildren().add(filter);
 		// anchorFilter.setTopAnchor(filter, 0.0);
 		// anchorFilter.setRightAnchor(filter, 0.0);
 		// anchorFilter.setLeftAnchor(filter, 0.0);

@@ -6,28 +6,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class DataBase {
+public class DataBaseConnection {
 
 	Connection connection = null; // obiekt reprezentujacy polaczenie z baza
 	DatabaseMetaData dbmd = null; // obiekt przechowujacy informacje o bazie danych
 	Statement statement = null; // obiekt wykorzystywany do zapytan do bazy danych
 	ResultSet result = null; // obiekt zawierajacy wyniki zapytania do bazy danych
 
-	private static DataBase instance = null;
-
-	/**
-	 * Singleton dla klasy bazy danych.
-	 * 
-	 * @return instance instancja klasy bazy danych
-	 * 
-	 */
-	public static DataBase getInstance() {
-		if (instance == null) {
-			instance = new DataBase();
-		}
-		return instance;
-
-	}
+	private static DataBaseConnection instance = null;
 
 	/**
 	 * Konstruktor klasy bazy danych.
@@ -35,7 +21,7 @@ public class DataBase {
 	 * @return
 	 * 
 	 */
-	public void DataBaseModel() {
+	public DataBaseConnection() {
 
 	}
 
@@ -55,11 +41,32 @@ public class DataBase {
 			dbmd = connection.getMetaData();
 			statement = connection.createStatement();
 
-			// tworzenie tabeli
-			RecordsTableDBModel.getInstance().createTable(result, dbmd, statement);
+			// tworzenie tabeli rekordy
+			result = dbmd.getTables(null, null, "REKORDY", null);
+			if (!result.next()) {
+
+				RecordsTableDBCreator.getInstance().createTable(statement);
+
+			} else {
+				System.out.println("Tabela rekordów juz istnieje");
+				// usuwanie tabeli
+				// statement.execute( "DROP TABLE REKORDY");
+			}
+
+			result = dbmd.getTables(null, null, "PLIKI", null);
+			if (!result.next()) {
+
+				FilesTableDBCreator.getInstance().createTable(statement);
+
+			} else {
+				System.out.println("Tabela plików juz istnieje");
+				// usuwanie tabeli
+				// statement.execute( "DROP TABLE PLIKI");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 }
