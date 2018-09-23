@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.dataBase.DataBaseModel;
 import view.additionalWindows.DownloadDBGridPane;
 import view.additionalWindows.RecordGridPane;
 
@@ -28,6 +29,8 @@ public class MainWindow {
 		DownloadDBGridPane download = new DownloadDBGridPane();
 
 		RecordGridPane recordGridPane = new RecordGridPane();
+
+		DataBaseModel db = new DataBaseModel();
 
 		// TODO
 		// dodac controller !!
@@ -68,9 +71,9 @@ public class MainWindow {
 		// for filter
 		AnchorPane anchorFilter = new AnchorPane();
 		anchorFilter.getChildren().add(filter);
-		// anchorFilter.setTopAnchor(filter, 0.0);
-		// anchorFilter.setRightAnchor(filter, 0.0);
-		// anchorFilter.setLeftAnchor(filter, 0.0);
+		anchorFilter.setTopAnchor(filter, 0.0);
+		anchorFilter.setRightAnchor(filter, 0.0);
+		anchorFilter.setLeftAnchor(filter, 0.0);
 		// anchorFilter.setBottomAnchor(filter, 0.0);
 
 		// for buttons

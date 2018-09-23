@@ -1,21 +1,16 @@
 package model.dataBase;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import model.File;
 
-public class FilesTableDBCreator {
+public class FilesTableDBManager {
 
-	Connection connection = null; // obiekt reprezentujacy polaczenie z baza
-	DatabaseMetaData dbmd = null; // obiekt przechowujacy informacje o bazie danych
-	Statement statement = null; // obiekt wykorzystywany do zapytan do bazy danych
-	ResultSet result = null; // obiekt zawierajacy wyniki zapytania do bazy danych
+	Statement statement = null;
 
-	private static FilesTableDBCreator instance = null;
+	private static FilesTableDBManager instance = null;
 
 	/**
 	 * Singleton dla klasy bazy danych.
@@ -23,15 +18,20 @@ public class FilesTableDBCreator {
 	 * @return instance instancja klasy bazy danych
 	 * 
 	 */
-	public static FilesTableDBCreator getInstance() {
+
+	public static FilesTableDBManager getInstance() {
 		if (instance == null) {
-			instance = new FilesTableDBCreator();
+			instance = new FilesTableDBManager();
 		}
 		return instance;
 
 	}
 
-	public void createTable(Statement statement) throws SQLException {
+	public void setDBStatement(Statement s) {
+		this.statement = s;
+	}
+
+	public void createTable() throws SQLException {
 
 		statement.execute("CREATE TABLE pliki" + "(" + "name				VARCHAR(256) NOT NULL,"
 				+ "info		VARCHAR(256) NOT NULL,"

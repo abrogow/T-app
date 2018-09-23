@@ -41,11 +41,15 @@ public class DataBaseConnection {
 			dbmd = connection.getMetaData();
 			statement = connection.createStatement();
 
+			// przekazuje statement do klas
+			RecordsTableDBManager.getInstance().setDBStatement(statement);
+			FilesTableDBManager.getInstance().setDBStatement(statement);
+
 			// tworzenie tabeli rekordy
 			result = dbmd.getTables(null, null, "REKORDY", null);
 			if (!result.next()) {
 
-				RecordsTableDBCreator.getInstance().createTable(statement);
+				RecordsTableDBManager.getInstance().createTable();
 
 			} else {
 				System.out.println("Tabela rekordów juz istnieje");
@@ -56,7 +60,7 @@ public class DataBaseConnection {
 			result = dbmd.getTables(null, null, "PLIKI", null);
 			if (!result.next()) {
 
-				FilesTableDBCreator.getInstance().createTable(statement);
+				FilesTableDBManager.getInstance().createTable();
 
 			} else {
 				System.out.println("Tabela plików juz istnieje");

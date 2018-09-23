@@ -1,5 +1,6 @@
 package model.dataBase;
 
+import javafx.collections.ObservableList;
 import model.File;
 import model.Model;
 import model.Record;
@@ -7,6 +8,8 @@ import model.Record;
 public class DataBaseModel extends Model {
 
 	private static DataBaseModel instance = null;
+	private RecordsTableDBManager recordsDB;
+	private FilesTableDBManager filesDB;
 
 	public static DataBaseModel getInstance() {
 		if (instance == null) {
@@ -15,7 +18,7 @@ public class DataBaseModel extends Model {
 		return instance;
 	}
 
-	public void DataBaseModel() {
+	public DataBaseModel() {
 
 		DataBaseConnection dbConnection = new DataBaseConnection();
 		dbConnection.createDataBase();
@@ -23,58 +26,61 @@ public class DataBaseModel extends Model {
 
 	@Override
 	public void addRecord(Record record) {
-		RecordsTableDBCreator.getInstance().addRecord(record);
+
+		recordsDB = new RecordsTableDBManager();
+		recordsDB.addRecord(record);
 	}
 
 	@Override
 	public void addFile(File file) {
 
-		FilesTableDBCreator.getInstance().addFile(file);
+		FilesTableDBManager.getInstance().addFile(file);
 	}
 
 	@Override
 	public void removeRecord(int idx) {
-		RecordsTableDBCreator.getInstance().removeRecord(idx);
+		RecordsTableDBManager.getInstance().removeRecord(idx);
 	}
 
 	@Override
 	public void removeFile(int idx) {
 
-		FilesTableDBCreator.getInstance().removeFile(idx);
+		FilesTableDBManager.getInstance().removeFile(idx);
 	}
 
 	@Override
 	public void editRecord(Record record) {
-		RecordsTableDBCreator.getInstance().editRecord(record);
+		RecordsTableDBManager.getInstance().editRecord(record);
 	}
 
 	@Override
 	public void editFile(File file) {
 
-		FilesTableDBCreator.getInstance().editFile(file);
+		FilesTableDBManager.getInstance().editFile(file);
 	}
 
 	@Override
 	public Record getRecord(int idx) {
-		return RecordsTableDBCreator.getInstance().getRecord(idx);
+		return RecordsTableDBManager.getInstance().getRecord(idx);
 	}
 
 	@Override
 	public File getFIle(int idx) {
 
-		return FilesTableDBCreator.getInstance().getFile(idx);
+		return FilesTableDBManager.getInstance().getFile(idx);
 	}
 
 	@Override
-	public void getAllRecords() {
+	public ObservableList<Record> getAllRecords() {
 
-		RecordsTableDBCreator.getInstance().getAllRecords();
+		ObservableList<Record> records = RecordsTableDBManager.getInstance().getAllRecords();
+		return records;
 	}
 
 	@Override
 	public void getAllFiles() {
 
-		FilesTableDBCreator.getInstance().getAllFiles();
+		FilesTableDBManager.getInstance().getAllFiles();
 	}
 
 }

@@ -1,5 +1,7 @@
 package model;
 
+import javafx.collections.ObservableList;
+
 public abstract class Model {
 
 	// metody do laczenia z filesTableDBModel i recordsTableDBModel ->
@@ -23,7 +25,7 @@ public abstract class Model {
 
 	public abstract File getFIle(int idx);
 
-	public abstract void getAllRecords();
+	public abstract ObservableList<Record> getAllRecords();
 
 	public abstract void getAllFiles();
 

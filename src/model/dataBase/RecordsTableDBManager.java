@@ -1,22 +1,20 @@
 package model.dataBase;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.Record;
 
-public class RecordsTableDBCreator {
+public class RecordsTableDBManager {
 
-	Connection connection = null; // obiekt reprezentujacy polaczenie z baza
-	DatabaseMetaData dbmd = null; // obiekt przechowujacy informacje o bazie danych
-	Statement statement = null; // obiekt wykorzystywany do zapytan do bazy danych
-	ResultSet result = null; // obiekt zawierajacy wyniki zapytania do bazy danych
+	Statement statement = null;
 
-	private static RecordsTableDBCreator instance = null;
+	private ObservableList<Record> records;
+
+	private static RecordsTableDBManager instance = null;
 
 	/**
 	 * Singleton dla klasy bazy danych.
@@ -24,19 +22,23 @@ public class RecordsTableDBCreator {
 	 * @return instance instancja klasy bazy danych
 	 * 
 	 */
-	public static RecordsTableDBCreator getInstance() {
+	public static RecordsTableDBManager getInstance() {
 		if (instance == null) {
-			instance = new RecordsTableDBCreator();
+			instance = new RecordsTableDBManager();
 		}
 		return instance;
 
 	}
 
-	public RecordsTableDBCreator() {
+	public RecordsTableDBManager() {
 
 	}
 
-	public void createTable(Statement statement) throws SQLException {
+	public void setDBStatement(Statement s) {
+		this.statement = s;
+	}
+
+	public void createTable() throws SQLException {
 
 		statement.execute("CREATE TABLE rekordy" + "(" + "name				VARCHAR(256) NOT NULL,"
 				+ "info		VARCHAR(256) NOT NULL," + "sequence			VARCHAR(256) NOT NULL,"
@@ -108,44 +110,66 @@ public class RecordsTableDBCreator {
 
 	// czy nie trzeba przeksztalcic tego na ObservableList<Record> data ?????
 
-	public ArrayList getAllRecords() {
-		// TODO Auto-generated method stub
-		System.out.println("RecordsTableDBModel.getAllFiles");
-		ArrayList<Record> records = new ArrayList<Record>();
+	// public ArrayList getAllRecords() {
+	// // TODO Auto-generated method stub
+	// System.out.println("RecordsTableDBModel.getAllFiles");
+	// ArrayList<Record> records = new ArrayList<Record>();
+	//
+	// try {
+	// ResultSet rs = statement.executeQuery("SELECT * FROM rekordy");
+	//
+	// while (rs.next()) {
+	// String name = rs.getString("name");
+	// String info = rs.getString("info");
+	// String sequence = rs.getString("sequence");
+	// long id = Long.parseLong(rs.getString("id"));
+	//
+	// Record record = new Record(id, name, info, sequence);
+	// records.add(record);
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// return records;
+	// }
+
+	public ObservableList<Record> getAllRecords() {
+
+		System.out.println("RecordsTableDBCreator.getAllRecordsAsObservableList");
+		records = FXCollections.observableArrayList();
 
 		try {
 			ResultSet rs = statement.executeQuery("SELECT * FROM rekordy");
-
 			while (rs.next()) {
+				long id = Long.parseLong(rs.getString("id"));
 				String name = rs.getString("name");
 				String info = rs.getString("info");
 				String sequence = rs.getString("sequence");
-				long id = Long.parseLong(rs.getString("id"));
 
-				Record record = new Record(id, name, info, sequence);
-				records.add(record);
+				Record rec = new Record(id, name, info, sequence);
+				records.add(rec);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return records;
 	}
 
-	public Object[][] getAllRecordsAsArray() {
-		// TODO Auto-generated method stub
-		System.out.println("RecordsTableDBModel.getAllFilesAsArray");
-		ArrayList<Record> records = getAllRecords();
-		ArrayList<Object[]> tmp = new ArrayList<Object[]>();
-
-		for (int i = 0; i < records.size(); i++) {
-			Record rec = records.get(i);
-			Object[] objRec = rec.toArray();
-			tmp.add(objRec);
-		}
-
-		return tmp.toArray(new Object[0][]);
-	}
+	// public Object[][] getAllRecordsAsArray() {
+	// // TODO Auto-generated method stub
+	// System.out.println("RecordsTableDBModel.getAllFilesAsArray");
+	// ArrayList<Record> records = getAllRecords();
+	// ArrayList<Object[]> tmp = new ArrayList<Object[]>();
+	//
+	// for (int i = 0; i < records.size(); i++) {
+	// Record rec = records.get(i);
+	// Object[] objRec = rec.toArray();
+	// tmp.add(objRec);
+	// }
+	//
+	// return tmp.toArray(new Object[0][]);
+	// }
 
 	public int getNumOfRecords() {
 		// TODO Auto-generated method stub

@@ -8,6 +8,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Priority;
 import model.Record;
+import model.dataBase.DataBaseModel;
 
 public class RecordsTable extends TemplateTable {
 
@@ -41,7 +42,7 @@ public class RecordsTable extends TemplateTable {
 		idColumn.setCellValueFactory(new PropertyValueFactory<Record, String>("recordId"));
 		nameColumn.setCellValueFactory(new PropertyValueFactory<Record, String>("recordName"));
 
-		recordsTable.setItems(data);
+		recordsTable.setItems(DataBaseModel.getInstance().getAllRecords());
 
 		scrollPane = new ScrollPane();
 		scrollPane.setContent(recordsTable);
