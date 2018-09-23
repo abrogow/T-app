@@ -77,7 +77,7 @@ public class RecordsTableDBModel {
 		try {
 			statement.execute("UPDATE rekordy " + "SET name='" + record.getRecordName() + "'," + "info='"
 					+ record.getRecordInfo() + "'," + "sequence=" + record.getRecordSequence() + " " + "WHERE id = "
-					+ Long.toString(record.getRecordId()));
+					+ record.getRecordId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
