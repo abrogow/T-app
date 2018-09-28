@@ -5,11 +5,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import view.mainWindow.TemplateGridPane;
 
-public class createDBGridPane extends TemplateGridPane {
+public class CreateDBGridPane extends TemplateGridPane {
 
 	private Button createButton, cancelButton;
 
-	public createDBGridPane() {
+	public CreateDBGridPane() {
 
 		createControls();
 		addControls();
@@ -44,6 +44,12 @@ public class createDBGridPane extends TemplateGridPane {
 
 	@Override
 	public void setProperties() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void createAndShowStage() {
 		// TODO Auto-generated method stub
 
 	}

@@ -15,11 +15,11 @@ public class RecordsTable extends TemplateTable {
 	private TableView<Record> recordsTable;
 
 	private final ObservableList<Record> data = FXCollections.observableArrayList(
-			new Record(1, "Smith", "jacob.smith@example.com", "jacob.smith@example.com"),
-			new Record(2, "Johnson", "isabella.johnson@example.com", "jacob.smith@example.com"),
-			new Record(3, "Williams", "ethan.williams@example.com", "jacob.smith@example.com"),
-			new Record(4, "Jones", "emma.jones@example.com", "jacob.smith@example.com"),
-			new Record(5, "Brown", "michael.brown@example.com", "jacob.smith@example.com"));
+			new Record(1, "123", "Smith", "jacob.smith@example.com", "jacob.smith@example.com"),
+			new Record(2, "123", "Johnson", "isabella.johnson@example.com", "jacob.smith@example.com"),
+			new Record(3, "123", "Williams", "ethan.williams@example.com", "jacob.smith@example.com"),
+			new Record(4, "123", "Jones", "emma.jones@example.com", "jacob.smith@example.com"),
+			new Record(5, "123", "Brown", "michael.brown@example.com", "jacob.smith@example.com"));
 
 	public RecordsTable() {
 
@@ -52,5 +52,10 @@ public class RecordsTable extends TemplateTable {
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 		this.setVgrow(scrollPane, Priority.ALWAYS);
 		this.getChildren().addAll(scrollPane);
+	}
+
+	public TableView<Record> getRecordsTable() {
+
+		return recordsTable;
 	}
 }

@@ -1,5 +1,6 @@
 package view.mainWindow;
 
+import Controller.MainWindowController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
@@ -29,6 +30,7 @@ public class MainWindow {
 		DownloadDBGridPane download = new DownloadDBGridPane();
 
 		RecordGridPane recordGridPane = new RecordGridPane();
+		MainWindowController controller = new MainWindowController(buttons, recordsTable, recordGridPane);
 
 		DataBaseModel db = new DataBaseModel();
 

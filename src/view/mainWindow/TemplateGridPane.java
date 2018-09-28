@@ -4,6 +4,8 @@ import javafx.scene.layout.GridPane;
 
 public abstract class TemplateGridPane extends GridPane {
 
+	public abstract void createAndShowStage();
+
 	public abstract void createControls();
 
 	public abstract void addControls();

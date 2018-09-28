@@ -27,6 +27,7 @@ public class FilesTableDBManager {
 
 	}
 
+	// do przekazania statement z DataBaseConnection
 	public void setDBStatement(Statement s) {
 		this.statement = s;
 	}

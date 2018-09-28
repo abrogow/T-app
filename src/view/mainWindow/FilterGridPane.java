@@ -81,4 +81,10 @@ public class FilterGridPane extends TemplateGridPane {
 		});
 	}
 
+	@Override
+	public void createAndShowStage() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

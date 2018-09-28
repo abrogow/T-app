@@ -9,6 +9,7 @@ public class Record {
 	private SimpleStringProperty recordName;
 	private SimpleStringProperty recordInfo;
 	private SimpleStringProperty recordSequence;
+	private SimpleStringProperty recordIdentifier;
 
 	/**
 	 * Konstruktor
@@ -18,11 +19,20 @@ public class Record {
 	 * @param opis
 	 * @param sekwencja
 	 */
-	public Record(long recordId, String recordName, String recordInfo, String recordSequence) {
+	public Record(long recordId, String recordIdentifier, String recordName, String recordInfo, String recordSequence) {
 		this.recordId = new SimpleLongProperty(recordId);
 		this.recordName = new SimpleStringProperty(recordName);
 		this.recordInfo = new SimpleStringProperty(recordInfo);
 		this.recordSequence = new SimpleStringProperty(recordSequence);
+		this.recordIdentifier = new SimpleStringProperty(recordIdentifier);
+
+	}
+
+	public Record(String recordIdentifier, String recordName, String recordInfo, String recordSequence) {
+		this.recordName = new SimpleStringProperty(recordName);
+		this.recordInfo = new SimpleStringProperty(recordInfo);
+		this.recordSequence = new SimpleStringProperty(recordSequence);
+		this.recordIdentifier = new SimpleStringProperty(recordIdentifier);
 
 	}
 
@@ -85,6 +95,14 @@ public class Record {
 	 */
 	public void setRecordSequence(String recordSequence) {
 		this.recordSequence.set(recordSequence);
+	}
+
+	public String getRecordIdentifier() {
+		return recordIdentifier.get();
+	}
+
+	public void setRecordIdentifier(String recordIdentifier) {
+		this.recordIdentifier.set(recordIdentifier);
 	}
 
 }

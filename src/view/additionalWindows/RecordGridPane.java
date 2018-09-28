@@ -1,10 +1,15 @@
 package view.additionalWindows;
 
+import Controller.AdditionalWindowController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import model.Record;
+import view.mainWindow.RecordsTable;
 import view.mainWindow.TemplateGridPane;
 
 public class RecordGridPane extends TemplateGridPane {
@@ -21,6 +26,11 @@ public class RecordGridPane extends TemplateGridPane {
 
 	private Button loadButton;
 	private Button webButton;
+	private Button saveButton;
+	private Button cancelButton;
+
+	private Stage stage;
+	private Record record;
 
 	public RecordGridPane() {
 
@@ -28,6 +38,7 @@ public class RecordGridPane extends TemplateGridPane {
 		addControls();
 		setProperties();
 		configureGrid();
+
 	}
 
 	@Override
@@ -45,6 +56,8 @@ public class RecordGridPane extends TemplateGridPane {
 
 		loadButton = new Button("Wczytaj plik");
 		webButton = new Button("Icon");
+		saveButton = new Button("Zapisz");
+		cancelButton = new Button("Anuluj");
 	}
 
 	@Override
@@ -60,6 +73,8 @@ public class RecordGridPane extends TemplateGridPane {
 		this.add(sequenceTextField, 1, 4);
 		this.add(loadButton, 2, 1);
 		this.add(webButton, 2, 2);
+		this.add(saveButton, 0, 5);
+		this.add(cancelButton, 1, 5);
 
 	}
 
@@ -76,6 +91,55 @@ public class RecordGridPane extends TemplateGridPane {
 	public void setProperties() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public Button getLoadButton() {
+		return loadButton;
+	}
+
+	public Button getWebButton() {
+		return webButton;
+	}
+
+	public Button getSaveButton() {
+		return saveButton;
+	}
+
+	public Button getCancelButton() {
+		return cancelButton;
+	}
+
+	public TextField getIdTextField() {
+		return idTextField;
+	}
+
+	public TextField getNameTextField() {
+		return nameTextField;
+	}
+
+	public TextField getInfoTextField() {
+		return infoTextField;
+	}
+
+	public TextField getSequenceTextField() {
+		return sequenceTextField;
+	}
+
+	@Override
+	public void createAndShowStage() {
+		// TODO Auto-generated method stub
+
+		RecordsTable recordsTable = new RecordsTable();
+		RecordGridPane recordGridPane = new RecordGridPane();
+
+		AdditionalWindowController controller = new AdditionalWindowController(recordsTable, recordGridPane);
+		stage = new Stage();
+		stage.setScene(new Scene(recordGridPane, 500, 300));
+		stage.show();
+	}
+
+	public Record getRecord() {
+		return record;
 	}
 
 }

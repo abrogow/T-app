@@ -43,4 +43,23 @@ public class ButtonsGridPane extends TemplateGridPane {
 		// TODO Auto-generated method stub
 
 	}
+
+	public Button getAddButton() {
+		return addButton;
+	}
+
+	public Button getEditButton() {
+		return editButton;
+	}
+
+	public Button getRemoveButton() {
+		return removeButton;
+	}
+
+	@Override
+	public void createAndShowStage() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

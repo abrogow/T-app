@@ -29,6 +29,7 @@ public class DataBaseModel extends Model {
 
 		recordsDB = new RecordsTableDBManager();
 		recordsDB.addRecord(record);
+
 	}
 
 	@Override

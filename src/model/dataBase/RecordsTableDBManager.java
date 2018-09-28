@@ -34,14 +34,16 @@ public class RecordsTableDBManager {
 
 	}
 
+	// do przekazania statement z DataBaseModel
 	public void setDBStatement(Statement s) {
 		this.statement = s;
 	}
 
 	public void createTable() throws SQLException {
 
-		statement.execute("CREATE TABLE rekordy" + "(" + "name				VARCHAR(256) NOT NULL,"
-				+ "info		VARCHAR(256) NOT NULL," + "sequence			VARCHAR(256) NOT NULL,"
+		statement.execute("CREATE TABLE rekordy" + "(" + "identifier	VARCHAR(256) NOT NULL, "
+				+ "name				VARCHAR(256) NOT NULL," + "info		VARCHAR(256) NOT NULL,"
+				+ "sequence			VARCHAR(256) NOT NULL,"
 				+ "id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)" + ")");
 
 		System.out.println("Utworzono tabele rekordy");
@@ -53,9 +55,10 @@ public class RecordsTableDBManager {
 
 		System.out.println("RecordsTableDBModel.addRecord");
 		try {
-			statement
-					.execute("INSERT INTO rekordy (name," + "info," + "sequence) " + "VALUES('" + record.getRecordName()
-							+ "', '" + record.getRecordInfo() + "', '" + record.getRecordSequence() + ")");
+			statement.execute("INSERT INTO rekordy (identifier, name," + "info," + "sequence) " + "VALUES ('"
+					+ record.getRecordIdentifier() + "', '" + record.getRecordName() + "', '" + record.getRecordInfo()
+					+ "', '" + record.getRecordSequence() + "')");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,9 +69,9 @@ public class RecordsTableDBManager {
 
 		System.out.println("RecordsTableDBModel.editRecord");
 		try {
-			statement.execute("UPDATE rekordy " + "SET name='" + record.getRecordName() + "'," + "info='"
-					+ record.getRecordInfo() + "'," + "sequence=" + record.getRecordSequence() + " " + "WHERE id = "
-					+ record.getRecordId());
+			statement.execute("UPDATE rekordy " + "SET " + "identifier='" + record.getRecordIdentifier() + ","
+					+ "name='" + record.getRecordName() + "'," + "info='" + record.getRecordInfo() + "'," + "sequence="
+					+ record.getRecordSequence() + " " + "WHERE id = " + record.getRecordId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -94,12 +97,13 @@ public class RecordsTableDBManager {
 			ResultSet rs = statement.executeQuery("SELECT * FROM rekordy WHERE id=" + Integer.toString(idx));
 
 			if (rs.next()) {
+				String identifier = rs.getString("identifier");
 				String name = rs.getString("name");
 				String info = rs.getString("info");
 				String sequence = rs.getString("sequence");
 				long id = Long.parseLong(rs.getString("id"));
 
-				record = new Record(id, name, info, sequence);
+				record = new Record(id, identifier, name, info, sequence);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -143,11 +147,12 @@ public class RecordsTableDBManager {
 			ResultSet rs = statement.executeQuery("SELECT * FROM rekordy");
 			while (rs.next()) {
 				long id = Long.parseLong(rs.getString("id"));
+				String identifier = rs.getString("identifier");
 				String name = rs.getString("name");
 				String info = rs.getString("info");
 				String sequence = rs.getString("sequence");
 
-				Record rec = new Record(id, name, info, sequence);
+				Record rec = new Record(id, identifier, name, info, sequence);
 				records.add(rec);
 			}
 		} catch (Exception e) {

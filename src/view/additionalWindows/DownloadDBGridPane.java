@@ -65,4 +65,10 @@ public class DownloadDBGridPane extends TemplateGridPane {
 
 	}
 
+	@Override
+	public void createAndShowStage() {
+		// TODO Auto-generated method stub
+
+	}
+
 }
