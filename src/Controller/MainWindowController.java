@@ -1,6 +1,8 @@
 package Controller;
 
+import javafx.beans.property.SimpleLongProperty;
 import model.Record;
+import model.dataBase.DataBaseModel;
 import view.additionalWindows.RecordGridPane;
 import view.mainWindow.ButtonsGridPane;
 import view.mainWindow.MainWindow;
@@ -12,6 +14,7 @@ public class MainWindowController {
 	private ButtonsGridPane buttonsGridPane;
 	private RecordsTable recordsTable;
 	private RecordGridPane recordGridPane;
+	private DataBaseModel dataBaseModel;
 
 	public MainWindowController(ButtonsGridPane buttonsGridPane, RecordsTable recordsTable,
 			RecordGridPane recordsGridPane) {
@@ -36,11 +39,6 @@ public class MainWindowController {
 
 		buttonsGridPane.getAddButton().setOnAction((event) -> {
 			showRecordWindow();
-			// Record record = recordGridPane.getRecord();
-			// if (record != null) {
-			// DataBaseModel.getInstance().addRecord(record);
-			//
-			// }
 		});
 	}
 
@@ -51,6 +49,15 @@ public class MainWindowController {
 
 	private void initializeRemoveButton() {
 
+		buttonsGridPane.getRemoveButton().setOnAction((event) -> {
+			Record record = recordsTable.getRecordsTable().getSelectionModel().getSelectedItem();
+			SimpleLongProperty idx = record.getRecordId();
+			String sidx = idx.toString();
+			// long idx = Long.valueOf(record.getRecordId().toString());
+			dataBaseModel.getInstance().removeRecord(idx.getValue());
+			recordsTable.updateTableView();
+
+		});
 	}
 
 	private void showRecordWindow() {

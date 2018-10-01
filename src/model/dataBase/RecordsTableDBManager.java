@@ -55,9 +55,10 @@ public class RecordsTableDBManager {
 
 		System.out.println("RecordsTableDBModel.addRecord");
 		try {
-			statement.execute("INSERT INTO rekordy (identifier, name," + "info," + "sequence) " + "VALUES ('"
+			String Query = "INSERT INTO rekordy (identifier, name," + "info," + "sequence) " + "VALUES ('"
 					+ record.getRecordIdentifier() + "', '" + record.getRecordName() + "', '" + record.getRecordInfo()
-					+ "', '" + record.getRecordSequence() + "')");
+					+ "', '" + record.getRecordSequence() + "')";
+			statement.execute(Query);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,12 +78,12 @@ public class RecordsTableDBManager {
 		}
 	}
 
-	public void removeRecord(int idx) {
+	public void removeRecord(long idx) {
 		// TODO Auto-generated method stub
 		System.out.println("RecordsTableDBModel.removeRecord");
 
 		try {
-			statement.execute("DELETE FROM rekordy WHERE id =" + Integer.toString(idx));
+			statement.execute("DELETE FROM rekordy WHERE id =" + Long.toString(idx));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

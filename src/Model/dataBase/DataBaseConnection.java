@@ -73,4 +73,8 @@ public class DataBaseConnection {
 		}
 	}
 
+	public Statement getStatement() {
+		return statement;
+	}
+
 }

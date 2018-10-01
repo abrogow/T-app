@@ -34,9 +34,6 @@ public class MainWindow {
 
 		DataBaseModel db = new DataBaseModel();
 
-		// TODO
-		// dodac controller !!
-
 		BorderPane root = initializeRoot(buttons, filesTable, recordsTable, filter);
 		primaryStage.setScene(new Scene(root, 1000, 600));
 		primaryStage.show();
@@ -122,4 +119,5 @@ public class MainWindow {
 		topContainer.getChildren().add(mainMenu);
 		root.setTop(topContainer);
 	}
+
 }

@@ -13,7 +13,7 @@ public abstract class Model {
 
 	public abstract void addFile(File file);
 
-	public abstract void removeRecord(int idx);
+	public abstract void removeRecord(long idx);
 
 	public abstract void removeFile(int idx);
 

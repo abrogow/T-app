@@ -11,6 +11,7 @@ public class AdditionalWindowController {
 	private RecordsTable recordsTable;
 	private RecordGridPane recordGridPane;
 	private Record record;
+	private DataBaseModel dataBaseModel;
 
 	public AdditionalWindowController(RecordsTable recordsTable, RecordGridPane recordGridPane) {
 
@@ -45,10 +46,12 @@ public class AdditionalWindowController {
 
 			record = new Record(identifier, name, info, sequence);
 			if (record != null) {
-				DataBaseModel.getInstance().addRecord(record);
-
+				dataBaseModel.getInstance().addRecord(record);
+				// recordsTable update table
+				// update table !?
+				// recordsTable.
+				recordsTable.updateTableView();
 			}
-
 			hideRecordAdditionalWidnow();
 
 			// }

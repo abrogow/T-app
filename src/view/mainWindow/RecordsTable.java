@@ -14,16 +14,12 @@ public class RecordsTable extends TemplateTable {
 
 	private TableView<Record> recordsTable;
 
-	private final ObservableList<Record> data = FXCollections.observableArrayList(
-			new Record(1, "123", "Smith", "jacob.smith@example.com", "jacob.smith@example.com"),
-			new Record(2, "123", "Johnson", "isabella.johnson@example.com", "jacob.smith@example.com"),
-			new Record(3, "123", "Williams", "ethan.williams@example.com", "jacob.smith@example.com"),
-			new Record(4, "123", "Jones", "emma.jones@example.com", "jacob.smith@example.com"),
-			new Record(5, "123", "Brown", "michael.brown@example.com", "jacob.smith@example.com"));
+	private ObservableList<Record> data = FXCollections.observableArrayList();
 
 	public RecordsTable() {
 
 		createTable();
+		updateTableView();
 	}
 
 	public void createTable() {
@@ -42,7 +38,7 @@ public class RecordsTable extends TemplateTable {
 		idColumn.setCellValueFactory(new PropertyValueFactory<Record, String>("recordId"));
 		nameColumn.setCellValueFactory(new PropertyValueFactory<Record, String>("recordName"));
 
-		recordsTable.setItems(DataBaseModel.getInstance().getAllRecords());
+		// updateTableView();
 
 		scrollPane = new ScrollPane();
 		scrollPane.setContent(recordsTable);
@@ -57,5 +53,15 @@ public class RecordsTable extends TemplateTable {
 	public TableView<Record> getRecordsTable() {
 
 		return recordsTable;
+	}
+
+	public void updateTableView() {
+
+		System.out.println("RecordsTable.updateTableView");
+		data.clear();
+		data = DataBaseModel.getInstance().getAllRecords();
+		recordsTable.setItems(data);
+		recordsTable.refresh();
+		// recordsTable.setItems(DataBaseModel.getInstance().getAllRecords());
 	}
 }

@@ -10,6 +10,7 @@ public class DataBaseModel extends Model {
 	private static DataBaseModel instance = null;
 	private RecordsTableDBManager recordsDB;
 	private FilesTableDBManager filesDB;
+	private DataBaseConnection dbConnection;
 
 	public static DataBaseModel getInstance() {
 		if (instance == null) {
@@ -27,8 +28,9 @@ public class DataBaseModel extends Model {
 	@Override
 	public void addRecord(Record record) {
 
-		recordsDB = new RecordsTableDBManager();
-		recordsDB.addRecord(record);
+		RecordsTableDBManager.getInstance().addRecord(record);
+		// recordsDB = new RecordsTableDBManager();
+		// recordsDB.addRecord(record);
 
 	}
 
@@ -39,7 +41,7 @@ public class DataBaseModel extends Model {
 	}
 
 	@Override
-	public void removeRecord(int idx) {
+	public void removeRecord(long idx) {
 		RecordsTableDBManager.getInstance().removeRecord(idx);
 	}
 
