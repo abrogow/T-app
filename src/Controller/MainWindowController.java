@@ -1,6 +1,7 @@
 package Controller;
 
 import javafx.beans.property.SimpleLongProperty;
+import javafx.scene.control.Alert;
 import model.Record;
 import model.dataBase.DataBaseModel;
 import view.additionalWindows.RecordGridPane;
@@ -44,26 +45,40 @@ public class MainWindowController {
 
 	private void initializeEditButton() {
 
-		buttonsGridPane.getEditButton().setOnAction((event) -> showRecordEditWindow());
+		buttonsGridPane.getEditButton().setOnAction((event) -> {
+			Record record = recordsTable.getRecordsTable().getSelectionModel().getSelectedItem();
+			if (record != null) {
+
+				showRecordEditWindow();
+
+			} else {
+				showAlertInfo();
+			}
+		});
 	}
 
 	private void initializeRemoveButton() {
 
 		buttonsGridPane.getRemoveButton().setOnAction((event) -> {
 			Record record = recordsTable.getRecordsTable().getSelectionModel().getSelectedItem();
-			SimpleLongProperty idx = record.getRecordId();
-			String sidx = idx.toString();
-			// long idx = Long.valueOf(record.getRecordId().toString());
-			dataBaseModel.getInstance().removeRecord(idx.getValue());
-			recordsTable.updateTableView();
+			if (record != null) {
 
+				SimpleLongProperty idx = record.getRecordId();
+				String sidx = idx.toString();
+				// long idx = Long.valueOf(record.getRecordId().toString());
+				DataBaseModel.getInstance().removeRecord(idx.getValue());
+				recordsTable.updateTableView();
+
+			} else {
+				showAlertInfo();
+			}
 		});
 	}
 
 	private void showRecordWindow() {
 
 		RecordGridPane recordPane = new RecordGridPane();
-		recordPane.createAndShowStage();
+		recordPane.createAndShowStage(recordsTable);
 	}
 
 	private void showRecordEditWindow() {
@@ -97,6 +112,15 @@ public class MainWindowController {
 		recordGridPane.getNameTextField().setStyle(null);
 		recordGridPane.getInfoTextField().setStyle(null);
 		recordGridPane.getSequenceTextField().setStyle(null);
+	}
+
+	public void showAlertInfo() {
+
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("B³¹d!");
+		alert.setHeaderText(null);
+		alert.setContentText("Nie zaznaczono rekordu!");
+		alert.showAndWait();
 	}
 
 }

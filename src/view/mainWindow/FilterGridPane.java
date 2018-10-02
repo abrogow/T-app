@@ -82,7 +82,7 @@ public class FilterGridPane extends TemplateGridPane {
 	}
 
 	@Override
-	public void createAndShowStage() {
+	public void createAndShowStage(RecordsTable recordsTable) {
 		// TODO Auto-generated method stub
 
 	}

@@ -126,10 +126,9 @@ public class RecordGridPane extends TemplateGridPane {
 	}
 
 	@Override
-	public void createAndShowStage() {
+	public void createAndShowStage(RecordsTable recordsTable) {
 		// TODO Auto-generated method stub
 
-		RecordsTable recordsTable = new RecordsTable();
 		RecordGridPane recordGridPane = new RecordGridPane();
 
 		AdditionalWindowController controller = new AdditionalWindowController(recordsTable, recordGridPane);

@@ -7,6 +7,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import view.mainWindow.RecordsTable;
 import view.mainWindow.TemplateGridPane;
 
 public class DownloadDBGridPane extends TemplateGridPane {
@@ -66,7 +67,7 @@ public class DownloadDBGridPane extends TemplateGridPane {
 	}
 
 	@Override
-	public void createAndShowStage() {
+	public void createAndShowStage(RecordsTable recordsTable) {
 		// TODO Auto-generated method stub
 
 	}

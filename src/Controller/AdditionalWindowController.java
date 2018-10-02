@@ -46,7 +46,7 @@ public class AdditionalWindowController {
 
 			record = new Record(identifier, name, info, sequence);
 			if (record != null) {
-				dataBaseModel.getInstance().addRecord(record);
+				DataBaseModel.getInstance().addRecord(record);
 				// recordsTable update table
 				// update table !?
 				// recordsTable.
