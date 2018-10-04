@@ -39,7 +39,7 @@ public class MainWindowController {
 	private void initializeAddButton() {
 
 		buttonsGridPane.getAddButton().setOnAction((event) -> {
-			showRecordWindow();
+			showRecordWindow(null);
 		});
 	}
 
@@ -49,7 +49,9 @@ public class MainWindowController {
 			Record record = recordsTable.getRecordsTable().getSelectionModel().getSelectedItem();
 			if (record != null) {
 
-				showRecordEditWindow();
+				SimpleLongProperty idx = record.getRecordId();
+				Record rec = DataBaseModel.getInstance().getRecord(idx.getValue());
+				showRecordWindow(rec);
 
 			} else {
 				showAlertInfo();
@@ -64,8 +66,6 @@ public class MainWindowController {
 			if (record != null) {
 
 				SimpleLongProperty idx = record.getRecordId();
-				String sidx = idx.toString();
-				// long idx = Long.valueOf(record.getRecordId().toString());
 				DataBaseModel.getInstance().removeRecord(idx.getValue());
 				recordsTable.updateTableView();
 
@@ -75,18 +75,10 @@ public class MainWindowController {
 		});
 	}
 
-	private void showRecordWindow() {
+	private void showRecordWindow(Record record) {
 
 		RecordGridPane recordPane = new RecordGridPane();
-		recordPane.createAndShowStage(recordsTable);
-	}
-
-	private void showRecordEditWindow() {
-
-		recordsTable.getRecordsTable().getSelectionModel().selectedItemProperty()
-				.addListener((observable, oldValue, newValue) -> showRecordData(newValue));
-		showRecordWindow();
-
+		recordPane.createAndShowStage(recordsTable, record);
 	}
 
 	private void disableMainWindow() {

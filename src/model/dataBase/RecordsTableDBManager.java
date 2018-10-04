@@ -70,9 +70,9 @@ public class RecordsTableDBManager {
 
 		System.out.println("RecordsTableDBModel.editRecord");
 		try {
-			statement.execute("UPDATE rekordy " + "SET " + "identifier='" + record.getRecordIdentifier() + ","
-					+ "name='" + record.getRecordName() + "'," + "info='" + record.getRecordInfo() + "'," + "sequence="
-					+ record.getRecordSequence() + " " + "WHERE id = " + record.getRecordId());
+			statement.execute("UPDATE rekordy " + "SET " + "identifier='" + record.getRecordIdentifier() + "',"
+					+ "name='" + record.getRecordName() + "'," + "info='" + record.getRecordInfo() + "'," + "sequence='"
+					+ record.getRecordSequence() + "' " + "WHERE id = " + record.getRecordId().getValue());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -89,13 +89,13 @@ public class RecordsTableDBManager {
 		}
 	}
 
-	public Record getRecord(int idx) {
+	public Record getRecord(long idx) {
 		// TODO Auto-generated method stub
 		System.out.println("RecordsTableDBModel.getRecord");
 		// TODO Auto-generated method stub
 		Record record = null;
 		try {
-			ResultSet rs = statement.executeQuery("SELECT * FROM rekordy WHERE id=" + Integer.toString(idx));
+			ResultSet rs = statement.executeQuery("SELECT * FROM rekordy WHERE id=" + Long.toString(idx));
 
 			if (rs.next()) {
 				String identifier = rs.getString("identifier");

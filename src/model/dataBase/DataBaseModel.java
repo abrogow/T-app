@@ -63,14 +63,8 @@ public class DataBaseModel extends Model {
 	}
 
 	@Override
-	public Record getRecord(int idx) {
+	public Record getRecord(long idx) {
 		return RecordsTableDBManager.getInstance().getRecord(idx);
-	}
-
-	@Override
-	public File getFIle(int idx) {
-
-		return FilesTableDBManager.getInstance().getFile(idx);
 	}
 
 	@Override
@@ -84,6 +78,11 @@ public class DataBaseModel extends Model {
 	public void getAllFiles() {
 
 		FilesTableDBManager.getInstance().getAllFiles();
+	}
+
+	@Override
+	public File getFile(long idx) {
+		return FilesTableDBManager.getInstance().getFile(idx);
 	}
 
 }

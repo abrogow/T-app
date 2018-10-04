@@ -21,9 +21,9 @@ public abstract class Model {
 
 	public abstract void editFile(File file);
 
-	public abstract Record getRecord(int idx);
+	public abstract Record getRecord(long idx);
 
-	public abstract File getFIle(int idx);
+	public abstract File getFile(long idx);
 
 	public abstract ObservableList<Record> getAllRecords();
 

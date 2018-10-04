@@ -76,13 +76,13 @@ public class FilesTableDBManager {
 		}
 	}
 
-	public File getFile(int idx) {
+	public File getFile(long idx) {
 		// TODO Auto-generated method stub
 		System.out.println("FilesTableDBModel.getFile");
 		// TODO Auto-generated method stub
 		File file = null;
 		try {
-			ResultSet rs = statement.executeQuery("SELECT * FROM pliki WHERE id=" + Integer.toString(idx));
+			ResultSet rs = statement.executeQuery("SELECT * FROM pliki WHERE id=" + Long.toString(idx));
 
 			if (rs.next()) {
 				String name = rs.getString("name");

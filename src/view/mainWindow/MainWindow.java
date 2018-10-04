@@ -1,5 +1,8 @@
 package view.mainWindow;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import Controller.MainWindowController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -36,6 +39,16 @@ public class MainWindow {
 
 		BorderPane root = initializeRoot(buttons, filesTable, recordsTable, filter);
 		primaryStage.setScene(new Scene(root, 1000, 600));
+		primaryStage.setOnCloseRequest(event -> {
+
+			System.out.println("Closing Stage");
+			try {
+				DriverManager.getConnection("jdbc:derby:Fasta_DB;shutdown=true");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		});
 		primaryStage.show();
 	}
 

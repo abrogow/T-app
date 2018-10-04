@@ -56,10 +56,4 @@ public class ButtonsGridPane extends TemplateGridPane {
 		return removeButton;
 	}
 
-	@Override
-	public void createAndShowStage(RecordsTable recordsTable) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

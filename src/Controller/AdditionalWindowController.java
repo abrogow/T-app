@@ -10,27 +10,27 @@ public class AdditionalWindowController {
 
 	private RecordsTable recordsTable;
 	private RecordGridPane recordGridPane;
-	private Record record;
+	// private Record record;
 	private DataBaseModel dataBaseModel;
 
-	public AdditionalWindowController(RecordsTable recordsTable, RecordGridPane recordGridPane) {
+	public AdditionalWindowController(RecordsTable recordsTable, RecordGridPane recordGridPane, Record rec) {
 
 		this.recordsTable = recordsTable;
 		this.recordGridPane = recordGridPane;
 
-		initializeHandlers();
+		initializeHandlers(rec);
 	}
 
 	// metoda inicjalizuje handlery przyciskow
-	private void initializeHandlers() {
+	private void initializeHandlers(Record rec) {
 
-		initializeSaveButton();
+		initializeSaveButton(rec);
 		initializeCancelButton();
 		initializeWebButton();
 		initializeLoadButton();
 	}
 
-	private void initializeSaveButton() {
+	private void initializeSaveButton(Record rec) {
 
 		recordGridPane.getSaveButton().setOnAction((event) -> {
 			// Record selected =
@@ -44,9 +44,20 @@ public class AdditionalWindowController {
 			String info = recordGridPane.getInfoTextField().getText();
 			String sequence = recordGridPane.getSequenceTextField().getText();
 
-			record = new Record(identifier, name, info, sequence);
+			Record record = new Record(identifier, name, info, sequence);
 			if (record != null) {
-				DataBaseModel.getInstance().addRecord(record);
+				if (rec != null) {
+					Long id = rec.getRecordId().longValue();
+					record = new Record(id, identifier, name, info, sequence);
+					DataBaseModel.getInstance().editRecord(record);
+					System.out.println("EDIT RECORD");
+				} else {
+
+					DataBaseModel.getInstance().addRecord(record);
+					System.out.println("ADD RECORD");
+
+				}
+
 				// recordsTable update table
 				// update table !?
 				// recordsTable.

@@ -125,16 +125,27 @@ public class RecordGridPane extends TemplateGridPane {
 		return sequenceTextField;
 	}
 
-	@Override
-	public void createAndShowStage(RecordsTable recordsTable) {
+	public void createAndShowStage(RecordsTable recordsTable, Record record) {
 		// TODO Auto-generated method stub
 
 		RecordGridPane recordGridPane = new RecordGridPane();
+		if (record != null) {
+			recordGridPane.setDefValue(record);
+		}
 
-		AdditionalWindowController controller = new AdditionalWindowController(recordsTable, recordGridPane);
+		AdditionalWindowController controller = new AdditionalWindowController(recordsTable, recordGridPane, record);
 		stage = new Stage();
 		stage.setScene(new Scene(recordGridPane, 500, 300));
 		stage.show();
+	}
+
+	public void setDefValue(Record record) {
+
+		this.getIdTextField().setText(record.getRecordIdentifier());
+		this.getNameTextField().setText(record.getRecordName());
+		this.getInfoTextField().setText(record.getRecordInfo());
+		this.getSequenceTextField().setText(record.getRecordSequence());
+
 	}
 
 	public Record getRecord() {

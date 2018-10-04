@@ -3,7 +3,6 @@ package view.additionalWindows;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import view.mainWindow.RecordsTable;
 import view.mainWindow.TemplateGridPane;
 
 public class CreateDBGridPane extends TemplateGridPane {
@@ -45,12 +44,6 @@ public class CreateDBGridPane extends TemplateGridPane {
 
 	@Override
 	public void setProperties() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void createAndShowStage(RecordsTable recordsTable) {
 		// TODO Auto-generated method stub
 
 	}
