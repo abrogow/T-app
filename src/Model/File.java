@@ -5,64 +5,149 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class File {
 
-	private SimpleLongProperty fileId;
-	private SimpleStringProperty fileName;
-	private SimpleStringProperty fileInfo;
+	private SimpleLongProperty id;
+	private SimpleStringProperty name;
+	private SimpleStringProperty description;
+	private SimpleLongProperty id_DB;
+	private SimpleStringProperty version_DB;
+	private SimpleStringProperty sequence_id;
+	private SimpleStringProperty sequence_name;
+	private SimpleLongProperty rand_sequence;
+	private SimpleStringProperty prefix;
+	private SimpleLongProperty rand_type;
+	private SimpleStringProperty positions_path;
 
-	/**
-	 * Konstruktor
-	 * 
-	 * @param id
-	 * @param nazwa
-	 * @param opis
-	 */
-	public File(long fileId, String fileName, String fileInfo) {
+	public File(String name, String description, Long id_DB, String version_DB, String sequence_id,
+			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String positions_path) {
 
-		this.fileId = new SimpleLongProperty(fileId);
-		this.fileName = new SimpleStringProperty(fileName);
-		this.fileInfo = new SimpleStringProperty(fileInfo);
+		super();
+		this.name = new SimpleStringProperty(name);
+		this.description = new SimpleStringProperty(description);
+		this.id_DB = new SimpleLongProperty(id_DB);
+		this.version_DB = new SimpleStringProperty(version_DB);
+		this.sequence_id = new SimpleStringProperty(sequence_id);
+		this.sequence_name = new SimpleStringProperty(sequence_name);
+		this.rand_sequence = new SimpleLongProperty(rand_sequence);
+		this.prefix = new SimpleStringProperty(prefix);
+		this.rand_type = new SimpleLongProperty(rand_type);
+		this.positions_path = new SimpleStringProperty(positions_path);
 
 	}
 
-	/**
-	 * @return id
-	 */
-	public SimpleLongProperty getFileId() {
-		return fileId;
+	public File(Long id, String name, String description, Long id_DB, String version_DB, String sequence_id,
+			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String positions_path) {
+
+		super();
+		this.id = new SimpleLongProperty(id);
+		this.name = new SimpleStringProperty(name);
+		this.description = new SimpleStringProperty(description);
+		this.id_DB = new SimpleLongProperty(id_DB);
+		this.version_DB = new SimpleStringProperty(version_DB);
+		this.sequence_id = new SimpleStringProperty(sequence_id);
+		this.sequence_name = new SimpleStringProperty(sequence_name);
+		this.rand_sequence = new SimpleLongProperty(rand_sequence);
+		this.prefix = new SimpleStringProperty(prefix);
+		this.rand_type = new SimpleLongProperty(rand_type);
+		this.positions_path = new SimpleStringProperty(positions_path);
+
 	}
 
-	/**
-	 * @param id
-	 */
-	public void setFileId(long fileId) {
-		this.fileId.set(fileId);
+	public File() {
+
 	}
 
-	/**
-	 * @return name
-	 */
-	public SimpleStringProperty getFileName() {
-		return fileName;
+	public Object[] toArray() {
+		return new Object[] { id, name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence,
+				prefix, rand_type, positions_path };
+
 	}
 
-	/**
-	 * @param name
-	 */
-	public void setFileName(String fileName) {
-		this.fileName.set(fileName);
+	public Long getFileId() {
+		return id.get();
 	}
 
-	/**
-	 * @return info
-	 */
-	public SimpleStringProperty getFileInfo() {
-		return fileInfo;
+	public void setFileId(Long id) {
+		this.id.set(id);
 	}
 
-	/**
-	 * @param info
-	 */
-	public void setFileInfo(String fileInfo) {
-		this.fileInfo.set(fileInfo);
+	public Long getId_DB() {
+		return id_DB.get();
 	}
+
+	public void setId_DB(Long id_DB) {
+		this.id_DB.set(id_DB);
+	}
+
+	public String getName() {
+		return name.get();
+	}
+
+	public void setName(String name) {
+		this.name.set(name);
+	}
+
+	public String getDescription() {
+		return description.get();
+	}
+
+	public void setDescription(String description) {
+		this.description.set(description);
+	}
+
+	public String getSequence_id() {
+		return sequence_id.get();
+	}
+
+	public void setSequence_id(String sequence_id) {
+		this.sequence_id.set(sequence_id);
+	}
+
+	public String getVersion_DB() {
+		return version_DB.get();
+	}
+
+	public void setVersion_DB(String version_DB) {
+		this.version_DB.set(version_DB);
+	}
+
+	public String getSequence_name() {
+		return sequence_name.get();
+	}
+
+	public void setSequence_name(String sequence_name) {
+		this.sequence_name.set(sequence_name);
+	}
+
+	public Long getRand_sequence() {
+		return rand_sequence.get();
+	}
+
+	public void setRand_sequence(Long rand_sequence) {
+		this.rand_sequence.set(rand_sequence);
+	}
+
+	public String getPrefix() {
+		return prefix.get();
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix.set(prefix);
+	}
+
+	public Long getRand_type() {
+		return rand_type.get();
+	}
+
+	public void setRand_type(Long rand_type) {
+		this.rand_type.set(rand_type);
+	}
+
+	public String getPositions_path() {
+		return positions_path.get();
+	}
+
+	public void setPositions_path(String positions_path) {
+		this.positions_path.set(positions_path);
+	}
+
 }

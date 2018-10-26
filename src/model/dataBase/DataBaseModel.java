@@ -75,13 +75,14 @@ public class DataBaseModel extends Model {
 	}
 
 	@Override
-	public void getAllFiles() {
+	public ObservableList<File> getAllFiles() {
 
-		FilesTableDBManager.getInstance().getAllFiles();
+		ObservableList<File> files = FilesTableDBManager.getInstance().getAllFiles();
+		return files;
 	}
 
 	@Override
-	public File getFile(long idx) {
+	public File getFile(Long idx) {
 		return FilesTableDBManager.getInstance().getFile(idx);
 	}
 

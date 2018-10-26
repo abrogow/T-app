@@ -1,67 +1,84 @@
 package Controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javafx.concurrent.Task;
+import javafx.scene.control.ProgressIndicator;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
-import model.Record;
+import model.File;
 import model.dataBase.DataBaseModel;
-import view.additionalWindows.RecordGridPane;
-import view.mainWindow.RecordsTable;
+import model.reader.UniprotReader;
+import view.additionalWindows.AddEditFileWindow;
+import view.mainWindow.FilesTable;
 
 public class AdditionalWindowController {
 
-	private RecordsTable recordsTable;
-	private RecordGridPane recordGridPane;
+	private FilesTable filesTable;
+	private AddEditFileWindow addEditFileWindow;
 	// private Record record;
 	private DataBaseModel dataBaseModel;
 
-	public AdditionalWindowController(RecordsTable recordsTable, RecordGridPane recordGridPane, Record rec) {
+	public AdditionalWindowController(FilesTable filesTable, AddEditFileWindow addEditFileWindow, File file) {
 
-		this.recordsTable = recordsTable;
-		this.recordGridPane = recordGridPane;
+		this.filesTable = filesTable;
+		this.addEditFileWindow = addEditFileWindow;
 
-		initializeHandlers(rec);
+		initializeHandlers(file);
 	}
 
 	// metoda inicjalizuje handlery przyciskow
-	private void initializeHandlers(Record rec) {
+	private void initializeHandlers(File file) {
 
-		initializeSaveButton(rec);
+		initializeSaveButton(file);
 		initializeCancelButton();
 		initializeWebButton();
 		initializeLoadButton();
 	}
 
-	private void initializeSaveButton(Record rec) {
+	private void initializeSaveButton(File f) {
 
-		recordGridPane.getSaveButton().setOnAction((event) -> {
+		addEditFileWindow.getSaveButton().setOnAction((event) -> {
 			// Record selected =
 			// recordsTable.getRecordsTable().getSelectionModel().getSelectedItem();
 			// przy edycji
 			// if (selected != null) {
 
 			// } else {
-			String identifier = recordGridPane.getIdTextField().getText();
-			String name = recordGridPane.getNameTextField().getText();
-			String info = recordGridPane.getInfoTextField().getText();
-			String sequence = recordGridPane.getSequenceTextField().getText();
+			Long id_DB = Long.parseLong(addEditFileWindow.getIdDBTextField().getText());
+			String name = addEditFileWindow.getNameTextField().getText();
+			String description = addEditFileWindow.getDescriptionTextField().getText();
+			String sequence_id = addEditFileWindow.getSequence_idTextField().getText();
+			String version_DB = addEditFileWindow.getVersion_DBTextField().getText();
+			String sequence_name = addEditFileWindow.getSequence_nameTextField().getText();
+			Long rand_sequence = Long.parseLong(addEditFileWindow.getRand_sequenceTextField().getText());
+			String prefix = addEditFileWindow.getPrefixTextField().getText();
+			Long rand_type = Long.parseLong(addEditFileWindow.getRand_typeTextField().getText());
+			String positions_path = addEditFileWindow.getPositions_PathTextField().getText();
 
-			Record record = new Record(identifier, name, info, sequence);
-			if (record != null) {
-				if (rec != null) {
-					Long id = rec.getRecordId().longValue();
-					record = new Record(id, identifier, name, info, sequence);
-					DataBaseModel.getInstance().editRecord(record);
-					System.out.println("EDIT RECORD");
+			File file = new File(name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence,
+					prefix, rand_type, positions_path);
+
+			if (file != null) {
+				if (f != null) {
+					Long id = f.getFileId();
+					file = new File(id, name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence,
+							prefix, rand_type, positions_path);
+					DataBaseModel.getInstance().editFile(file);
+					System.out.println("EDIT FILE");
 				} else {
 
-					DataBaseModel.getInstance().addRecord(record);
-					System.out.println("ADD RECORD");
+					DataBaseModel.getInstance().addFile(file);
+					System.out.println("ADD FILE");
 
 				}
 
 				// recordsTable update table
 				// update table !?
 				// recordsTable.
-				recordsTable.updateTableView();
+				filesTable.updateTableView();
 			}
 			hideRecordAdditionalWidnow();
 
@@ -72,7 +89,7 @@ public class AdditionalWindowController {
 
 	private void initializeCancelButton() {
 
-		recordGridPane.getCancelButton().setOnAction((event) -> hideRecordAdditionalWidnow());
+		addEditFileWindow.getCancelButton().setOnAction((event) -> hideRecordAdditionalWidnow());
 	}
 
 	private void initializeWebButton() {
@@ -81,29 +98,87 @@ public class AdditionalWindowController {
 
 	private void initializeLoadButton() {
 
+		addEditFileWindow.getLoadButton().setOnAction((event) -> {
+
+			Stage stage = new Stage();
+
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Wybierz plik FASTA:");
+			java.io.File selectedDirectory = fileChooser.showOpenDialog(stage);
+
+			String path = selectedDirectory.getAbsolutePath();
+			UniprotReader uniprotReader = new UniprotReader();
+			ProgressIndicator pind = addEditFileWindow.createProgressIndicator();
+
+			try {
+				if (path != null) {
+					// Create new Task and Thread - Bind Progress Property to Task Progress
+					Task task = taskCreator(Integer.parseInt("30"));
+					pind.progressProperty().unbind();
+					pind.progressProperty().bind(task.progressProperty());
+					new Thread(task).start();
+
+					ArrayList<Long> positionsList = uniprotReader.readPositions(path);
+					uniprotReader.savePositionsToFile(positionsList);
+				}
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+
 	}
 
 	private void hideRecordAdditionalWidnow() {
 
-		Window stage = recordGridPane.getScene().getWindow();
+		Window stage = addEditFileWindow.getScene().getWindow();
 		stage.hide();
 	}
 
 	private void clearFieldsAdditionalWindow() {
 
-		recordGridPane.getIdTextField().setText("");
-		recordGridPane.getNameTextField().setText("");
-		recordGridPane.getInfoTextField().setText("");
-		recordGridPane.getSequenceTextField().setText("");
+		addEditFileWindow.getIdDBTextField().setText("");
+		addEditFileWindow.getNameTextField().setText("");
+		addEditFileWindow.getDescriptionTextField().setText("");
+		addEditFileWindow.getSequence_idTextField().setText("");
+		addEditFileWindow.getVersion_DBTextField().setText("");
+		addEditFileWindow.getSequence_nameTextField().setText("");
+		addEditFileWindow.getRand_sequenceTextField().setText("");
+		addEditFileWindow.getPrefixTextField().setText("");
+		addEditFileWindow.getRand_typeTextField().setText("");
+		addEditFileWindow.getPositions_PathTextField().setText("");
 	}
 
 	// przeladowuje pola w RecordAdditionalWindow (mozna bedzie uzyc do kolorow)
 	private void reloadFiledsRecordAdditionalWindow() {
 
-		recordGridPane.getIdTextField().setStyle(null);
-		recordGridPane.getNameTextField().setStyle(null);
-		recordGridPane.getInfoTextField().setStyle(null);
-		recordGridPane.getSequenceTextField().setStyle(null);
+		addEditFileWindow.getIdDBTextField().setStyle(null);
+		addEditFileWindow.getNameTextField().setStyle(null);
+		addEditFileWindow.getDescriptionTextField().setStyle(null);
+		addEditFileWindow.getSequence_idTextField().setStyle(null);
+		addEditFileWindow.getVersion_DBTextField().setStyle(null);
+		addEditFileWindow.getSequence_nameTextField().setStyle(null);
+		addEditFileWindow.getRand_sequenceTextField().setStyle(null);
+		addEditFileWindow.getPrefixTextField().setStyle(null);
+		addEditFileWindow.getRand_typeTextField().setStyle(null);
+		addEditFileWindow.getPositions_PathTextField().setStyle(null);
+	}
+
+	// Create a New Task
+	private Task taskCreator(int seconds) {
+		return new Task() {
+
+			@Override
+			protected Object call() throws Exception {
+				for (int i = 0; i < seconds; i++) {
+					Thread.sleep(1000);
+					updateProgress(i + 1, seconds);
+
+				}
+				return true;
+			}
+		};
 	}
 
 }

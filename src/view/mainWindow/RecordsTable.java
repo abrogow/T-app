@@ -13,6 +13,8 @@ import model.dataBase.DataBaseModel;
 public class RecordsTable extends TemplateTable {
 
 	private TableView<Record> recordsTable;
+	private TableColumn<Record, String> idColumn;
+	private TableColumn<Record, String> nameColumn;
 
 	private ObservableList<Record> data = FXCollections.observableArrayList();
 

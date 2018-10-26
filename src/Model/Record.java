@@ -36,6 +36,10 @@ public class Record {
 
 	}
 
+	public Record() {
+
+	}
+
 	public Object[] toArray() {
 		return new Object[] { recordId, recordName, recordInfo, recordSequence };
 

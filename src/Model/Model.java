@@ -23,10 +23,10 @@ public abstract class Model {
 
 	public abstract Record getRecord(long idx);
 
-	public abstract File getFile(long idx);
+	public abstract File getFile(Long idx);
 
 	public abstract ObservableList<Record> getAllRecords();
 
-	public abstract void getAllFiles();
+	public abstract ObservableList<File> getAllFiles();
 
 }

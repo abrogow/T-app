@@ -61,11 +61,12 @@ public class DataBaseConnection {
 			if (!result.next()) {
 
 				FilesTableDBManager.getInstance().createTable();
+				System.out.println("Tworze tabele pliki");
 
 			} else {
 				System.out.println("Tabela plików juz istnieje");
 				// usuwanie tabeli
-				// statement.execute( "DROP TABLE PLIKI");
+				// statement.execute("DROP TABLE PLIKI");
 			}
 
 		} catch (Exception e) {

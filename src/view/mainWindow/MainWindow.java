@@ -18,8 +18,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.dataBase.DataBaseModel;
-import view.additionalWindows.DownloadDBGridPane;
-import view.additionalWindows.RecordGridPane;
+import view.additionalWindows.AddEditFileWindow;
+import view.additionalWindows.DownloadDBWindow;
 
 public class MainWindow {
 
@@ -30,10 +30,10 @@ public class MainWindow {
 		FilterGridPane filter = new FilterGridPane();
 		FilesTable filesTable = new FilesTable();
 		RecordsTable recordsTable = new RecordsTable();
-		DownloadDBGridPane download = new DownloadDBGridPane();
+		DownloadDBWindow download = new DownloadDBWindow();
 
-		RecordGridPane recordGridPane = new RecordGridPane();
-		MainWindowController controller = new MainWindowController(buttons, recordsTable, recordGridPane);
+		AddEditFileWindow addEditFileWindow = new AddEditFileWindow();
+		MainWindowController controller = new MainWindowController(buttons, filesTable, addEditFileWindow);
 
 		DataBaseModel db = new DataBaseModel();
 
