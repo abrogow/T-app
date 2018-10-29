@@ -16,7 +16,6 @@ public class MainWindowController {
 	private RecordsTable recordsTable;
 	private FilesTable filesTable;
 	private AddEditFileWindow addEditFileWindow;
-	private AddEditFileWindow recordGridPane;
 	private DataBaseModel dataBaseModel;
 
 	public MainWindowController(ButtonsGridPane buttonsGridPane, FilesTable filesTable,
@@ -78,8 +77,6 @@ public class MainWindowController {
 	}
 
 	private void showFileWindow(File file) {
-
-		AddEditFileWindow addEditFileWindow = new AddEditFileWindow();
 		addEditFileWindow.createAndShowStage(filesTable, file);
 	}
 
@@ -99,7 +96,7 @@ public class MainWindowController {
 
 		if (file != null) {
 			reloadFiledsAddEditFileWindow();
-			addEditFileWindow.getIdDBTextField().setText(file.getId_DB().toString());
+			addEditFileWindow.getIdDBComboBox().setValue(file.getId_DB().toString());
 			addEditFileWindow.getNameTextField().setText(file.getName());
 			addEditFileWindow.getDescriptionTextField().setText(file.getDescription());
 			addEditFileWindow.getSequence_idTextField().setText(file.getSequence_id());
@@ -116,7 +113,7 @@ public class MainWindowController {
 	// przeladowuje pola w AddEditFileWindow
 	private void reloadFiledsAddEditFileWindow() {
 
-		addEditFileWindow.getIdDBTextField().setStyle(null);
+		addEditFileWindow.getIdDBComboBox().setStyle(null);
 		addEditFileWindow.getNameTextField().setStyle(null);
 		addEditFileWindow.getDescriptionTextField().setStyle(null);
 		addEditFileWindow.getSequence_idTextField().setStyle(null);

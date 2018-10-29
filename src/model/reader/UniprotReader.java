@@ -10,25 +10,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import model.FastaRecord;
+import view.additionalWindows.AddEditFileWindow;
 
 public class UniprotReader extends Reader {
 
-	private static final String IDENTIFIER_PATTERN = "(.*)(|)(.*)(|)(.*)";
-	private static final String ENTERY_NAME_PATTERN = "(.*)(|)(.*)(|)(.*)( )(.*)";
-	private static final String PROTEIN_NAME_PATTERN = null;
-	private static final String ORGANISM_NAME_PATTERN = "(.*)(OS=)(.*)(GN=)(.*)";
-	private static final String GENE_NAME_PATTERN = "(.*)(GN=)(.*)(PE=)(.*)";
-	private static final String PROTEIN_EXISTENCE_PATTERN = "(.*)(PE=)(.*)(SV=)(.*)";
-	private static final String SEQUENCE_VERSION_PATTERN = "(.*)(SV=)(.*)";
-	private static final String SEQUENCE_PATTERN = "(.*)(?\\n)(.*)";
+	public UniprotReader(AddEditFileWindow addEditFileWindow) {
+		super(addEditFileWindow);
+		// TODO Auto-generated constructor stub
+	}
+
+	private RandomAccessFile raf;
 
 	private static final String PATTERN = "\\>([a-zA-Z]*)\\|(.*?)\\|(.*?) (.*?)OS=(.*?)GN=(.*?)PE=(.*?)SV=([1-9]*)(.*)";
 
 	protected String positionsFilePath = "C:\\Users\\BROGO\\Desktop\\INZYNIERKA\\uniprotPositionsList.txt";
-
-	public UniprotReader() {
-
-	}
 
 	@Override
 	public FastaRecord parseRecord(int recordNumber) {
@@ -41,30 +36,6 @@ public class UniprotReader extends Reader {
 
 		String record = getRecordFromFile(startPos, endPos);
 		FastaRecord fastaRecord = new FastaRecord();
-
-		/*
-		 * // set indentifier String identifier = getMatcher(IDENTIFIER_PATTERN, 3,
-		 * record); // fastaRecord.setIdentifier(identifier);
-		 * 
-		 * // set enteryName String enteryName = getMatcher(ENTERY_NAME_PATTERN, 5,
-		 * record); // fastaRecord.setEnteryName(enteryName);
-		 * 
-		 * // set oranismName String oranismName = getMatcher(ORGANISM_NAME_PATTERN, 3,
-		 * record); fastaRecord.setSequenceVersion(oranismName);
-		 * 
-		 * // set geneName String geneName = getMatcher(GENE_NAME_PATTERN, 3, record);
-		 * fastaRecord.setSequenceVersion(geneName);
-		 * 
-		 * // set proteinExistence String proteinExistence =
-		 * getMatcher(PROTEIN_EXISTENCE_PATTERN, 3, record);
-		 * fastaRecord.setSequenceVersion(proteinExistence);
-		 * 
-		 * // set sequenceVersion String sequenceVersion =
-		 * getMatcher(SEQUENCE_VERSION_PATTERN, 3, record);
-		 * fastaRecord.setSequenceVersion(sequenceVersion);
-		 * 
-		 * // set sequence ?????????????????????
-		 */
 
 		getMatcher(PATTERN, 0, record);
 
@@ -92,9 +63,9 @@ public class UniprotReader extends Reader {
 	@Override
 	public String getRecordFromFile(long startPosition, long endPosition) {
 		// TODO Auto-generated method stub
+		String recordString = "";
 		try {
-			RandomAccessFile raf = new RandomAccessFile(path, "r");
-			String recordString = "";
+			raf = new RandomAccessFile(path, "r");
 
 			String line = null;
 			String endLine = null;
@@ -117,7 +88,7 @@ public class UniprotReader extends Reader {
 			ex.printStackTrace();
 		}
 
-		return null;
+		return recordString;
 	}
 
 	@Override

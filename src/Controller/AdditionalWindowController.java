@@ -2,9 +2,8 @@ package Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
-import javafx.concurrent.Task;
-import javafx.scene.control.ProgressIndicator;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -20,6 +19,11 @@ public class AdditionalWindowController {
 	private AddEditFileWindow addEditFileWindow;
 	// private Record record;
 	private DataBaseModel dataBaseModel;
+	private Stage stage;
+	private Stage progressWindow;
+	private Thread thread;
+	private UniprotReader uniprotReader;
+	private String path;
 
 	public AdditionalWindowController(FilesTable filesTable, AddEditFileWindow addEditFileWindow, File file) {
 
@@ -47,7 +51,7 @@ public class AdditionalWindowController {
 			// if (selected != null) {
 
 			// } else {
-			Long id_DB = Long.parseLong(addEditFileWindow.getIdDBTextField().getText());
+			String id_DB = addEditFileWindow.getIdDBComboBox().getValue().toString();
 			String name = addEditFileWindow.getNameTextField().getText();
 			String description = addEditFileWindow.getDescriptionTextField().getText();
 			String sequence_id = addEditFileWindow.getSequence_idTextField().getText();
@@ -106,18 +110,14 @@ public class AdditionalWindowController {
 			fileChooser.setTitle("Wybierz plik FASTA:");
 			java.io.File selectedDirectory = fileChooser.showOpenDialog(stage);
 
-			String path = selectedDirectory.getAbsolutePath();
-			UniprotReader uniprotReader = new UniprotReader();
-			ProgressIndicator pind = addEditFileWindow.createProgressIndicator();
+			// create progressBar
+
+			path = selectedDirectory.getAbsolutePath();
+			uniprotReader = new UniprotReader(addEditFileWindow);
 
 			try {
 				if (path != null) {
-					// Create new Task and Thread - Bind Progress Property to Task Progress
-					Task task = taskCreator(Integer.parseInt("30"));
-					pind.progressProperty().unbind();
-					pind.progressProperty().bind(task.progressProperty());
-					new Thread(task).start();
-
+					addEditFileWindow.createProgressBar();
 					ArrayList<Long> positionsList = uniprotReader.readPositions(path);
 					uniprotReader.savePositionsToFile(positionsList);
 				}
@@ -126,6 +126,15 @@ public class AdditionalWindowController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
+			// parsowanie
+			Scanner input = new Scanner(System.in);
+			System.out.println("Nr rekordu :");
+			int recordNr = Integer.parseInt(input.nextLine());
+			uniprotReader.parseRecord(recordNr);
+
+			// addEditFileWindow.getProgressBar().setVisible(false);
+			// addEditFileWindow.getIleProcent().setVisible(false);
 		});
 
 	}
@@ -138,7 +147,7 @@ public class AdditionalWindowController {
 
 	private void clearFieldsAdditionalWindow() {
 
-		addEditFileWindow.getIdDBTextField().setText("");
+		addEditFileWindow.getIdDBComboBox().setValue("");
 		addEditFileWindow.getNameTextField().setText("");
 		addEditFileWindow.getDescriptionTextField().setText("");
 		addEditFileWindow.getSequence_idTextField().setText("");
@@ -153,7 +162,7 @@ public class AdditionalWindowController {
 	// przeladowuje pola w RecordAdditionalWindow (mozna bedzie uzyc do kolorow)
 	private void reloadFiledsRecordAdditionalWindow() {
 
-		addEditFileWindow.getIdDBTextField().setStyle(null);
+		addEditFileWindow.getIdDBComboBox().setStyle(null);
 		addEditFileWindow.getNameTextField().setStyle(null);
 		addEditFileWindow.getDescriptionTextField().setStyle(null);
 		addEditFileWindow.getSequence_idTextField().setStyle(null);
@@ -163,22 +172,6 @@ public class AdditionalWindowController {
 		addEditFileWindow.getPrefixTextField().setStyle(null);
 		addEditFileWindow.getRand_typeTextField().setStyle(null);
 		addEditFileWindow.getPositions_PathTextField().setStyle(null);
-	}
-
-	// Create a New Task
-	private Task taskCreator(int seconds) {
-		return new Task() {
-
-			@Override
-			protected Object call() throws Exception {
-				for (int i = 0; i < seconds; i++) {
-					Thread.sleep(1000);
-					updateProgress(i + 1, seconds);
-
-				}
-				return true;
-			}
-		};
 	}
 
 }

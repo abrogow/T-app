@@ -8,7 +8,7 @@ public class File {
 	private SimpleLongProperty id;
 	private SimpleStringProperty name;
 	private SimpleStringProperty description;
-	private SimpleLongProperty id_DB;
+	private SimpleStringProperty id_DB;
 	private SimpleStringProperty version_DB;
 	private SimpleStringProperty sequence_id;
 	private SimpleStringProperty sequence_name;
@@ -17,13 +17,13 @@ public class File {
 	private SimpleLongProperty rand_type;
 	private SimpleStringProperty positions_path;
 
-	public File(String name, String description, Long id_DB, String version_DB, String sequence_id,
+	public File(String name, String description, String id_DB, String version_DB, String sequence_id,
 			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String positions_path) {
 
 		super();
 		this.name = new SimpleStringProperty(name);
 		this.description = new SimpleStringProperty(description);
-		this.id_DB = new SimpleLongProperty(id_DB);
+		this.id_DB = new SimpleStringProperty(id_DB);
 		this.version_DB = new SimpleStringProperty(version_DB);
 		this.sequence_id = new SimpleStringProperty(sequence_id);
 		this.sequence_name = new SimpleStringProperty(sequence_name);
@@ -34,14 +34,14 @@ public class File {
 
 	}
 
-	public File(Long id, String name, String description, Long id_DB, String version_DB, String sequence_id,
+	public File(Long id, String name, String description, String id_DB, String version_DB, String sequence_id,
 			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String positions_path) {
 
 		super();
 		this.id = new SimpleLongProperty(id);
 		this.name = new SimpleStringProperty(name);
 		this.description = new SimpleStringProperty(description);
-		this.id_DB = new SimpleLongProperty(id_DB);
+		this.id_DB = new SimpleStringProperty(id_DB);
 		this.version_DB = new SimpleStringProperty(version_DB);
 		this.sequence_id = new SimpleStringProperty(sequence_id);
 		this.sequence_name = new SimpleStringProperty(sequence_name);
@@ -70,11 +70,11 @@ public class File {
 		this.id.set(id);
 	}
 
-	public Long getId_DB() {
+	public String getId_DB() {
 		return id_DB.get();
 	}
 
-	public void setId_DB(Long id_DB) {
+	public void setId_DB(String id_DB) {
 		this.id_DB.set(id_DB);
 	}
 

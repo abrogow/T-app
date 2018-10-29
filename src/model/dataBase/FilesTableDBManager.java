@@ -42,7 +42,7 @@ public class FilesTableDBManager {
 	public void createTable() throws SQLException {
 
 		statement.execute("CREATE TABLE pliki" + "(" + "name				VARCHAR(256),"
-				+ "description		VARCHAR(256)," + "id_DB		INT," + "version_DB		VARCHAR(256),"
+				+ "description		VARCHAR(256)," + "id_DB		VARCHAR(256)," + "version_DB		VARCHAR(256),"
 				+ "sequence_id		VARCHAR(256)," + "sequence_name		VARCHAR(256)," + "rand_sequence		INT,"
 				+ "prefix		VARCHAR(256)," + "rand_type		INT," + "positions_path		VARCHAR(256),"
 				+ "id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)" + ")");
@@ -57,14 +57,14 @@ public class FilesTableDBManager {
 		try {
 			System.out.println(
 					"INSERT INTO pliki (name, description, id_DB, version_DB,sequence_id, sequence_name,rand_sequence, prefix, rand_type, positions_path) "
-							+ " VALUES('" + file.getName() + "', '" + file.getDescription() + "', " + file.getId_DB()
-							+ ", '" + file.getVersion_DB() + "', '" + file.getSequence_id() + "', '"
+							+ " VALUES('" + file.getName() + "', '" + file.getDescription() + "', '" + file.getId_DB()
+							+ "', '" + file.getVersion_DB() + "', '" + file.getSequence_id() + "', '"
 							+ file.getSequence_name() + "', " + file.getRand_sequence() + ", '" + file.getPrefix()
 							+ "', " + file.getRand_type() + ", '" + file.getPositions_path() + "')");
 			statement.execute(
 					"INSERT INTO pliki (name, description, id_DB, version_DB,sequence_id, sequence_name,rand_sequence, prefix, rand_type, positions_path) "
-							+ " VALUES('" + file.getName() + "', '" + file.getDescription() + "', " + file.getId_DB()
-							+ ", '" + file.getVersion_DB() + "', '" + file.getSequence_id() + "', '"
+							+ " VALUES('" + file.getName() + "', '" + file.getDescription() + "', '" + file.getId_DB()
+							+ "', '" + file.getVersion_DB() + "', '" + file.getSequence_id() + "', '"
 							+ file.getSequence_name() + "', " + file.getRand_sequence() + ", '" + file.getPrefix()
 							+ "', " + file.getRand_type() + ", '" + file.getPositions_path() + "')");
 		} catch (Exception e) {
@@ -78,7 +78,7 @@ public class FilesTableDBManager {
 		System.out.println("FilesTableDBModel.editFile");
 		try {
 			statement.execute("UPDATE pliki " + "SET name='" + file.getName() + "'," + "description='"
-					+ file.getDescription() + "'," + "id_DB=" + file.getId_DB() + "," + "version_DB='"
+					+ file.getDescription() + "'," + "id_DB='" + file.getId_DB() + "'," + "version_DB='"
 					+ file.getVersion_DB() + "'," + "sequence_id='" + file.getSequence_id() + "'," + "sequence_name='"
 					+ file.getSequence_name() + "'," + "rand_sequence=" + file.getRand_sequence() + "," + "prefix='"
 					+ file.getPrefix() + "'," + "rand_type=" + file.getRand_type() + ", " + "positions_path='"
@@ -110,7 +110,7 @@ public class FilesTableDBManager {
 			if (rs.next()) {
 				String name = rs.getString("name");
 				String description = rs.getString("description");
-				Long id_DB = Long.parseLong(rs.getString("id_DB"));
+				String id_DB = rs.getString("id_DB");
 				String version_DB = rs.getString("version_DB");
 				String sequence_id = rs.getString("sequence_id");
 				String sequence_name = rs.getString("sequence_name");
@@ -140,7 +140,7 @@ public class FilesTableDBManager {
 			while (rs.next()) {
 				String name = rs.getString("name");
 				String description = rs.getString("description");
-				Long id_DB = Long.parseLong(rs.getString("id_DB"));
+				String id_DB = rs.getString("id_DB");
 				String version_DB = rs.getString("version_DB");
 				String sequence_id = rs.getString("sequence_id");
 				String sequence_name = rs.getString("sequence_name");

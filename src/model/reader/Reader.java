@@ -8,12 +8,17 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.FastaRecord;
+import view.additionalWindows.AddEditFileWindow;
 
 public abstract class Reader {
 
 	protected ArrayList<Long> positionsList;
 	protected String path;
 	protected File positionsFile;
+	protected long processedBytes;
+	protected long size;
+	protected RandomAccessFile raf;
+	protected AddEditFileWindow addEditFileWindow;
 
 	public abstract FastaRecord parseRecord(int recordNumber);
 
@@ -24,6 +29,10 @@ public abstract class Reader {
 	public abstract String getPositionsFilePath();
 
 	public abstract File getPositionsFile();
+
+	public Reader(AddEditFileWindow addEditFileWindow) {
+		this.addEditFileWindow = addEditFileWindow;
+	}
 
 	public void start() throws IOException {
 
@@ -42,8 +51,13 @@ public abstract class Reader {
 	public ArrayList<Long> readPositions(String path) throws IOException {
 
 		this.path = path;
-		RandomAccessFile raf = new RandomAccessFile(path, "rw");
+		raf = new RandomAccessFile(path, "rw");
 
+		size = raf.length();
+		processedBytes = 0;
+
+		raf.seek(0);
+		// size = getNumbOfLines(path);
 		positionsList = new ArrayList<>();
 
 		String line = null;
@@ -51,7 +65,9 @@ public abstract class Reader {
 		System.out.println("File pos: " + pos);
 
 		while ((line = raf.readLine()) != null) {
-
+			// do ladowania paska postepu
+			// prepareProgressBar();
+			processedBytes += line.length() + 2;
 			if (line.substring(0, 1).equals(">")) {
 
 				pos = raf.getFilePointer();
@@ -60,6 +76,8 @@ public abstract class Reader {
 				pos = pos - line.length() - 2;
 
 				positionsList.add(pos);
+
+				prepareProgressBar();
 
 			}
 
@@ -73,5 +91,17 @@ public abstract class Reader {
 		if (positionsFile != null && positionsFile.exists())
 			return true;
 		return false;
+	}
+
+	public long getSize() {
+		return size;
+	}
+
+	public void prepareProgressBar() {
+		float done = (float) processedBytes / (float) size;
+		float percent = Math.round(done * 100);
+		System.out.println("Done " + percent + "%");
+		addEditFileWindow.setProgressBar(done);
+		addEditFileWindow.getProgressTextField().setText(percent + "%");
 	}
 }

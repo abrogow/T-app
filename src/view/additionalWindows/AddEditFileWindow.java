@@ -1,5 +1,11 @@
 package view.additionalWindows;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+
 import Controller.AdditionalWindowController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -7,9 +13,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.File;
@@ -21,9 +31,11 @@ public class AddEditFileWindow extends TemplateGridPane {
 	private Label nameLabel, descriptionLabel, id_DBLabel, version_DBLabel, sequence_idLabel, sequence_nameLabel,
 			rand_sequenceLabel, prefixLabel, rand_typeLabel, positions_pathLabel;;
 
-	private TextField nameTextField, descriptionTextField, id_DBTextField, version_DBTextField, sequence_idTextField,
+	private TextField nameTextField, descriptionTextField, version_DBTextField, sequence_idTextField,
 			sequence_nameTextField, rand_sequenceTextField, prefixTextField, rand_typeTextField,
 			positions_pathTextFiled;
+
+	private ComboBox id_DBComboBox;
 
 	private Button loadButton;
 	private Button webButton;
@@ -33,6 +45,11 @@ public class AddEditFileWindow extends TemplateGridPane {
 	private Stage stage;
 	private File file;
 	private FilesTable filesTable;
+
+	private ProgressBar progressBar;
+	private TextField progressTextField;
+
+	private final List<String> dataBaseType = Arrays.asList("UniProt", "NCBI", "IPI", "TAIR", "Other");
 
 	public AddEditFileWindow() {
 
@@ -58,7 +75,11 @@ public class AddEditFileWindow extends TemplateGridPane {
 		positions_pathLabel = new Label("Œcie¿ka do utworzonego pliku z pozycjami rekordów");
 
 		descriptionTextField = new TextField();
-		id_DBTextField = new TextField();
+		id_DBComboBox = new ComboBox();
+
+		for (String db : dataBaseType) {
+			id_DBComboBox.getItems().add(db);
+		}
 		version_DBTextField = new TextField();
 		sequence_idTextField = new TextField();
 		sequence_nameTextField = new TextField();
@@ -90,7 +111,7 @@ public class AddEditFileWindow extends TemplateGridPane {
 
 		this.add(nameTextField, 1, 1);
 		this.add(descriptionTextField, 1, 2);
-		this.add(id_DBTextField, 1, 3);
+		this.add(id_DBComboBox, 1, 3);
 		this.add(version_DBTextField, 1, 4);
 		this.add(sequence_idTextField, 1, 5);
 		this.add(sequence_nameTextField, 1, 6);
@@ -118,6 +139,7 @@ public class AddEditFileWindow extends TemplateGridPane {
 	@Override
 	public void setProperties() {
 		// TODO Auto-generated method stub
+		id_DBComboBox.setPrefWidth(200);
 
 	}
 
@@ -137,8 +159,8 @@ public class AddEditFileWindow extends TemplateGridPane {
 		return cancelButton;
 	}
 
-	public TextField getIdDBTextField() {
-		return id_DBTextField;
+	public ComboBox getIdDBComboBox() {
+		return id_DBComboBox;
 	}
 
 	public TextField getNameTextField() {
@@ -188,20 +210,19 @@ public class AddEditFileWindow extends TemplateGridPane {
 	public void createAndShowStage(FilesTable filesTable, File file) {
 		// TODO Auto-generated method stub
 
-		AddEditFileWindow addEditFileWindow = new AddEditFileWindow();
 		if (file != null) {
-			addEditFileWindow.setDefValue(file);
+			this.setDefValue(file);
 		}
 
-		AdditionalWindowController controller = new AdditionalWindowController(filesTable, addEditFileWindow, file);
+		AdditionalWindowController controller = new AdditionalWindowController(filesTable, this, file);
 		stage = new Stage();
-		stage.setScene(new Scene(addEditFileWindow, 500, 300));
+		stage.setScene(new Scene(this, 800, 500));
 		stage.show();
 	}
 
 	public void setDefValue(File file) {
 
-		this.getIdDBTextField().setText(file.getId_DB().toString());
+		this.getIdDBComboBox().setValue(file.getId_DB().toString());
 		this.getNameTextField().setText(file.getName());
 		this.getDescriptionTextField().setText(file.getDescription());
 		this.getSequence_idTextField().setText(file.getSequence_id());
@@ -234,6 +255,47 @@ public class AddEditFileWindow extends TemplateGridPane {
 			}
 		});
 		return pind;
+	}
+
+	public void setProgressBar(float value) {
+
+		NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+		formatter.setMaximumFractionDigits(2);
+		formatter.setMinimumFractionDigits(2);
+		formatter.setRoundingMode(RoundingMode.HALF_UP);
+		Float formatedFloat = new Float(value);
+		progressBar.setProgress(formatedFloat.floatValue());
+	}
+
+	public TextInputControl getProgressTextField() {
+		// TODO Auto-generated method stub
+		return progressTextField;
+	}
+
+	public ProgressBar getProgressBar() {
+		// TODO Auto-generated method stub
+		return progressBar;
+	}
+
+	public Stage createProgressBar() {
+
+		Stage s = new Stage();
+		s.setTitle("Processing...");
+
+		progressBar = new ProgressBar(0.6);
+		progressTextField = new TextField();
+		GridPane grid = new GridPane();
+
+		grid.setAlignment(Pos.CENTER);
+		grid.setHgap(50);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(5, 5, 5, 5));
+		// grid.add(progressBar, 0, 1);
+		grid.add(progressTextField, 0, 0);
+		Scene scene = new Scene(grid, 500, 500);
+
+		s.setScene(scene);
+		return s;
 	}
 
 }
