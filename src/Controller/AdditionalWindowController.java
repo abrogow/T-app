@@ -2,8 +2,10 @@ package Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -24,6 +26,9 @@ public class AdditionalWindowController {
 	private Thread thread;
 	private UniprotReader uniprotReader;
 	private String path;
+	private LinkedHashMap<Long, String> idHashMap;
+	private LinkedHashMap<Long, String> nameHashMap;
+	private LinkedHashMap<Long, String> organismNameHashMap;
 
 	public AdditionalWindowController(FilesTable filesTable, AddEditFileWindow addEditFileWindow, File file) {
 
@@ -116,10 +121,18 @@ public class AdditionalWindowController {
 			uniprotReader = new UniprotReader(addEditFileWindow);
 
 			try {
-				if (path != null) {
-					addEditFileWindow.createProgressBar();
-					ArrayList<Long> positionsList = uniprotReader.readPositions(path);
-					uniprotReader.savePositionsToFile(positionsList);
+				if (this.ifReaderSet()) {
+					if (path != null) {
+						addEditFileWindow.createProgressBar();
+						ArrayList<Long> positionsList = uniprotReader.readPositions(path);
+						uniprotReader.savePositionsToFile(positionsList);
+
+						uniprotReader.savePositionsAndIdToMap(positionsList);
+
+					}
+					;
+				} else {
+					showAlertInfo();
 				}
 
 			} catch (IOException e) {
@@ -172,6 +185,25 @@ public class AdditionalWindowController {
 		addEditFileWindow.getPrefixTextField().setStyle(null);
 		addEditFileWindow.getRand_typeTextField().setStyle(null);
 		addEditFileWindow.getPositions_PathTextField().setStyle(null);
+	}
+
+	private boolean ifReaderSet() {
+		if (("").equals(addEditFileWindow.getIdDBComboBox().getValue()))
+			return false;
+
+		else
+			return true;
+
+	}
+
+	private void showAlertInfo() {
+
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("B³¹d!");
+		alert.setHeaderText(null);
+		alert.setContentText("Nie zaznaczono identyfikatora bazy danych!");
+		alert.showAndWait();
+		addEditFileWindow.getIdDBComboBox().setStyle("red");
 	}
 
 }

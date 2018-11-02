@@ -2,10 +2,11 @@ package model.reader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.zip.ZipFile;
 
 import model.FastaRecord;
 import view.additionalWindows.AddEditFileWindow;
@@ -19,6 +20,8 @@ public abstract class Reader {
 	protected long size;
 	protected RandomAccessFile raf;
 	protected AddEditFileWindow addEditFileWindow;
+	protected String FASTA_EXTENSION = "fasta";
+	protected String ZIP_EXTENSION = "zip";
 
 	public abstract FastaRecord parseRecord(int recordNumber);
 
@@ -32,20 +35,6 @@ public abstract class Reader {
 
 	public Reader(AddEditFileWindow addEditFileWindow) {
 		this.addEditFileWindow = addEditFileWindow;
-	}
-
-	public void start() throws IOException {
-
-		// if (!ifPositionsFileExist()) {
-		Scanner input = new Scanner(System.in);
-		System.out.println("Sciezka do pliku FASTA :");
-		String path = "C:\\Users\\BROGO\\Desktop\\INZYNIERKA\\test.txt";
-		if (!("").equals(path)) {
-
-			readPositions(path);
-		}
-		// }
-
 	}
 
 	public ArrayList<Long> readPositions(String path) throws IOException {
@@ -103,5 +92,28 @@ public abstract class Reader {
 		System.out.println("Done " + percent + "%");
 		addEditFileWindow.setProgressBar(done);
 		addEditFileWindow.getProgressTextField().setText(percent + "%");
+	}
+
+	public String getExtension() {
+		String extension = "";
+		int i = path.lastIndexOf(".");
+		if (i > 0) {
+			extension = path.substring(i + 1);
+		}
+		System.out.println("Extension:" + extension);
+		return extension;
+	}
+
+	public void openFile(String extension) throws IOException {
+
+		if (ZIP_EXTENSION.equals(extension)) {
+
+			ZipFile zipFile = new ZipFile(path);
+			FileOutputStream fos = new FileOutputStream(path);
+
+		} else if (FASTA_EXTENSION.equals(extension)) {
+
+		}
+
 	}
 }
