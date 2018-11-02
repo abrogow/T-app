@@ -34,11 +34,11 @@ public class UniprotReader extends Reader {
 
 	// zwraca sparsowany rekord
 	@Override
-	public FastaRecord parseRecord(int recordNumber) {
+	public FastaRecord parseRecord(int recordNumber) throws IOException {
 		// TODO Auto-generated method stub
 
 		long startPos = positionsList.get(recordNumber);
-		long endPos = positionsList.get(recordNumber + 1);
+		long endPos = getEndRecordPosition(recordNumber);
 
 		String record = getRecordFromFile(startPos, endPos);
 		FastaRecord fastaRecord = new FastaRecord();
@@ -53,7 +53,7 @@ public class UniprotReader extends Reader {
 
 		if (m.matches()) {
 
-			for (int i = 0; i < m.groupCount() - 2; i++) {
+			for (int i = 0; i < m.groupCount() - 1; i++) {
 
 				paramsMap.put(keys[i], m.group(i + 2));
 			}
@@ -103,6 +103,7 @@ public class UniprotReader extends Reader {
 				recordString += (char) raf.readByte();
 
 			}
+
 			return recordString;
 
 		} catch (IOException ex) {
@@ -133,14 +134,14 @@ public class UniprotReader extends Reader {
 	}
 
 	// zwraca hash mape z pozycjami i id rekordow
-	public void savePositionsAndIdToMap(ArrayList<Long> positionsList) {
+	public void savePositionsAndIdToMap(ArrayList<Long> positionsList) throws IOException {
 
 		idHashMap = new LinkedHashMap<Long, String>();
 		nameHashMap = new LinkedHashMap<Long, String>();
 		organismNameHashMap = new LinkedHashMap<Long, String>();
 
 		Long pos = null;
-		for (int i = 0; i <= positionsList.size(); i++) {
+		for (int i = 0; i < positionsList.size(); i++) {
 
 			pos = positionsList.get(i);
 			FastaRecord fastaRecord = new FastaRecord();

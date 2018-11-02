@@ -23,7 +23,7 @@ public abstract class Reader {
 	protected String FASTA_EXTENSION = "fasta";
 	protected String ZIP_EXTENSION = "zip";
 
-	public abstract FastaRecord parseRecord(int recordNumber);
+	public abstract FastaRecord parseRecord(int recordNumber) throws IOException;
 
 	public abstract String getRecordFromFile(long startPosition, long endPosition);
 
@@ -66,8 +66,6 @@ public abstract class Reader {
 
 				positionsList.add(pos);
 
-				prepareProgressBar();
-
 			}
 
 		}
@@ -104,6 +102,18 @@ public abstract class Reader {
 		return extension;
 	}
 
+	public long getEndRecordPosition(int recordNumber) throws IOException {
+
+		long endPos;
+		if (recordNumber + 1 < positionsList.size())
+			endPos = positionsList.get(recordNumber + 1);
+		else
+			endPos = raf.length();
+
+		return endPos;
+	}
+
+	// dokonczyc
 	public void openFile(String extension) throws IOException {
 
 		if (ZIP_EXTENSION.equals(extension)) {
