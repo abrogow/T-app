@@ -26,7 +26,7 @@ public class UniprotReader extends Reader {
 
 	private static final String PATTERN = "\\>([a-zA-Z]*)\\|(.*?)\\|(.*?) (.*?)OS=(.*?)GN=(.*?)PE=(.*?)SV=([1-9]*)(.*)";
 
-	protected String positionsFilePath = "C:\\Users\\BROGO\\Desktop\\INZYNIERKA\\uniprotPositionsList.txt";
+	protected String positionsFilePath;
 
 	private LinkedHashMap<Long, String> idHashMap;
 	private LinkedHashMap<Long, String> nameHashMap;
@@ -118,6 +118,7 @@ public class UniprotReader extends Reader {
 		// TODO Auto-generated method stub
 		if (!ifPositionsFileExist()) {
 
+			positionsFilePath = getPositionsListFilePath(path);
 			positionsFile = new File(positionsFilePath);
 			PrintWriter pw = new PrintWriter(positionsFile);
 

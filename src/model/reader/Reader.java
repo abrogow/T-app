@@ -1,12 +1,16 @@
 package model.reader;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import org.apache.commons.io.FilenameUtils;
 
 import model.FastaRecord;
 import view.additionalWindows.AddEditFileWindow;
@@ -114,16 +118,40 @@ public abstract class Reader {
 	}
 
 	// dokonczyc
-	public void openFile(String extension) throws IOException {
+	public String getPathFromFileType(String extension) throws IOException {
 
+		String filePath = "";
 		if (ZIP_EXTENSION.equals(extension)) {
 
-			ZipFile zipFile = new ZipFile(path);
-			FileOutputStream fos = new FileOutputStream(path);
-
-		} else if (FASTA_EXTENSION.equals(extension)) {
-
+			ZipInputStream zipinputstream = new ZipInputStream(new FileInputStream(path));
+			ZipEntry zipentry = zipinputstream.getNextEntry();
+			while (zipentry != null) {
+				filePath = zipentry.getName();
+				File newFile = new File(filePath);
+				String directory = newFile.getParent();
+				if (directory == null) {
+					if (newFile.isDirectory())
+						break;
+				}
+			}
 		}
+		if (FASTA_EXTENSION.equals(extension)) {
+			filePath = path;
+		}
+		return filePath;
+	}
 
+	// funkcja generuje sciezke do pliku z pozycjami
+	public String getPositionsListFilePath(String path) {
+
+		String newPath = path.substring(0, path.lastIndexOf(File.separator));
+
+		java.nio.file.Path p = Paths.get(path);
+		String fileNameWithOutExt = FilenameUtils.removeExtension(p.getFileName().toString());
+
+		String fileName = fileNameWithOutExt + "-positionsList.txt";
+
+		String dstPath = newPath + "\\" + fileName;
+		return dstPath;
 	}
 }
