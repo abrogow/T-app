@@ -1,11 +1,16 @@
 package Controller;
 
+import java.util.LinkedHashMap;
+
 import javafx.scene.control.Alert;
 import model.File;
 import model.dataBase.DataBaseModel;
+import model.reader.Reader;
+import model.reader.UniprotReader;
 import view.additionalWindows.AddEditFileWindow;
 import view.mainWindow.ButtonsGridPane;
 import view.mainWindow.FilesTable;
+import view.mainWindow.FilterGridPane;
 import view.mainWindow.MainWindow;
 import view.mainWindow.RecordsTable;
 
@@ -17,13 +22,26 @@ public class MainWindowController {
 	private FilesTable filesTable;
 	private AddEditFileWindow addEditFileWindow;
 	private DataBaseModel dataBaseModel;
+	private FilterGridPane filterGridPane;
+
+	private File file;
+
+	// do filtra
+	private LinkedHashMap<Long, String> idHashMap;
+	private LinkedHashMap<Long, String> nameHashMap;
+	private LinkedHashMap<Long, String> organismNameHashMap;
+
+	// do readera
+	private Reader reader;
+	private static final String UNIPROT_READER = "UniProt";
 
 	public MainWindowController(ButtonsGridPane buttonsGridPane, FilesTable filesTable,
-			AddEditFileWindow addEditFileWindow) {
+			AddEditFileWindow addEditFileWindow, FilterGridPane filterGridPane) {
 
 		this.buttonsGridPane = buttonsGridPane;
 		this.filesTable = filesTable;
 		this.addEditFileWindow = addEditFileWindow;
+		this.filterGridPane = filterGridPane;
 
 		initializeHandlers();
 
@@ -35,6 +53,8 @@ public class MainWindowController {
 		initializeAddButton();
 		initializeRemoveButton();
 		initializeEditButton();
+		initializeSearchButton();
+		initializeSaveButton();
 	}
 
 	private void initializeAddButton() {
@@ -47,7 +67,7 @@ public class MainWindowController {
 	private void initializeEditButton() {
 
 		buttonsGridPane.getEditButton().setOnAction((event) -> {
-			File file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
+			file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
 			if (file != null) {
 
 				Long idx = file.getFileId();
@@ -63,7 +83,7 @@ public class MainWindowController {
 	private void initializeRemoveButton() {
 
 		buttonsGridPane.getRemoveButton().setOnAction((event) -> {
-			File file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
+			file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
 			if (file != null) {
 
 				Long idx = file.getFileId();
@@ -74,6 +94,56 @@ public class MainWindowController {
 				showAlertInfo();
 			}
 		});
+	}
+
+	private void initializeSearchButton() {
+
+		filterGridPane.getSearchButton().setOnAction((event) -> {
+
+			file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
+
+			if (file != null) {
+
+				getSpecyfiedReader();
+
+				reader.setHashMaps();
+				// getSpecyficationsFromFilter();
+				// saveNewRecordsListIntoFile();
+
+			} else {
+				// to samo dla wszytskich plikow po kolei
+			}
+
+			filterGridPane.getSaveButton().setDisable(false);
+
+		});
+		;
+	}
+
+	private void initializeSaveButton() {
+
+		filterGridPane.getSaveButton().setOnAction((event) -> {
+
+			filterGridPane.showStageWithFileName();
+			if (filterGridPane.getNewFileTextField().getText().isEmpty())
+				showAlertInfoForNewName();
+			else {
+				// zapisywanie rekordow do nowego pliku
+			}
+
+		});
+	}
+
+	private void setHashMaps(LinkedHashMap<Long, String> idHashMap, LinkedHashMap<Long, String> nameHashMap,
+			LinkedHashMap<Long, String> organismNameHashMap) {
+
+		this.idHashMap = idHashMap;
+		this.nameHashMap = nameHashMap;
+		this.organismNameHashMap = organismNameHashMap;
+	}
+
+	private void getSpecyficationsFromFilter() {
+
 	}
 
 	private void showFileWindow(File file) {
@@ -133,6 +203,25 @@ public class MainWindowController {
 		alert.setHeaderText(null);
 		alert.setContentText("Nie zaznaczono rekordu!");
 		alert.showAndWait();
+	}
+
+	public void showAlertInfoForNewName() {
+
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("B³¹d!");
+		alert.setHeaderText(null);
+		alert.setContentText("Nie podano nowej nazwy pliku!");
+		alert.showAndWait();
+	}
+	// TODO: dopisac inne readery jezeli zostana zrobione
+
+	public void getSpecyfiedReader() {
+
+		String id_DB = file.getId_DB();
+
+		if (UNIPROT_READER.equals(id_DB))
+			reader = new UniprotReader(addEditFileWindow);
+
 	}
 
 }

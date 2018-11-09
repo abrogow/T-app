@@ -33,7 +33,7 @@ public class MainWindow {
 		DownloadDBWindow download = new DownloadDBWindow();
 
 		AddEditFileWindow addEditFileWindow = new AddEditFileWindow();
-		MainWindowController controller = new MainWindowController(buttons, filesTable, addEditFileWindow);
+		MainWindowController controller = new MainWindowController(buttons, filesTable, addEditFileWindow, filter);
 
 		DataBaseModel db = new DataBaseModel();
 

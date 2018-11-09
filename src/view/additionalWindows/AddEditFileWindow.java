@@ -139,7 +139,8 @@ public class AddEditFileWindow extends TemplateGridPane {
 	@Override
 	public void setProperties() {
 		// TODO Auto-generated method stub
-		id_DBComboBox.setPrefWidth(200);
+		this.id_DBComboBox.setPrefWidth(200);
+		this.saveButton.setDisable(true);
 
 	}
 

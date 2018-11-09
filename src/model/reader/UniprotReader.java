@@ -1,9 +1,7 @@
 package model.reader;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -113,52 +111,16 @@ public class UniprotReader extends Reader {
 		return recordString;
 	}
 
-	@Override
-	public void savePositionsToFile(ArrayList<Long> positionsList) throws FileNotFoundException {
-		// TODO Auto-generated method stub
-		if (!ifPositionsFileExist()) {
-
-			positionsFilePath = getPositionsListFilePath(path);
-			positionsFile = new File(positionsFilePath);
-			PrintWriter pw = new PrintWriter(positionsFile);
-
-			for (Long position : positionsList) {
-
-				pw.println(position);
-
-			}
-			System.out.println("Save positions to file");
-			pw.close();
-		} else {
-			return;
-		}
+	public LinkedHashMap<Long, String> getIdHashMap() {
+		return idHashMap;
 	}
 
-	// zwraca hash mape z pozycjami i id rekordow
-	public void savePositionsAndIdToMap(ArrayList<Long> positionsList) throws IOException {
+	public LinkedHashMap<Long, String> getNameHashMap() {
+		return nameHashMap;
+	}
 
-		idHashMap = new LinkedHashMap<Long, String>();
-		nameHashMap = new LinkedHashMap<Long, String>();
-		organismNameHashMap = new LinkedHashMap<Long, String>();
-
-		Long pos = null;
-		for (int i = 0; i < positionsList.size(); i++) {
-
-			pos = positionsList.get(i);
-			FastaRecord fastaRecord = new FastaRecord();
-			fastaRecord = parseRecord(i);
-
-			String id = fastaRecord.getIdentyfier();
-			String name = fastaRecord.getEnteryName();
-			String organismName = fastaRecord.getOrganismName();
-
-			idHashMap.put(pos, id);
-			nameHashMap.put(pos, name);
-			organismNameHashMap.put(pos, organismName);
-		}
-		idHashMap.keySet();
-		nameHashMap.keySet();
-		organismNameHashMap.keySet();
+	public LinkedHashMap<Long, String> getOrganismNameHashMap() {
+		return organismNameHashMap;
 	}
 
 	public String getPositionsFilePath() {

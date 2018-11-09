@@ -75,6 +75,7 @@ public class AdditionalWindowController {
 		addEditFileWindow.getLoadButton().setOnAction((event) -> {
 
 			if (ifReaderSet()) {
+				addEditFileWindow.getLoadButton().setDisable(false);
 				getPathFromFileDialog();
 				readAndSavePositions();
 				addEditFileWindow.getPositions_PathTextField().setText(path);
@@ -193,6 +194,7 @@ public class AdditionalWindowController {
 				ArrayList<Long> positionsList = uniprotReader.readPositions(path);
 				uniprotReader.savePositionsToFile(positionsList);
 				uniprotReader.savePositionsAndIdToMap(positionsList);
+				uniprotReader.saveMapsToFile();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

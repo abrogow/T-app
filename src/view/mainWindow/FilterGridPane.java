@@ -2,20 +2,32 @@ package view.mainWindow;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class FilterGridPane extends TemplateGridPane {
 
-	private Label idLabel, nameLabel, speciesLabel;
+	private Label idLabel, nameLabel, speciesLabel, newFileLabel;
 	private ChoiceBox idChoiceBox, nameChoiceBox, speciesChoiceBox;
 	private Button saveButton, searchButton;
+	private TextField newFileTextField;
 
 	public Button getSearchButton() {
 		return searchButton;
+	}
+
+	public Button getSaveButton() {
+		return saveButton;
+	}
+
+	public TextField getNewFileTextField() {
+		return newFileTextField;
 	}
 
 	public FilterGridPane() {
@@ -75,10 +87,19 @@ public class FilterGridPane extends TemplateGridPane {
 	public void setProperties() {
 
 		this.saveButton.setDisable(true);
+	}
 
-		this.getSearchButton().setOnAction((event) -> {
-			this.saveButton.setDisable(false);
-		});
+	public void showStageWithFileName() {
+
+		Stage stage = new Stage();
+		stage.setTitle("Nazwa nowego pliku:");
+		Scene scene = new Scene(this);
+		newFileLabel = new Label("Nazwa nowego pliku: ");
+		newFileTextField = new TextField();
+
+		this.add(newFileLabel, 0, 0);
+		this.add(newFileTextField, 1, 0);
+		stage.show();
 	}
 
 }
