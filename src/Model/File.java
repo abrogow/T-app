@@ -2,6 +2,7 @@ package model;
 
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
+import model.reader.Reader;
 
 public class File {
 
@@ -16,11 +17,11 @@ public class File {
 	private SimpleStringProperty prefix;
 	private SimpleLongProperty rand_type;
 	private SimpleStringProperty positions_path;
+	private Reader reader;
 
 	public File(String name, String description, String id_DB, String version_DB, String sequence_id,
 			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String positions_path) {
 
-		super();
 		this.name = new SimpleStringProperty(name);
 		this.description = new SimpleStringProperty(description);
 		this.id_DB = new SimpleStringProperty(id_DB);
@@ -31,7 +32,7 @@ public class File {
 		this.prefix = new SimpleStringProperty(prefix);
 		this.rand_type = new SimpleLongProperty(rand_type);
 		this.positions_path = new SimpleStringProperty(positions_path);
-
+		this.reader = null;
 	}
 
 	public File(Long id, String name, String description, String id_DB, String version_DB, String sequence_id,
@@ -49,7 +50,7 @@ public class File {
 		this.prefix = new SimpleStringProperty(prefix);
 		this.rand_type = new SimpleLongProperty(rand_type);
 		this.positions_path = new SimpleStringProperty(positions_path);
-
+		this.reader = null;
 	}
 
 	public File() {
@@ -150,4 +151,10 @@ public class File {
 		this.positions_path.set(positions_path);
 	}
 
+	// public static Reader createReader() {
+	// if (UNIPROT_READER.equals(id_DB))
+	// return new UniprotReader(addEditFileWindow);
+	// else
+	// return null;
+	// }
 }

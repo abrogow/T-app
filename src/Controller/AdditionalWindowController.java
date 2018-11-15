@@ -75,7 +75,6 @@ public class AdditionalWindowController {
 		addEditFileWindow.getLoadButton().setOnAction((event) -> {
 
 			if (ifReaderSet()) {
-				addEditFileWindow.getLoadButton().setDisable(false);
 				getPathFromFileDialog();
 				readAndSavePositions();
 				addEditFileWindow.getPositions_PathTextField().setText(path);

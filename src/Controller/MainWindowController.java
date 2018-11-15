@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import model.File;
 import model.dataBase.DataBaseModel;
 import model.reader.Reader;
-import model.reader.UniprotReader;
 import view.additionalWindows.AddEditFileWindow;
 import view.mainWindow.ButtonsGridPane;
 import view.mainWindow.FilesTable;
@@ -104,7 +103,7 @@ public class MainWindowController {
 
 			if (file != null) {
 
-				getSpecyfiedReader();
+				// getSpecifiedReader();
 
 				reader.setHashMaps();
 				// getSpecyficationsFromFilter();
@@ -212,16 +211,6 @@ public class MainWindowController {
 		alert.setHeaderText(null);
 		alert.setContentText("Nie podano nowej nazwy pliku!");
 		alert.showAndWait();
-	}
-	// TODO: dopisac inne readery jezeli zostana zrobione
-
-	public void getSpecyfiedReader() {
-
-		String id_DB = file.getId_DB();
-
-		if (UNIPROT_READER.equals(id_DB))
-			reader = new UniprotReader(addEditFileWindow);
-
 	}
 
 }

@@ -39,7 +39,7 @@ public class UniprotReader extends Reader {
 		long endPos = getEndRecordPosition(recordNumber);
 
 		String record = getRecordFromFile(startPos, endPos);
-		FastaRecord fastaRecord = new FastaRecord();
+		FastaRecord fastaRecord = null;
 		List<String> parameters = new ArrayList<String>();
 		Map<String, String> paramsMap = new LinkedHashMap<String, String>();
 
@@ -55,13 +55,12 @@ public class UniprotReader extends Reader {
 
 				paramsMap.put(keys[i], m.group(i + 2));
 			}
+			paramsMap.keySet();
+			fastaRecord = new FastaRecord(paramsMap.get("identifier"), paramsMap.get("enteryName"),
+					paramsMap.get("proteinName"), paramsMap.get("organismName"), paramsMap.get("geneName"),
+					paramsMap.get("proteinExistence"), paramsMap.get("sequenceVersion"), paramsMap.get("sequence"));
+			System.out.println(fastaRecord);
 		}
-
-		paramsMap.keySet();
-		fastaRecord = new FastaRecord(paramsMap.get("identifier"), paramsMap.get("enteryName"),
-				paramsMap.get("proteinName"), paramsMap.get("organismName"), paramsMap.get("geneName"),
-				paramsMap.get("proteinExistence"), paramsMap.get("sequenceVersion"), paramsMap.get("sequence"));
-		System.out.println(fastaRecord);
 
 		return fastaRecord;
 	}

@@ -38,9 +38,9 @@ public abstract class Reader {
 	protected String TXT_EXTENSION = "txt";
 	protected ZipInputStream zipinputstream;
 
-	private LinkedHashMap<Long, String> idHashMap;
-	private LinkedHashMap<Long, String> nameHashMap;
-	private LinkedHashMap<Long, String> organismNameHashMap;
+	private LinkedHashMap<String, ArrayList<Long>> idHashMap;
+	private LinkedHashMap<String, ArrayList<Long>> nameHashMap;
+	private LinkedHashMap<String, ArrayList<Long>> organismNameHashMap;
 
 	private String positionsFilePath;
 
@@ -122,46 +122,89 @@ public abstract class Reader {
 	// zwraca hash mape z pozycjami i id rekordow
 	public void savePositionsAndIdToMap(ArrayList<Long> positionsList) throws IOException {
 
-		idHashMap = new LinkedHashMap<Long, String>();
-		nameHashMap = new LinkedHashMap<Long, String>();
-		organismNameHashMap = new LinkedHashMap<Long, String>();
+		idHashMap = new LinkedHashMap<String, ArrayList<Long>>();
+		nameHashMap = new LinkedHashMap<String, ArrayList<Long>>();
+		organismNameHashMap = new LinkedHashMap<String, ArrayList<Long>>();
 
+		ArrayList<Long> positions;
 		Long pos = null;
 		for (int i = 0; i < positionsList.size(); i++) {
 
 			pos = positionsList.get(i);
-			FastaRecord fastaRecord = new FastaRecord();
+			FastaRecord fastaRecord;
 			fastaRecord = parseRecord(i);
 
-			String id = fastaRecord.getIdentyfier();
-			String name = fastaRecord.getEnteryName();
-			String organismName = fastaRecord.getOrganismName();
+			if (fastaRecord != null) {
+				String id = fastaRecord.getIdentyfier();
+				String name = fastaRecord.getEnteryName();
+				String organismName = fastaRecord.getOrganismName();
 
-			idHashMap.put(pos, id);
-			nameHashMap.put(pos, name);
-			organismNameHashMap.put(pos, organismName);
+				/////////////// !!!!!!!!!!!!!!!nowa metoda
+				// jezeli 1 pozycja - tworze nowa liste i dodaje do hashmapy
+				if (idHashMap.get(id) == null) {
+					positions = new ArrayList<Long>();
+					positions.add(pos);
+					idHashMap.put(id, positions);
+					// jezeli kolejna pozycja dodaje do listy, referaencja jest juz trzymana w
+					// hashmapie wiec nie musze dodawac jeszcze raz
+				} else {
+					positions = idHashMap.get(id);
+					positions.add(pos);
+				}
+
+				if (nameHashMap.get(name) == null) {
+					positions = new ArrayList<Long>();
+					positions.add(pos);
+					nameHashMap.put(name, positions);
+				} else {
+					positions = nameHashMap.get(name);
+					positions.add(pos);
+				}
+
+				if (organismNameHashMap.get(organismName) == null) {
+					positions = new ArrayList<Long>();
+					positions.add(pos);
+					organismNameHashMap.put(organismName, positions);
+				} else {
+					positions = organismNameHashMap.get(organismName);
+					positions.add(pos);
+				}
+
+			} else {
+				System.out.println("Reader.savePositionsAndIdToMap: Failed to parse fasta record");
+			}
 		}
 		idHashMap.keySet();
 		nameHashMap.keySet();
 		organismNameHashMap.keySet();
 	}
 
+	// zamienic na spisywanie z listy w petli
 	public void saveMapsToFile() throws FileNotFoundException, IOException {
 
-		List<LinkedHashMap<Long, String>> mapList = new ArrayList<LinkedHashMap<Long, String>>();
+		List<LinkedHashMap<String, ArrayList<Long>>> mapList = new ArrayList<LinkedHashMap<String, ArrayList<Long>>>();
 		mapList.add(idHashMap);
 		mapList.add(nameHashMap);
 		mapList.add(organismNameHashMap);
 
 		String dstFile;
 
-		for (LinkedHashMap<Long, String> map : mapList) {
+		for (LinkedHashMap<String, ArrayList<Long>> map : mapList) {
 
 			dstFile = getHashMapFilePath(path, map);
 			FileOutputStream fos = new FileOutputStream(new File(dstFile));
 			PrintWriter pw = new PrintWriter(fos);
-			for (Map.Entry<Long, String> m : map.entrySet()) {
-				pw.println(m.getKey() + "=" + m.getValue());
+			String rec = "";
+
+			for (Map.Entry<String, ArrayList<Long>> m : map.entrySet()) {
+				rec = m.getKey() + "=";
+
+				for (int i = 0; i < m.getValue().size(); i++) {
+					if (i != 0)
+						rec += ",";
+					rec += m.getValue().get(i);
+				}
+				pw.println(rec);
 			}
 			pw.flush();
 			pw.close();
@@ -248,7 +291,7 @@ public abstract class Reader {
 		return dstPath;
 	}
 
-	public String getHashMapFilePath(String path, LinkedHashMap<Long, String> mapa) {
+	public String getHashMapFilePath(String path, LinkedHashMap<String, ArrayList<Long>> mapa) {
 
 		String hashMapName = "";
 		if (mapa == idHashMap)
@@ -268,6 +311,7 @@ public abstract class Reader {
 		java.nio.file.Path p = Paths.get(path);
 		String fileNameWithOutExt = FilenameUtils.removeExtension(p.getFileName().toString());
 
+		// TODO moze zrobic osobny folder na wsyztskie dodawane pliki??
 		File dir = new File("resultFiles");
 		dir.mkdir();
 

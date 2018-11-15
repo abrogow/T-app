@@ -21,6 +21,8 @@ public class FastaRecord {
 		this.identifier = identifier;
 		this.enteryName = enteryName;
 		this.proteinName = proteinName;
+		if (organismName == null)
+			System.out.println("NULL");
 		this.organismName = organismName;
 		this.geneName = geneName;
 		this.proteinExistence = proteinExistence;
