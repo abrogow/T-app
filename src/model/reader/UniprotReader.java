@@ -20,6 +20,10 @@ public class UniprotReader extends Reader {
 		// TODO Auto-generated constructor stub
 	}
 
+	public UniprotReader() {
+		super();
+	}
+
 	private RandomAccessFile raf;
 
 	private static final String PATTERN = "\\>([a-zA-Z]*)\\|(.*?)\\|(.*?) (.*?)OS=(.*?)GN=(.*?)PE=(.*?)SV=([1-9]*)(.*)";
@@ -32,11 +36,10 @@ public class UniprotReader extends Reader {
 
 	// zwraca sparsowany rekord
 	@Override
-	public FastaRecord parseRecord(int recordNumber) throws IOException {
+	public FastaRecord parseRecord(long startPos, ArrayList<Long> positionsList) throws IOException {
 		// TODO Auto-generated method stub
 
-		long startPos = positionsList.get(recordNumber);
-		long endPos = getEndRecordPosition(recordNumber);
+		long endPos = getEndRecordPosition(startPos, positionsList);
 
 		String record = getRecordFromFile(startPos, endPos);
 		FastaRecord fastaRecord = null;
@@ -59,7 +62,6 @@ public class UniprotReader extends Reader {
 			fastaRecord = new FastaRecord(paramsMap.get("identifier"), paramsMap.get("enteryName"),
 					paramsMap.get("proteinName"), paramsMap.get("organismName"), paramsMap.get("geneName"),
 					paramsMap.get("proteinExistence"), paramsMap.get("sequenceVersion"), paramsMap.get("sequence"));
-			System.out.println(fastaRecord);
 		}
 
 		return fastaRecord;

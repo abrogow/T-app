@@ -8,6 +8,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -15,8 +16,11 @@ public class FilterGridPane extends TemplateGridPane {
 
 	private Label idLabel, nameLabel, speciesLabel, newFileLabel;
 	private ChoiceBox idChoiceBox, nameChoiceBox, speciesChoiceBox;
-	private Button saveButton, searchButton;
+	private Button saveButton, searchButton, okButton, cancelButton;
 	private TextField newFileTextField;
+	private Stage stage;
+
+	private String fileName;
 
 	public Button getSearchButton() {
 		return searchButton;
@@ -26,8 +30,24 @@ public class FilterGridPane extends TemplateGridPane {
 		return saveButton;
 	}
 
+	public Button getOkButton() {
+		return okButton;
+	}
+
+	public Button getCancelButton() {
+		return cancelButton;
+	}
+
 	public TextField getNewFileTextField() {
 		return newFileTextField;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public Stage getStage() {
+		return stage;
 	}
 
 	public FilterGridPane() {
@@ -86,20 +106,32 @@ public class FilterGridPane extends TemplateGridPane {
 
 	public void setProperties() {
 
-		this.saveButton.setDisable(true);
+		// this.saveButton.setDisable(true);
 	}
 
-	public void showStageWithFileName() {
+	public Stage showStageWithFileName() {
 
-		Stage stage = new Stage();
-		stage.setTitle("Nazwa nowego pliku:");
-		Scene scene = new Scene(this);
+		stage = new Stage();
+		stage.setTitle("Nazwa nowego pliku: ");
+		GridPane gridPane = new GridPane();
+		Scene scene = new Scene(gridPane, 500, 200);
 		newFileLabel = new Label("Nazwa nowego pliku: ");
+		newFileLabel.setAlignment(Pos.CENTER);
 		newFileTextField = new TextField();
+		newFileTextField.setPrefWidth(300);
+		okButton = new Button("Ok");
+		okButton.setAlignment(Pos.CENTER);
+		cancelButton = new Button("Anuluj");
+		cancelButton.setAlignment(Pos.CENTER);
 
-		this.add(newFileLabel, 0, 0);
-		this.add(newFileTextField, 1, 0);
-		stage.show();
+		gridPane.add(newFileLabel, 0, 1);
+		gridPane.add(newFileTextField, 1, 1);
+		gridPane.add(okButton, 0, 2);
+		gridPane.add(cancelButton, 1, 2);
+
+		stage.setScene(scene);
+		return stage;
+
 	}
 
 }

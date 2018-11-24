@@ -1,11 +1,21 @@
 package Controller;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Scanner;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 import model.File;
 import model.dataBase.DataBaseModel;
 import model.reader.Reader;
+import model.writer.UniprotWriter;
+import model.writer.Writer;
 import view.additionalWindows.AddEditFileWindow;
 import view.mainWindow.ButtonsGridPane;
 import view.mainWindow.FilesTable;
@@ -22,6 +32,9 @@ public class MainWindowController {
 	private AddEditFileWindow addEditFileWindow;
 	private DataBaseModel dataBaseModel;
 	private FilterGridPane filterGridPane;
+	private Button okButton, cancelButton;
+	private Stage stage;
+	private String fileName;
 
 	private File file;
 
@@ -33,6 +46,9 @@ public class MainWindowController {
 	// do readera
 	private Reader reader;
 	private static final String UNIPROT_READER = "UniProt";
+
+	// do filtra
+	private Scanner in;
 
 	public MainWindowController(ButtonsGridPane buttonsGridPane, FilesTable filesTable,
 			AddEditFileWindow addEditFileWindow, FilterGridPane filterGridPane) {
@@ -106,7 +122,9 @@ public class MainWindowController {
 				// getSpecifiedReader();
 
 				reader.setHashMaps();
+				// setHashMapsFromFile();
 				// getSpecyficationsFromFilter();
+				// findFiles();
 				// saveNewRecordsListIntoFile();
 
 			} else {
@@ -123,12 +141,77 @@ public class MainWindowController {
 
 		filterGridPane.getSaveButton().setOnAction((event) -> {
 
-			filterGridPane.showStageWithFileName();
-			if (filterGridPane.getNewFileTextField().getText().isEmpty())
+			Stage stage = filterGridPane.showStageWithFileName();
+			stage.show();
+			// dalsze zapisywanie w przycisku OK
+			initializeOkButton();
+			initializeCancelButton();
+
+		});
+	}
+
+	private void initializeOkButton() {
+
+		filterGridPane.getOkButton().setOnAction((event) -> {
+
+			if (!("").equals(filterGridPane.getNewFileTextField().getText())) {
+				fileName = filterGridPane.getNewFileTextField().getText();
+				stage = filterGridPane.getStage();
+				stage.close();
+
+				// TODO:szukanie rekordów (get srcFile)
+
+				// TODO:zapisywanie pliku narazie wybieram plik i po prostu przekopiowuje
+				// rekord po rekordzie do nowego pliku
+				String path = "C:\\Users\\BROGO\\Desktop\\INZYNIERKA\\test-positionsList.txt";
+				String srcPath = "C:\\Users\\BROGO\\Desktop\\INZYNIERKA\\test.txt";
+				// utworznie listy z pozycjami pozniej wstawic ArrayList z filtrowania
+				ArrayList<Long> resultPositions = new ArrayList<Long>();
+				String line;
+				try {
+					BufferedReader bufReader = new BufferedReader(new FileReader(path));
+					line = bufReader.readLine();
+					while (line != null) {
+						resultPositions.add(Long.parseLong(line));
+						line = bufReader.readLine();
+					}
+					bufReader.close();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// TODO:trzeba zrobic rozpoznawanie writera
+				Writer writer = new UniprotWriter();
+				try {
+
+					writer.saveRecordsToFile(resultPositions, fileName, srcPath);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				in.close();
+
+			} else {
 				showAlertInfoForNewName();
-			else {
-				// zapisywanie rekordow do nowego pliku
+				return;
 			}
+		});
+	}
+
+	private void initializeCancelButton() {
+
+		filterGridPane.getCancelButton().setOnAction((event) -> {
+
+			stage = filterGridPane.getStage();
+			stage.close();
 
 		});
 	}

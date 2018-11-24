@@ -29,7 +29,7 @@ public abstract class Reader {
 	protected String path;
 	protected File positionsFile;
 	protected long processedBytes;
-	protected long size;
+	protected Long size;
 	protected RandomAccessFile raf;
 	protected AddEditFileWindow addEditFileWindow;
 	protected String FASTA_EXTENSION = "fasta";
@@ -44,7 +44,7 @@ public abstract class Reader {
 
 	private String positionsFilePath;
 
-	public abstract FastaRecord parseRecord(int recordNumber) throws IOException;
+	public abstract FastaRecord parseRecord(long startPos, ArrayList<Long> positionsList) throws IOException;
 
 	public abstract String getRecordFromFile(long startPosition, long endPosition);
 
@@ -60,6 +60,10 @@ public abstract class Reader {
 
 	public Reader(AddEditFileWindow addEditFileWindow) {
 		this.addEditFileWindow = addEditFileWindow;
+	}
+
+	public Reader() {
+
 	}
 
 	public ArrayList<Long> readPositions(String path) throws IOException {
@@ -126,49 +130,22 @@ public abstract class Reader {
 		nameHashMap = new LinkedHashMap<String, ArrayList<Long>>();
 		organismNameHashMap = new LinkedHashMap<String, ArrayList<Long>>();
 
-		ArrayList<Long> positions;
 		Long pos = null;
 		for (int i = 0; i < positionsList.size(); i++) {
 
 			pos = positionsList.get(i);
 			FastaRecord fastaRecord;
-			fastaRecord = parseRecord(i);
+			long startPos = positionsList.get(i);
+			fastaRecord = parseRecord(startPos, positionsList);
 
 			if (fastaRecord != null) {
 				String id = fastaRecord.getIdentyfier();
 				String name = fastaRecord.getEnteryName();
 				String organismName = fastaRecord.getOrganismName();
 
-				/////////////// !!!!!!!!!!!!!!!nowa metoda
-				// jezeli 1 pozycja - tworze nowa liste i dodaje do hashmapy
-				if (idHashMap.get(id) == null) {
-					positions = new ArrayList<Long>();
-					positions.add(pos);
-					idHashMap.put(id, positions);
-					// jezeli kolejna pozycja dodaje do listy, referaencja jest juz trzymana w
-					// hashmapie wiec nie musze dodawac jeszcze raz
-				} else {
-					positions = idHashMap.get(id);
-					positions.add(pos);
-				}
-
-				if (nameHashMap.get(name) == null) {
-					positions = new ArrayList<Long>();
-					positions.add(pos);
-					nameHashMap.put(name, positions);
-				} else {
-					positions = nameHashMap.get(name);
-					positions.add(pos);
-				}
-
-				if (organismNameHashMap.get(organismName) == null) {
-					positions = new ArrayList<Long>();
-					positions.add(pos);
-					organismNameHashMap.put(organismName, positions);
-				} else {
-					positions = organismNameHashMap.get(organismName);
-					positions.add(pos);
-				}
+				setValueIntoMap(idHashMap, id, pos);
+				setValueIntoMap(nameHashMap, name, pos);
+				setValueIntoMap(organismNameHashMap, organismName, pos);
 
 			} else {
 				System.out.println("Reader.savePositionsAndIdToMap: Failed to parse fasta record");
@@ -177,6 +154,23 @@ public abstract class Reader {
 		idHashMap.keySet();
 		nameHashMap.keySet();
 		organismNameHashMap.keySet();
+	}
+
+	private void setValueIntoMap(LinkedHashMap<String, ArrayList<Long>> hashMap, String value, Long pos) {
+
+		ArrayList<Long> positions;
+
+		// jezeli 1 pozycja - tworze nowa liste i dodaje do hashmapy
+		if (hashMap.get(value) == null) {
+			positions = new ArrayList<Long>();
+			positions.add(pos);
+			hashMap.put(value, positions);
+			// jezeli kolejna pozycja dodaje do listy, referaencja jest juz trzymana w
+			// hashmapie wiec nie musze dodawac jeszcze raz
+		} else {
+			positions = hashMap.get(value);
+			positions.add(pos);
+		}
 	}
 
 	// zamienic na spisywanie z listy w petli
@@ -220,18 +214,6 @@ public abstract class Reader {
 		return false;
 	}
 
-	public long getSize() {
-		return size;
-	}
-
-	public void prepareProgressBar() {
-		float done = (float) processedBytes / (float) size;
-		float percent = Math.round(done * 100);
-		System.out.println("Done " + percent + "%");
-		addEditFileWindow.setProgressBar(done);
-		addEditFileWindow.getProgressTextField().setText(percent + "%");
-	}
-
 	public String getExtension() {
 		String extension = "";
 		int i = path.lastIndexOf(".");
@@ -242,8 +224,12 @@ public abstract class Reader {
 		return extension;
 	}
 
-	public long getEndRecordPosition(int recordNumber) throws IOException {
+	public long getEndRecordPosition(long startPos, ArrayList<Long> positionsList) throws IOException {
 
+		setPositionsList(positionsList);
+		if (size == null)
+			size = raf.length();
+		int recordNumber = getRecordNumber(startPos);
 		long endPos;
 		if (recordNumber + 1 < positionsList.size())
 			endPos = positionsList.get(recordNumber + 1);
@@ -251,6 +237,17 @@ public abstract class Reader {
 			endPos = size;
 
 		return endPos;
+	}
+
+	public int getRecordNumber(Long pos) {
+
+		int recordNumber = 0;
+
+		while (!pos.equals(positionsList.get(recordNumber))) {
+			recordNumber++;
+		}
+
+		return recordNumber;
 	}
 
 	// funkcja rozpoznaje czy plik jest spakowany
@@ -348,5 +345,21 @@ public abstract class Reader {
 
 		}
 	}
+
+	public void setPositionsList(ArrayList<Long> positionsList) {
+		this.positionsList = positionsList;
+	}
+
+	// ustawia sciezke do pliku fasta z rekordami
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public void setRaf(String path) throws FileNotFoundException {
+
+		raf = new RandomAccessFile(path, "r");
+	}
+
+	// funkcja do filtra tworzy listê pozycji
 
 }
