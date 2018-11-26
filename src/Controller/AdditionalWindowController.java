@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
@@ -57,7 +59,7 @@ public class AdditionalWindowController {
 
 		addEditFileWindow.getSaveButton().setOnAction((event) -> {
 
-			if (ifReaderSet()) {
+			if (isReaderSet()) {
 				saveFile(f);
 			} else {
 				showAlertInfo();
@@ -80,17 +82,14 @@ public class AdditionalWindowController {
 
 		addEditFileWindow.getLoadButton().setOnAction((event) -> {
 
-			if (ifReaderSet()) {
+			if (isReaderSet()) {
 
 				// set progressBar
 
-				// setProgressIndicatior();
 				getPathFromFileDialog();
 				// closeProgressIndicatior();
 
-				readAndSavePositions();
-				addEditFileWindow.getPositions_PathTextField().setText(path);
-				addEditFileWindow.getNameTextField().setText(fileName);
+				setProgressIndicatior();
 			} else {
 				showAlertInfo();
 				return;
@@ -134,7 +133,7 @@ public class AdditionalWindowController {
 		addEditFileWindow.getPositions_PathTextField().setStyle(null);
 	}
 
-	private boolean ifReaderSet() {
+	private boolean isReaderSet() {
 		if (addEditFileWindow.getIdDBComboBox().getSelectionModel().isEmpty())
 			return false;
 
@@ -216,20 +215,20 @@ public class AdditionalWindowController {
 	Task<Void> task = new Task<Void>() {
 		@Override
 		public Void call() {
-			for (int i = 1; i < 10; i++) {
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				System.out.println(i);
-				updateProgress(i, 10);
-			}
+			readAndSavePositions();
+			addEditFileWindow.getPositions_PathTextField().setText(path);
+			addEditFileWindow.getNameTextField().setText(fileName);
 			return null;
 		}
 	};
 
 	private void setProgressIndicatior() {
+
+		task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+			public void handle(WorkerStateEvent t) {
+				progressStage.close();
+			}
+		});
 
 		th = new Thread(task);
 		th.setDaemon(true);
@@ -242,7 +241,7 @@ public class AdditionalWindowController {
 
 		Scene scene = new Scene(root, 400, 300);
 		progressStage = new Stage();
-		progressStage.setTitle("Progressing...");
+		progressStage.setTitle("£adowanie...");
 
 		progressStage.setScene(scene);
 		progressStage.show();
