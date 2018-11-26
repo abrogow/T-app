@@ -89,7 +89,7 @@ public class AdditionalWindowController {
 				getPathFromFileDialog();
 				// closeProgressIndicatior();
 
-				setProgressIndicatior();
+				setProgressIndicator();
 			} else {
 				showAlertInfo();
 				return;
@@ -222,7 +222,7 @@ public class AdditionalWindowController {
 		}
 	};
 
-	private void setProgressIndicatior() {
+	private void setProgressIndicator() {
 
 		task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 			public void handle(WorkerStateEvent t) {
