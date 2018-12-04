@@ -9,8 +9,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import model.FastaRecord;
-import model.reader.Reader;
-import model.reader.UniprotReader;
 
 public abstract class Writer {
 
@@ -62,30 +60,31 @@ public abstract class Writer {
 		return dstPath;
 	}
 
+	// TODO: param record; tylko zapis
 	public void saveRecordsToFile(ArrayList<Long> resultPositions, String fileName, String srcFile) throws IOException {
 
 		// open file
-		createAndOpenFile(fileName, srcFile);
-		FastaRecord record = new FastaRecord();
-
-		// TODO:rozpoznawanie readera
-		Reader reader = new UniprotReader();
-		// TODO:ustawianie
-		reader.setPath(srcFile);
-		reader.setRaf(srcFile);
-
-		for (Long position : resultPositions)
-			try {
-				{
-
-					record = reader.parseRecord(position, resultPositions);
-					saveRecordIntoFile(record);
-
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		closeFile();
+		// createAndOpenFile(fileName, srcFile);
+		// FastaRecord record = new FastaRecord();
+		//
+		// // TODO:rozpoznawanie readera
+		// FastaReader reader = new FastaReader();
+		// // TODO:ustawianie
+		// reader.setPath(srcFile);
+		// reader.setRaf(srcFile);
+		//
+		// for (Long position : resultPositions)
+		// try {
+		// {
+		//
+		// record = reader.parseRecord(position, resultPositions);
+		// saveRecordIntoFile(record);
+		//
+		// }
+		// } catch (Exception e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// closeFile();
 	}
 }

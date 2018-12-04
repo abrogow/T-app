@@ -60,13 +60,13 @@ public class FilesTableDBManager {
 							+ " VALUES('" + file.getName() + "', '" + file.getDescription() + "', '" + file.getId_DB()
 							+ "', '" + file.getVersion_DB() + "', '" + file.getSequence_id() + "', '"
 							+ file.getSequence_name() + "', " + file.getRand_sequence() + ", '" + file.getPrefix()
-							+ "', " + file.getRand_type() + ", '" + file.getPositions_path() + "')");
+							+ "', " + file.getRand_type() + ", '" + file.getDstPath() + "')");
 			statement.execute(
 					"INSERT INTO pliki (name, description, id_DB, version_DB,sequence_id, sequence_name,rand_sequence, prefix, rand_type, positions_path) "
 							+ " VALUES('" + file.getName() + "', '" + file.getDescription() + "', '" + file.getId_DB()
 							+ "', '" + file.getVersion_DB() + "', '" + file.getSequence_id() + "', '"
 							+ file.getSequence_name() + "', " + file.getRand_sequence() + ", '" + file.getPrefix()
-							+ "', " + file.getRand_type() + ", '" + file.getPositions_path() + "')");
+							+ "', " + file.getRand_type() + ", '" + file.getDstPath() + "')");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -82,7 +82,7 @@ public class FilesTableDBManager {
 					+ file.getVersion_DB() + "'," + "sequence_id='" + file.getSequence_id() + "'," + "sequence_name='"
 					+ file.getSequence_name() + "'," + "rand_sequence=" + file.getRand_sequence() + "," + "prefix='"
 					+ file.getPrefix() + "'," + "rand_type=" + file.getRand_type() + ", " + "positions_path='"
-					+ file.getPositions_path() + " WHERE id = " + file.getFileId());
+					+ file.getDstPath() + " WHERE id = " + file.getFileId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

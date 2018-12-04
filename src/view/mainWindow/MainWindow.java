@@ -27,7 +27,7 @@ public class MainWindow {
 
 		primaryStage.setTitle("Thesis");
 		ButtonsGridPane buttons = new ButtonsGridPane();
-		FilterGridPane filter = new FilterGridPane();
+		FilterPane filter = new FilterPane();
 		FilesTable filesTable = new FilesTable();
 		RecordsTable recordsTable = new RecordsTable();
 		DownloadDBWindow download = new DownloadDBWindow();
@@ -53,7 +53,7 @@ public class MainWindow {
 	}
 
 	public BorderPane initializeRoot(ButtonsGridPane buttons, FilesTable filesTable, RecordsTable recordsTable,
-			FilterGridPane filter) {
+			FilterPane filter) {
 
 		BorderPane root = new BorderPane();
 		initializeMenu(root);

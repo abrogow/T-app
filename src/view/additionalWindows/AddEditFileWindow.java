@@ -72,7 +72,7 @@ public class AddEditFileWindow extends TemplateGridPane {
 		rand_sequenceLabel = new Label("Infoormacja czy plik zawiera sekwencje randomizowane(long)");
 		prefixLabel = new Label("Przedrostek identyfikatorów sekwencji randomizowanych");
 		rand_typeLabel = new Label("Rodzaj randomizacji(long)");
-		positions_pathLabel = new Label("Œcie¿ka do utworzonego pliku z pozycjami rekordów");
+		positions_pathLabel = new Label("Œcie¿ka do pliku");
 
 		descriptionTextField = new TextField();
 		id_DBComboBox = new ComboBox();
@@ -231,7 +231,7 @@ public class AddEditFileWindow extends TemplateGridPane {
 		this.getRand_sequenceTextField().setText(file.getRand_sequence().toString());
 		this.getPrefixTextField().setText(file.getPrefix());
 		this.getRand_typeTextField().setText(file.getRand_type().toString());
-		this.getPositions_PathTextField().setText(file.getPositions_path());
+		this.getPositions_PathTextField().setText(file.getDstPath());
 
 	}
 

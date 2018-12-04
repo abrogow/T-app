@@ -1,22 +1,17 @@
 package Controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import model.File;
 import model.dataBase.DataBaseModel;
-import model.reader.UniprotReader;
+import model.reader.FastaIndexBuilder;
+import model.reader.FastaReader;
+import model.reader.FastaUniprotRecordParser;
 import view.additionalWindows.AddEditFileWindow;
 import view.mainWindow.FilesTable;
 
@@ -29,7 +24,6 @@ public class AdditionalWindowController {
 	private Stage stage;
 	private Stage progressWindow;
 	private Thread thread;
-	private UniprotReader uniprotReader;
 	private String path;
 	private LinkedHashMap<Long, String> idHashMap;
 	private LinkedHashMap<Long, String> nameHashMap;
@@ -83,13 +77,28 @@ public class AdditionalWindowController {
 		addEditFileWindow.getLoadButton().setOnAction((event) -> {
 
 			if (isReaderSet()) {
-
-				// set progressBar
-
 				getPathFromFileDialog();
-				// closeProgressIndicatior();
+				// readAndSavePositions();
+				///////////////////////////
 
-				setProgressIndicator();
+				FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
+				FastaIndexBuilder indexBuilder = new FastaIndexBuilder(path, parser);
+				try {
+					indexBuilder.buildIndex();
+					FastaReader reader = new FastaReader(path, parser);
+					reader.open();
+
+					indexBuilder.createMaps();
+					indexBuilder.saveMaps();
+					reader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				////////////////////////////////
+				addEditFileWindow.getPositions_PathTextField().setText(path);
+				addEditFileWindow.getNameTextField().setText(fileName);
 			} else {
 				showAlertInfo();
 				return;
@@ -197,55 +206,55 @@ public class AdditionalWindowController {
 
 	// funkcja czyta plik, zapisuje pozycje do pliku, id, nazwe i gatunek do
 	// odpowiednich map
-	private void readAndSavePositions() {
-		uniprotReader = new UniprotReader(addEditFileWindow);
-		try {
-			if (path != null) {
-				ArrayList<Long> positionsList = uniprotReader.readPositions(path);
-				uniprotReader.savePositionsToFile(positionsList);
-				uniprotReader.savePositionsAndIdToMap(positionsList);
-				uniprotReader.saveMapsToFile();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	// private void readAndSavePositions() {
+	// uniprotReader = new UniprotReader(addEditFileWindow);
+	// try {
+	// if (path != null) {
+	// ArrayList<Long> positionsList = uniprotReader.readPositions(path);
+	// uniprotReader.savePositionsToFile(positionsList);
+	// uniprotReader.savePositionsAndIdToMap(positionsList);
+	// uniprotReader.saveMapsToFile();
+	// }
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
 
-	Task<Void> task = new Task<Void>() {
-		@Override
-		public Void call() {
-			readAndSavePositions();
-			addEditFileWindow.getPositions_PathTextField().setText(path);
-			addEditFileWindow.getNameTextField().setText(fileName);
-			return null;
-		}
-	};
+	// Task<Void> task = new Task<Void>() {
+	// @Override
+	// public Void call() {
+	// readAndSavePositions();
+	// addEditFileWindow.getPositions_PathTextField().setText(path);
+	// addEditFileWindow.getNameTextField().setText(fileName);
+	// return null;
+	// }
+	// };
 
-	private void setProgressIndicator() {
-
-		task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-			public void handle(WorkerStateEvent t) {
-				progressStage.close();
-			}
-		});
-
-		th = new Thread(task);
-		th.setDaemon(true);
-		th.start();
-
-		ProgressIndicator progressIndicator = new ProgressIndicator();
-
-		StackPane root = new StackPane();
-		root.getChildren().addAll(progressIndicator);
-
-		Scene scene = new Scene(root, 400, 300);
-		progressStage = new Stage();
-		progressStage.setTitle("£adowanie...");
-
-		progressStage.setScene(scene);
-		progressStage.show();
-	}
+	// private void setProgressIndicator() {
+	//
+	// task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+	// public void handle(WorkerStateEvent t) {
+	// progressStage.close();
+	// }
+	// });
+	//
+	// th = new Thread(task);
+	// th.setDaemon(true);
+	// th.start();
+	//
+	// ProgressIndicator progressIndicator = new ProgressIndicator();
+	//
+	// StackPane root = new StackPane();
+	// root.getChildren().addAll(progressIndicator);
+	//
+	// Scene scene = new Scene(root, 400, 300);
+	// progressStage = new Stage();
+	// progressStage.setTitle("£adowanie...");
+	//
+	// progressStage.setScene(scene);
+	// progressStage.show();
+	// }
 
 	@SuppressWarnings("deprecation")
 	private void closeProgressIndicatior() {

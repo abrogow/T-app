@@ -1,5 +1,8 @@
 package view.mainWindow;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,15 +15,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class FilterGridPane extends TemplateGridPane {
+public class FilterPane extends TemplateGridPane {
 
 	private Label idLabel, nameLabel, speciesLabel, newFileLabel;
-	private ChoiceBox idChoiceBox, nameChoiceBox, speciesChoiceBox;
+	private ChoiceBox speciesChoiceBox;
 	private Button saveButton, searchButton, okButton, cancelButton;
-	private TextField newFileTextField;
+	private TextField newFileTextField, idTextField, nameTextField;
 	private Stage stage;
 
 	private String fileName;
+
+	private final List<String> species = Arrays.asList("Homo sapiens ");
 
 	public Button getSearchButton() {
 		return searchButton;
@@ -46,11 +51,23 @@ public class FilterGridPane extends TemplateGridPane {
 		return fileName;
 	}
 
+	public ChoiceBox getSpeciesChoiceBox() {
+		return speciesChoiceBox;
+	}
+
+	public TextField getNameTextField() {
+		return nameTextField;
+	}
+
+	public TextField getIdTextField() {
+		return idTextField;
+	}
+
 	public Stage getStage() {
 		return stage;
 	}
 
-	public FilterGridPane() {
+	public FilterPane() {
 
 		createControls();
 		setProperties();
@@ -64,9 +81,12 @@ public class FilterGridPane extends TemplateGridPane {
 		nameLabel = new Label("Nazwa: ");
 		speciesLabel = new Label("Gatunek: ");
 
-		idChoiceBox = new ChoiceBox();
-		nameChoiceBox = new ChoiceBox();
+		idTextField = new TextField();
+		nameTextField = new TextField();
 		speciesChoiceBox = new ChoiceBox();
+		for (String spec : species) {
+			speciesChoiceBox.getItems().add(spec);
+		}
 
 		searchButton = new Button("Wyszukaj");
 		saveButton = new Button("Zapisz rekordy do pliku");
@@ -82,8 +102,8 @@ public class FilterGridPane extends TemplateGridPane {
 		this.add(nameLabel, 0, 2);
 		this.add(speciesLabel, 0, 3);
 
-		this.add(idChoiceBox, 1, 1);
-		this.add(nameChoiceBox, 1, 2);
+		this.add(idTextField, 1, 1);
+		this.add(nameTextField, 1, 2);
 		this.add(speciesChoiceBox, 1, 3);
 
 		this.add(searchButton, 1, 5);
@@ -114,7 +134,7 @@ public class FilterGridPane extends TemplateGridPane {
 		stage = new Stage();
 		stage.setTitle("Nazwa nowego pliku: ");
 		GridPane gridPane = new GridPane();
-		Scene scene = new Scene(gridPane, 500, 200);
+		Scene scene = new Scene(gridPane, 500, 400);
 		newFileLabel = new Label("Nazwa nowego pliku: ");
 		newFileLabel.setAlignment(Pos.CENTER);
 		newFileTextField = new TextField();

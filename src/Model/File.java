@@ -2,7 +2,7 @@ package model;
 
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
-import model.reader.Reader;
+import model.reader.FastaReader;
 
 public class File {
 
@@ -16,11 +16,11 @@ public class File {
 	private SimpleLongProperty rand_sequence;
 	private SimpleStringProperty prefix;
 	private SimpleLongProperty rand_type;
-	private SimpleStringProperty positions_path;
-	private Reader reader;
+	private SimpleStringProperty dstPath;
+	private FastaReader reader;
 
 	public File(String name, String description, String id_DB, String version_DB, String sequence_id,
-			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String positions_path) {
+			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String dstPath) {
 
 		this.name = new SimpleStringProperty(name);
 		this.description = new SimpleStringProperty(description);
@@ -31,12 +31,12 @@ public class File {
 		this.rand_sequence = new SimpleLongProperty(rand_sequence);
 		this.prefix = new SimpleStringProperty(prefix);
 		this.rand_type = new SimpleLongProperty(rand_type);
-		this.positions_path = new SimpleStringProperty(positions_path);
+		this.dstPath = new SimpleStringProperty(dstPath);
 		this.reader = null;
 	}
 
 	public File(Long id, String name, String description, String id_DB, String version_DB, String sequence_id,
-			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String positions_path) {
+			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String dstPath) {
 
 		super();
 		this.id = new SimpleLongProperty(id);
@@ -49,7 +49,7 @@ public class File {
 		this.rand_sequence = new SimpleLongProperty(rand_sequence);
 		this.prefix = new SimpleStringProperty(prefix);
 		this.rand_type = new SimpleLongProperty(rand_type);
-		this.positions_path = new SimpleStringProperty(positions_path);
+		this.dstPath = new SimpleStringProperty(dstPath);
 		this.reader = null;
 	}
 
@@ -59,7 +59,7 @@ public class File {
 
 	public Object[] toArray() {
 		return new Object[] { id, name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence,
-				prefix, rand_type, positions_path };
+				prefix, rand_type, dstPath };
 
 	}
 
@@ -143,12 +143,12 @@ public class File {
 		this.rand_type.set(rand_type);
 	}
 
-	public String getPositions_path() {
-		return positions_path.get();
+	public String getDstPath() {
+		return dstPath.get();
 	}
 
-	public void setPositions_path(String positions_path) {
-		this.positions_path.set(positions_path);
+	public void destDstPath(String dstPath) {
+		this.dstPath.set(dstPath);
 	}
 
 	// public static Reader createReader() {

@@ -5,21 +5,25 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Scanner;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import model.FastaRecord;
 import model.File;
 import model.dataBase.DataBaseModel;
-import model.reader.Reader;
+import model.reader.FastaIndexBuilder;
+import model.reader.FastaReader;
+import model.reader.FastaUniprotRecordParser;
 import model.writer.UniprotWriter;
 import model.writer.Writer;
 import view.additionalWindows.AddEditFileWindow;
 import view.mainWindow.ButtonsGridPane;
 import view.mainWindow.FilesTable;
-import view.mainWindow.FilterGridPane;
+import view.mainWindow.FilterPane;
 import view.mainWindow.MainWindow;
 import view.mainWindow.RecordsTable;
 
@@ -31,7 +35,7 @@ public class MainWindowController {
 	private FilesTable filesTable;
 	private AddEditFileWindow addEditFileWindow;
 	private DataBaseModel dataBaseModel;
-	private FilterGridPane filterGridPane;
+	private FilterPane filterPane;
 	private Button okButton, cancelButton;
 	private Stage stage;
 	private String fileName;
@@ -39,24 +43,23 @@ public class MainWindowController {
 	private File file;
 
 	// do filtra
-	private LinkedHashMap<Long, String> idHashMap;
-	private LinkedHashMap<Long, String> nameHashMap;
-	private LinkedHashMap<Long, String> organismNameHashMap;
+	private Map<String, Long> idHashMap;
+	private Map<String, Long> nameHashMap;
+	private Map<String, ArrayList<Long>> organismNameHashMap;
+	private Map<String, String> params;
+	List<FastaRecord> resultList;
+	FastaReader reader;
 
 	// do readera
-	private Reader reader;
 	private static final String UNIPROT_READER = "UniProt";
 
-	// do filtra
-	private Scanner in;
-
 	public MainWindowController(ButtonsGridPane buttonsGridPane, FilesTable filesTable,
-			AddEditFileWindow addEditFileWindow, FilterGridPane filterGridPane) {
+			AddEditFileWindow addEditFileWindow, FilterPane filterPane) {
 
 		this.buttonsGridPane = buttonsGridPane;
 		this.filesTable = filesTable;
 		this.addEditFileWindow = addEditFileWindow;
-		this.filterGridPane = filterGridPane;
+		this.filterPane = filterPane;
 
 		initializeHandlers();
 
@@ -68,6 +71,7 @@ public class MainWindowController {
 		initializeAddButton();
 		initializeRemoveButton();
 		initializeEditButton();
+
 		initializeSearchButton();
 		initializeSaveButton();
 	}
@@ -113,25 +117,60 @@ public class MainWindowController {
 
 	private void initializeSearchButton() {
 
-		filterGridPane.getSearchButton().setOnAction((event) -> {
+		filterPane.getSearchButton().setOnAction((event) -> {
 
 			file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
 
 			if (file != null) {
 
-				// getSpecifiedReader();
+				// get params
+				getParamsFromFields();
+				String dstPath = file.getDstPath();
 
-				reader.setHashMaps();
-				// setHashMapsFromFile();
-				// getSpecyficationsFromFilter();
-				// findFiles();
-				// saveNewRecordsListIntoFile();
+				// load hashmaps
+				FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
+				FastaIndexBuilder indexBuilder = new FastaIndexBuilder(dstPath, parser);
+				reader = new FastaReader(dstPath, parser);
+				reader.setFileSize();
+
+				String idHMPath = indexBuilder.getResultFilesPath(dstPath, "idHashMap");
+				String nameHMPath = indexBuilder.getResultFilesPath(dstPath, "nameHashMap");
+				String organismHMPath = indexBuilder.getResultFilesPath(dstPath, "organismNameHashMap");
+
+				try {
+					try {
+						idHashMap = reader.readIdIndex(idHMPath);
+						idHashMap.keySet();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					organismNameHashMap = reader.readOrganismIndex(organismHMPath);
+					organismNameHashMap.keySet();
+					nameHashMap = reader.readIdIndex(nameHMPath);
+					nameHashMap.keySet();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// set hash maps in reader
+				reader.setMaps(organismNameHashMap, idHashMap, nameHashMap);
+				// filtering
+				try {
+					filterRecords();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				reloadFieldsFilter();
 
 			} else {
-				// to samo dla wszytskich plikow po kolei
+				showAlertInfoForNoFile();
 			}
 
-			filterGridPane.getSaveButton().setDisable(false);
+			filterPane.getSaveButton().setDisable(false);
 
 		});
 		;
@@ -139,9 +178,9 @@ public class MainWindowController {
 
 	private void initializeSaveButton() {
 
-		filterGridPane.getSaveButton().setOnAction((event) -> {
+		filterPane.getSaveButton().setOnAction((event) -> {
 
-			Stage stage = filterGridPane.showStageWithFileName();
+			Stage stage = filterPane.showStageWithFileName();
 			stage.show();
 			// dalsze zapisywanie w przycisku OK
 			initializeOkButton();
@@ -152,11 +191,11 @@ public class MainWindowController {
 
 	private void initializeOkButton() {
 
-		filterGridPane.getOkButton().setOnAction((event) -> {
+		filterPane.getOkButton().setOnAction((event) -> {
 
-			if (!("").equals(filterGridPane.getNewFileTextField().getText())) {
-				fileName = filterGridPane.getNewFileTextField().getText();
-				stage = filterGridPane.getStage();
+			if (!("").equals(filterPane.getNewFileTextField().getText())) {
+				fileName = filterPane.getNewFileTextField().getText();
+				stage = filterPane.getStage();
 				stage.close();
 
 				// TODO:szukanie rekordów (get srcFile)
@@ -197,8 +236,6 @@ public class MainWindowController {
 					e.printStackTrace();
 				}
 
-				in.close();
-
 			} else {
 				showAlertInfoForNewName();
 				return;
@@ -208,20 +245,12 @@ public class MainWindowController {
 
 	private void initializeCancelButton() {
 
-		filterGridPane.getCancelButton().setOnAction((event) -> {
+		filterPane.getCancelButton().setOnAction((event) -> {
 
-			stage = filterGridPane.getStage();
+			stage = filterPane.getStage();
 			stage.close();
 
 		});
-	}
-
-	private void setHashMaps(LinkedHashMap<Long, String> idHashMap, LinkedHashMap<Long, String> nameHashMap,
-			LinkedHashMap<Long, String> organismNameHashMap) {
-
-		this.idHashMap = idHashMap;
-		this.nameHashMap = nameHashMap;
-		this.organismNameHashMap = organismNameHashMap;
 	}
 
 	private void getSpecyficationsFromFilter() {
@@ -257,7 +286,7 @@ public class MainWindowController {
 			addEditFileWindow.getRand_sequenceTextField().setText(file.getRand_sequence().toString());
 			addEditFileWindow.getPrefixTextField().setText(file.getPrefix());
 			addEditFileWindow.getRand_typeTextField().setText(file.getRand_type().toString());
-			addEditFileWindow.getPositions_PathTextField().setText(file.getPositions_path());
+			addEditFileWindow.getPositions_PathTextField().setText(file.getDstPath());
 
 		}
 	}
@@ -278,6 +307,88 @@ public class MainWindowController {
 
 	}
 
+	private void reloadFieldsFilter() {
+
+		filterPane.getNameTextField().setText(null);
+		filterPane.getIdTextField().setText(null);
+		filterPane.getSpeciesChoiceBox().setValue(null);
+	}
+
+	private void getParamsFromFields() {
+
+		params = new HashMap<String, String>();
+
+		if (!("").equals(filterPane.getIdTextField().getText()))
+			params.put("id", filterPane.getIdTextField().getText());
+		if (!("").equals(filterPane.getNameTextField().getText()))
+			params.put("name", filterPane.getNameTextField().getText());
+		if (!filterPane.getSpeciesChoiceBox().getSelectionModel().isEmpty())
+			params.put("species", filterPane.getSpeciesChoiceBox().getValue().toString());
+
+	}
+
+	private void filterRecords() throws IOException {
+
+		params.keySet();
+
+		resultList = new ArrayList<FastaRecord>();
+
+		List<FastaRecord> recordsList = new ArrayList<FastaRecord>();
+		FastaRecord record = null;
+
+		// ustawienie positionsList i posiitonsMap
+		reader.setPositionsListFromIdHashMap(idHashMap);
+		reader.setPositionsMapFromPositionsList();
+
+		// otwarcie pliku
+		reader.openFile();
+
+		// przeszukanie po gatunkach
+		if (reader.setOrganism(params.get("species")) == true) {
+
+			for (int i = 0; i < organismNameHashMap.get(params.get("species")).size(); i++) {
+				record = reader.getNextRecord();
+				recordsList.add(record);
+			}
+		}
+
+		// przeszukanie po ID jezeli wypelniony gatunek oraniczamy liste przeszukania
+		String id = params.get("id");
+		Long pos;
+		if (recordsList.size() > 0) {
+
+			for (FastaRecord rec : recordsList) {
+
+				pos = reader.getStartPos(rec);
+				record = reader.getRecordContainsId(id, pos);
+				if (record != null)
+					resultList.add(record);
+
+			}
+		} else {// jezeli niewypelniony gatunek: //TODO: poprawic!
+			for (String key : idHashMap.keySet()) {
+
+				pos = reader.getStartPos(Math.toIntExact(idHashMap.get(key)));
+				record = reader.getRecordContainsId(id, pos);
+				if (record != null)
+					resultList.add(record);
+			}
+		}
+		// szukanie po nazwie
+
+		showResultInfo(resultList.size());
+		reader.close();
+	}
+
+	public void showResultInfo(int i) {
+
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Zakoñczono sukcesem!");
+		alert.setHeaderText(null);
+		alert.setContentText("Znaleziono " + i + " rekordów spe³niaj¹cych kryteria!");
+		alert.showAndWait();
+	}
+
 	public void showAlertInfo() {
 
 		Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -293,6 +404,15 @@ public class MainWindowController {
 		alert.setTitle("B³¹d!");
 		alert.setHeaderText(null);
 		alert.setContentText("Nie podano nowej nazwy pliku!");
+		alert.showAndWait();
+	}
+
+	public void showAlertInfoForNoFile() {
+
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("B³¹d!");
+		alert.setHeaderText(null);
+		alert.setContentText("Nie zaznaczono pliku!");
 		alert.showAndWait();
 	}
 
