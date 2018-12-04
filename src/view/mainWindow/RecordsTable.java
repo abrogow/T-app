@@ -18,6 +18,8 @@ public class RecordsTable extends TemplateTable {
 
 	private ObservableList<Record> data = FXCollections.observableArrayList();
 
+	// private ObservableList<Record> data;
+
 	public RecordsTable() {
 
 		createTable();
@@ -37,7 +39,7 @@ public class RecordsTable extends TemplateTable {
 		recordsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		recordsTable.setPrefSize(300, 100);
 
-		idColumn.setCellValueFactory(new PropertyValueFactory<Record, String>("recordId"));
+		idColumn.setCellValueFactory(new PropertyValueFactory<Record, String>("recordIdentifier"));
 		nameColumn.setCellValueFactory(new PropertyValueFactory<Record, String>("recordName"));
 
 		// updateTableView();
@@ -59,6 +61,7 @@ public class RecordsTable extends TemplateTable {
 
 	public void updateTableView() {
 
+		// data.add(rec1);
 		System.out.println("RecordsTable.updateTableView");
 		data.clear();
 		data = DataBaseModel.getInstance().getAllRecords();

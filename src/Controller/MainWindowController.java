@@ -1,8 +1,6 @@
 package Controller;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +47,7 @@ public class MainWindowController {
 	private Map<String, String> params;
 	List<FastaRecord> resultList;
 	FastaReader reader;
+	String srcPath;
 
 	// do readera
 	private static final String UNIPROT_READER = "UniProt";
@@ -125,17 +124,17 @@ public class MainWindowController {
 
 				// get params
 				getParamsFromFields();
-				String dstPath = file.getDstPath();
+				srcPath = file.getDstPath();
 
 				// load hashmaps
 				FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
-				FastaIndexBuilder indexBuilder = new FastaIndexBuilder(dstPath, parser);
-				reader = new FastaReader(dstPath, parser);
+				FastaIndexBuilder indexBuilder = new FastaIndexBuilder(srcPath, parser);
+				reader = new FastaReader(srcPath, parser);
 				reader.setFileSize();
 
-				String idHMPath = indexBuilder.getResultFilesPath(dstPath, "idHashMap");
-				String nameHMPath = indexBuilder.getResultFilesPath(dstPath, "nameHashMap");
-				String organismHMPath = indexBuilder.getResultFilesPath(dstPath, "organismNameHashMap");
+				String idHMPath = indexBuilder.getResultFilesPath(srcPath, "idHashMap");
+				String nameHMPath = indexBuilder.getResultFilesPath(srcPath, "nameHashMap");
+				String organismHMPath = indexBuilder.getResultFilesPath(srcPath, "organismNameHashMap");
 
 				try {
 					try {
@@ -198,36 +197,11 @@ public class MainWindowController {
 				stage = filterPane.getStage();
 				stage.close();
 
-				// TODO:szukanie rekordów (get srcFile)
-
-				// TODO:zapisywanie pliku narazie wybieram plik i po prostu przekopiowuje
-				// rekord po rekordzie do nowego pliku
-				String path = "C:\\Users\\BROGO\\Desktop\\INZYNIERKA\\test-positionsList.txt";
-				String srcPath = "C:\\Users\\BROGO\\Desktop\\INZYNIERKA\\test.txt";
-				// utworznie listy z pozycjami pozniej wstawic ArrayList z filtrowania
-				ArrayList<Long> resultPositions = new ArrayList<Long>();
-				String line;
-				try {
-					BufferedReader bufReader = new BufferedReader(new FileReader(path));
-					line = bufReader.readLine();
-					while (line != null) {
-						resultPositions.add(Long.parseLong(line));
-						line = bufReader.readLine();
-					}
-					bufReader.close();
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
 				// TODO:trzeba zrobic rozpoznawanie writera
 				Writer writer = new UniprotWriter();
 				try {
 
-					writer.saveRecordsToFile(resultPositions, fileName, srcPath);
+					writer.saveRecordsToFile(resultList, fileName, srcPath);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -348,32 +322,32 @@ public class MainWindowController {
 
 			for (int i = 0; i < organismNameHashMap.get(params.get("species")).size(); i++) {
 				record = reader.getNextRecord();
-				recordsList.add(record);
+				resultList.add(record);
 			}
 		}
 
 		// przeszukanie po ID jezeli wypelniony gatunek oraniczamy liste przeszukania
-		String id = params.get("id");
-		Long pos;
-		if (recordsList.size() > 0) {
-
-			for (FastaRecord rec : recordsList) {
-
-				pos = reader.getStartPos(rec);
-				record = reader.getRecordContainsId(id, pos);
-				if (record != null)
-					resultList.add(record);
-
-			}
-		} else {// jezeli niewypelniony gatunek: //TODO: poprawic!
-			for (String key : idHashMap.keySet()) {
-
-				pos = reader.getStartPos(Math.toIntExact(idHashMap.get(key)));
-				record = reader.getRecordContainsId(id, pos);
-				if (record != null)
-					resultList.add(record);
-			}
-		}
+		// String id = params.get("id");
+		// Long pos;
+		// if (recordsList.size() > 0) {
+		//
+		// for (FastaRecord rec : recordsList) {
+		//
+		// pos = reader.getStartPos(rec);
+		// record = reader.getRecordContainsId(id, pos);
+		// if (record != null)
+		// resultList.add(record);
+		//
+		// }
+		// } else {// jezeli niewypelniony gatunek: //TODO: poprawic!
+		// for (String key : idHashMap.keySet()) {
+		//
+		// pos = reader.getStartPos(Math.toIntExact(idHashMap.get(key)));
+		// record = reader.getRecordContainsId(id, pos);
+		// if (record != null)
+		// resultList.add(record);
+		// }
+		// }
 		// szukanie po nazwie
 
 		showResultInfo(resultList.size());

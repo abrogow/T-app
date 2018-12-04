@@ -25,7 +25,7 @@ public class MainWindow {
 
 	public void initializeGUI(Stage primaryStage) {
 
-		primaryStage.setTitle("Thesis");
+		primaryStage.setTitle("");
 		ButtonsGridPane buttons = new ButtonsGridPane();
 		FilterPane filter = new FilterPane();
 		FilesTable filesTable = new FilesTable();

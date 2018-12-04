@@ -35,9 +35,9 @@ public class FilesTable extends TemplateTable {
 		filesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		filesTable.setPrefSize(300, 100);
 
-		idColumn.setCellValueFactory(new PropertyValueFactory<File, String>("id"));
+		idColumn.setCellValueFactory(new PropertyValueFactory<File, String>("description"));
 		nameColumn.setCellValueFactory(new PropertyValueFactory<File, String>("name"));
-		pathColumn.setCellValueFactory(new PropertyValueFactory<File, String>("positions_path"));
+		pathColumn.setCellValueFactory(new PropertyValueFactory<File, String>("dstPath"));
 
 		scrollPane = new ScrollPane();
 		scrollPane.setContent(filesTable);
@@ -59,8 +59,10 @@ public class FilesTable extends TemplateTable {
 		System.out.println("FilesTable.updateTableView");
 		data.clear();
 		data = DataBaseModel.getInstance().getAllFiles();
+
 		filesTable.setItems(data);
 		filesTable.refresh();
+		filesTable.setItems(DataBaseModel.getInstance().getAllFiles());
 		// recordsTable.setItems(DataBaseModel.getInstance().getAllRecords());
 	}
 

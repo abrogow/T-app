@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.List;
 
 import model.FastaRecord;
+import model.reader.FastaReader;
+import model.reader.FastaUniprotRecordParser;
 
 public abstract class Writer {
 
@@ -29,8 +31,8 @@ public abstract class Writer {
 			String descLine = getDescLine(record);
 			String sequence = getSequenceLine(record);
 
-			pw.print(descLine);
-			pw.print(sequence);
+			pw.println(descLine);
+			pw.println(sequence);
 
 		}
 	}
@@ -61,30 +63,28 @@ public abstract class Writer {
 	}
 
 	// TODO: param record; tylko zapis
-	public void saveRecordsToFile(ArrayList<Long> resultPositions, String fileName, String srcFile) throws IOException {
+	public void saveRecordsToFile(List<FastaRecord> resultPositions, String fileName, String srcFile)
+			throws IOException {
 
 		// open file
-		// createAndOpenFile(fileName, srcFile);
-		// FastaRecord record = new FastaRecord();
-		//
+		createAndOpenFile(fileName, srcFile);
+
 		// // TODO:rozpoznawanie readera
-		// FastaReader reader = new FastaReader();
+		FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
+		FastaReader reader = new FastaReader(srcFile, parser);
 		// // TODO:ustawianie
-		// reader.setPath(srcFile);
-		// reader.setRaf(srcFile);
-		//
-		// for (Long position : resultPositions)
-		// try {
-		// {
-		//
-		// record = reader.parseRecord(position, resultPositions);
-		// saveRecordIntoFile(record);
-		//
-		// }
-		// } catch (Exception e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// closeFile();
+
+		for (FastaRecord position : resultPositions)
+			try {
+				{
+
+					saveRecordIntoFile(position);
+
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		closeFile();
 	}
 }
