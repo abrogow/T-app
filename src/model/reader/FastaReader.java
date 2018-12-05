@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import model.FastaRecord;
+import model.tools.FileTools;
 
 public class FastaReader {
 

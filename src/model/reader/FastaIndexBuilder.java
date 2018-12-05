@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import model.FastaRecord;
+import model.tools.FileTools;
 
 public class FastaIndexBuilder {
 	public final static String FASTA_EXTENSION = "fasta";
