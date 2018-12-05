@@ -184,6 +184,21 @@ public class FastaReader {
 		return (record);
 	}
 
+	public FastaRecord getRecordByName(String name) {
+		FastaRecord record = null;
+		Long startPos = null;
+
+		if ((startPos = this.nameHashMap.get(name)) != null) {
+			try {
+				record = this.readRecord(startPos);
+			} catch (IOException ioe) {
+				record = null;
+			}
+		}
+
+		return (record);
+	}
+
 	/**
 	 * Pobranie rekordu który zawiera String id
 	 * 
@@ -210,6 +225,25 @@ public class FastaReader {
 		}
 
 		return (record);
+	}
+
+	public FastaRecord getRecordContainsName(String name, Long startPos) {
+
+		FastaRecord record = null;
+		String key = "";
+
+		for (Entry<String, Long> entry : nameHashMap.entrySet()) {
+			if (entry.getValue().equals(startPos)) {
+				key = entry.getKey();
+			}
+		}
+
+		if (key.contains(name)) {
+
+			record = getRecordByName(key);
+		}
+
+		return record;
 	}
 
 	/**

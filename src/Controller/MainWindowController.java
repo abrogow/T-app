@@ -163,8 +163,6 @@ public class MainWindowController {
 					e.printStackTrace();
 				}
 
-				reloadFieldsFilter();
-
 			} else {
 				showAlertInfoForNoFile();
 			}
@@ -184,6 +182,7 @@ public class MainWindowController {
 			// dalsze zapisywanie w przycisku OK
 			initializeOkButton();
 			initializeCancelButton();
+			reloadFieldsFilter();
 
 		});
 	}
@@ -301,6 +300,7 @@ public class MainWindowController {
 
 	}
 
+	// :TODO przeniesc funkcje do readera
 	private void filterRecords() throws IOException {
 
 		params.keySet();
@@ -322,33 +322,71 @@ public class MainWindowController {
 
 			for (int i = 0; i < organismNameHashMap.get(params.get("species")).size(); i++) {
 				record = reader.getNextRecord();
-				resultList.add(record);
+				recordsList.add(record);
 			}
 		}
 
 		// przeszukanie po ID jezeli wypelniony gatunek oraniczamy liste przeszukania
-		// String id = params.get("id");
-		// Long pos;
-		// if (recordsList.size() > 0) {
-		//
-		// for (FastaRecord rec : recordsList) {
-		//
-		// pos = reader.getStartPos(rec);
-		// record = reader.getRecordContainsId(id, pos);
-		// if (record != null)
-		// resultList.add(record);
-		//
-		// }
-		// } else {// jezeli niewypelniony gatunek: //TODO: poprawic!
-		// for (String key : idHashMap.keySet()) {
-		//
-		// pos = reader.getStartPos(Math.toIntExact(idHashMap.get(key)));
-		// record = reader.getRecordContainsId(id, pos);
-		// if (record != null)
-		// resultList.add(record);
-		// }
-		// }
-		// szukanie po nazwie
+		String id = params.get("id");
+		Long pos;
+		if (id != null) {
+			if (recordsList.size() > 0) {
+
+				for (FastaRecord rec : recordsList) {
+
+					pos = reader.getStartPos(rec);
+					record = reader.getRecordContainsId(id, pos);
+					if (record != null)
+						resultList.add(record);
+
+				}
+			} else {// jezeli niewypelniony gatunek:
+				for (String key : idHashMap.keySet()) {
+
+					pos = idHashMap.get(key);
+					record = reader.getRecordContainsId(id, pos);
+					if (record != null)
+						resultList.add(record);
+				}
+			}
+		}
+
+		// szukanie po nazwie je¿eli wypelniony agtunek zawezamy liste
+		String name = params.get("name");
+
+		if (name != null) {
+			if (recordsList.size() > 0) {
+
+				for (FastaRecord rec : recordsList) {
+
+					pos = reader.getStartPos(rec);
+					record = reader.getRecordContainsName(name, pos);
+					if (record != null)
+						resultList.add(record);
+				}
+			} else if (resultList.size() > 0) { // je¿eli wyeplnione id
+
+				recordsList.clear();
+
+				for (FastaRecord rec : resultList) {
+
+					pos = reader.getStartPos(rec);
+					record = reader.getRecordContainsName(name, pos);
+					if (record != null)
+						recordsList.add(record);
+				}
+
+			} else { // jezeli niewypelniony gatunek i id
+				for (String key : nameHashMap.keySet()) {
+
+					pos = nameHashMap.get(key);
+					record = reader.getRecordContainsName(name, pos);
+					if (record != null)
+						resultList.add(record);
+				}
+			}
+
+		}
 
 		showResultInfo(resultList.size());
 		reader.close();
