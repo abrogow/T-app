@@ -6,46 +6,48 @@ import java.util.regex.Matcher;
 
 import model.FastaRecord;
 
-public class FastaUniprotRecordParser extends FastaRecordParser
-{
-	private static final String		REGEXP = "\\>([a-zA-Z]*)\\|(.*?)\\|(.*?) (.*?)OS=(.*?)GN=(.*?)PE=(.*?)SV=([1-9]*)(.*)";
-	private static final String[]	KEYS = { "identifier", "enteryName", "proteinName", "organismName", "geneName", "proteinExistence","sequenceVersion", "sequence" };
+public class FastaUniprotRecordParser extends FastaRecordParser {
+	private static final String REGEXP = "\\>([a-zA-Z]*)\\|(.*?)\\|(.*?) (.*?)OS=(.*?)GN=(.*?)PE=(.*?)SV=([1-9]*)(.*)";
+	private static final String[] KEYS = { "identifier", "enteryName", "proteinName", "organismName", "geneName",
+			"proteinExistence", "sequenceVersion", "sequence" };
 
-	private Map<String, String> paramsMap=null;
-	
+	private Map<String, String> paramsMap = null;
+
 	public FastaUniprotRecordParser() {
 		super();
 		this.paramsMap = new HashMap<String, String>();
 	}
-	
+
 	@Override
 	public FastaRecord parse(String recordStr) {
 		FastaRecord fastaRecord = null;
-		
+
 		Matcher m = this.pattern.matcher(recordStr);
-		
+
 		paramsMap.clear();
-		
+
+		// zmienic na matches tylko grupe 1 i 2 reszta opcjonalnie
 		if (m.matches()) {
 			for (int i = 0; i < m.groupCount() - 1; i++) {
 				paramsMap.put(KEYS[i], m.group(i + 2));
 			}
 
-			fastaRecord = new FastaRecord(	paramsMap.get("identifier"), paramsMap.get("enteryName"),
-											paramsMap.get("proteinName"), paramsMap.get("organismName"), paramsMap.get("geneName"),
-											paramsMap.get("proteinExistence"), paramsMap.get("sequenceVersion"), paramsMap.get("sequence").replaceAll("\\s",""));
-			
-			int index=fastaRecord.getOrganismName().indexOf(" OX=");
-			if (index!=-1)
-				fastaRecord.setOrganismName(fastaRecord.getOrganismName().substring(0,index));
+			fastaRecord = new FastaRecord(paramsMap.get("identifier"), paramsMap.get("enteryName"),
+					paramsMap.get("proteinName"), paramsMap.get("organismName"), paramsMap.get("geneName"),
+					paramsMap.get("proteinExistence"), paramsMap.get("sequenceVersion"),
+					paramsMap.get("sequence").replaceAll("\\s", ""));
+
+			int index = fastaRecord.getOrganismName().indexOf(" OX=");
+			if (index != -1)
+				fastaRecord.setOrganismName(fastaRecord.getOrganismName().substring(0, index));
 		}
-		
-		return(fastaRecord);
+
+		return (fastaRecord);
 	}
 
 	@Override
 	public String getRegExp() {
-		return(REGEXP);
+		return (REGEXP);
 	}
 
 }

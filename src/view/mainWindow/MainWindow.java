@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import Controller.MainWindowController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -31,13 +32,15 @@ public class MainWindow {
 		FilesTable filesTable = new FilesTable();
 		RecordsTable recordsTable = new RecordsTable();
 		DownloadDBWindow download = new DownloadDBWindow();
+		CreateNewDBPane createNewDB = new CreateNewDBPane();
 
 		AddEditFileWindow addEditFileWindow = new AddEditFileWindow();
-		MainWindowController controller = new MainWindowController(buttons, filesTable, addEditFileWindow, filter);
+		MainWindowController controller = new MainWindowController(buttons, filesTable, addEditFileWindow, filter,
+				createNewDB);
 
 		DataBaseModel db = new DataBaseModel();
 
-		BorderPane root = initializeRoot(buttons, filesTable, recordsTable, filter);
+		BorderPane root = initializeRoot(buttons, filesTable, recordsTable, filter, createNewDB);
 		primaryStage.setScene(new Scene(root, 1000, 600));
 		primaryStage.setOnCloseRequest(event -> {
 
@@ -53,7 +56,7 @@ public class MainWindow {
 	}
 
 	public BorderPane initializeRoot(ButtonsGridPane buttons, FilesTable filesTable, RecordsTable recordsTable,
-			FilterPane filter) {
+			FilterPane filter, CreateNewDBPane createNewDB) {
 
 		BorderPane root = new BorderPane();
 		initializeMenu(root);
@@ -80,13 +83,11 @@ public class MainWindow {
 		anchorRecordsTable.setLeftAnchor(recordsTable, 0.0);
 		anchorRecordsTable.setBottomAnchor(recordsTable, 0.0);
 
-		// for filter
-		AnchorPane anchorFilter = new AnchorPane();
-		anchorFilter.getChildren().add(filter);
-		anchorFilter.setTopAnchor(filter, 0.0);
-		anchorFilter.setRightAnchor(filter, 0.0);
-		anchorFilter.setLeftAnchor(filter, 0.0);
-		// anchorFilter.setBottomAnchor(filter, 0.0);
+		// for newDBCreator and filter
+		VBox vBox = new VBox();
+		vBox.getChildren().add(filter);
+		vBox.getChildren().add(createNewDB);
+		vBox.setPadding(new Insets(20, 5, 30, 5));
 
 		// for buttons
 		AnchorPane anchorButtons = new AnchorPane();
@@ -96,7 +97,7 @@ public class MainWindow {
 		anchorButtons.setLeftAnchor(buttons, 0.0);
 		anchorButtons.setBottomAnchor(buttons, 0.0);
 
-		splitPane1.getItems().addAll(anchorFilesTable, anchorRecordsTable, anchorFilter);
+		splitPane1.getItems().addAll(anchorFilesTable, anchorRecordsTable, vBox);
 
 		ap.getChildren().add(splitPane1);
 		ap.setTopAnchor(splitPane1, 0.0);

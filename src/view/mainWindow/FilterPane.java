@@ -15,7 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class FilterPane extends TemplateGridPane {
+public class FilterPane extends GridPane {
 
 	private Label idLabel, nameLabel, speciesLabel, newFileLabel;
 	private ChoiceBox speciesChoiceBox;
@@ -25,7 +25,7 @@ public class FilterPane extends TemplateGridPane {
 
 	private String fileName;
 
-	private final List<String> species = Arrays.asList("Homo sapiens ");
+	private final List<String> species = Arrays.asList("", "Homo sapiens ");
 
 	public Button getSearchButton() {
 		return searchButton;
@@ -95,7 +95,7 @@ public class FilterPane extends TemplateGridPane {
 
 	public void addControls() {
 
-		Text sceneTitle = new Text("Filtry wyszukiwania");
+		Text sceneTitle = new Text("Filtry wyszukiwania:");
 		this.add(sceneTitle, 0, 0, 2, 1);
 
 		this.add(idLabel, 0, 1);
@@ -122,11 +122,14 @@ public class FilterPane extends TemplateGridPane {
 		this.setHgap(50);
 		this.setVgap(10);
 		this.setPadding(new Insets(5, 5, 5, 5));
+		this.setPrefSize(300, 100);
 	}
 
 	public void setProperties() {
 
 		// this.saveButton.setDisable(true);
+		this.setStyle("-fx-padding: 5;" + "-fx-border-style: solid inside;" + "-fx-border-width: 0.5;"
+				+ "-fx-border-insets: 5;" + "-fx-border-radius: 5;" + "-fx-border-color: grey;");
 	}
 
 	public Stage showStageWithFileName() {
