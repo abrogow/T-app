@@ -1,10 +1,44 @@
 package model.tools;
 
+//import model.File;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
+
+import model.FastaRecord;
+import model.builder.FastaRecordBuilder;
+import model.writer.Writer;
 
 final public class RandomizationTools {
 	public final static char AMINOACIDS[] = { 'L', 'A', 'G', 'S', 'V', 'E', 'K', 'I', 'T', 'R', 'D', 'P', 'N', 'F', 'Q',
 			'Y', 'M', 'H', 'C', 'W', 'U', 'X', 'B', 'Z', 'J', 'O' };
+
+	private final static String RANDOM_SEQUENCE = "Losowe sekwencje";
+	private final static String REVERSED_SEQUENCE = "Odwrócone sekwencje";
+
+	private Writer writer;
+	private FastaRecordBuilder builder;
+
+	public String getRandomRecord(FastaRecord record, String srcPath, Writer writer, String seqType)
+			throws IOException {
+
+		StringBuilder rec = new StringBuilder();
+		String lineSeparator = FileTools.getLineSeparator(new File(srcPath));
+		String desc = writer.getDescLine(record);
+		String seq = writer.getSequenceLine(record);
+		StringBuilder newSeq = new StringBuilder();
+		;
+
+		if (RANDOM_SEQUENCE.equals(seqType))
+			newSeq = new StringBuilder(getRandomSequence(seq));
+		if (REVERSED_SEQUENCE.equals(seqType))
+			newSeq = new StringBuilder(getReversedSequence(seq));
+		rec.append(desc);
+		rec.append(lineSeparator);
+		rec.append(newSeq.toString());
+
+		return rec.toString();
+	}
 
 	static public double[] getAminoacidProbs(String sequence) {
 		double probs[] = null;
@@ -33,6 +67,7 @@ final public class RandomizationTools {
 		return (distrib);
 	}
 
+	// losowe sekwencje
 	static public String getRandomSequence(String sequence) {
 		return (RandomizationTools.getRandomSequence(sequence.length(),
 				RandomizationTools.getAminoacidDistrib(sequence)));
@@ -58,6 +93,7 @@ final public class RandomizationTools {
 		return (new String(randSequence));
 	}
 
+	// odwrocone sekwencje
 	static public String getReversedSequence(String sequence) {
 		String revSeq = null;
 

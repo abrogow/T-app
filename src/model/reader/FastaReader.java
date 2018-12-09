@@ -382,6 +382,8 @@ public class FastaReader {
 
 	public void setPositionsMapFromPositionsList() {
 
+		if (fileSize == null)
+			setFileSize();
 		int j = 1;
 		for (int i = 0; i < positionsList.size(); i++) {
 

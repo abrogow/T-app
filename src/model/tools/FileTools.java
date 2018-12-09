@@ -1,4 +1,5 @@
 package model.tools;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,42 +9,41 @@ import java.io.IOException;
  */
 public class FileTools {
 
-	private FileTools() {}
-	
+	private FileTools() {
+	}
+
 	/**
 	 * 
 	 * @param path
 	 * @return
 	 */
-	public static String getExtension(String path)
-	{
+	public static String getExtension(String path) {
 		String extension = "";
 		int i = path.lastIndexOf(".");
 		if (i > 0) {
 			extension = path.substring(i + 1);
 		}
-		//System.out.println("Extension:" + extension);
+		// System.out.println("Extension:" + extension);
 		return extension;
 	}
-	
+
 	/**
 	 * 
 	 * @param filepath
 	 * @return
 	 */
-	public static String removeExtension(String filepath)
-	{
-		String	newFilepath=null;
-		int		index=-1;
+	public static String removeExtension(String filepath) {
+		String newFilepath = null;
+		int index = -1;
 
-		if ((index=filepath.lastIndexOf("."))!=-1)
-			newFilepath=filepath.substring(0,index);
+		if ((index = filepath.lastIndexOf(".")) != -1)
+			newFilepath = filepath.substring(0, index);
 		else
-			newFilepath=filepath;
-		
-		return(newFilepath);
+			newFilepath = filepath;
+
+		return (newFilepath);
 	}
-	
+
 	/**
 	 * 
 	 * @param file
@@ -53,37 +53,28 @@ public class FileTools {
 	public static String getLineSeparator(File file) throws IOException {
 		char current;
 		String lineSeparator = "";
-		
+
 		FileInputStream fis = new FileInputStream(file);
-		try
-		{
-			while (fis.available() > 0)
-			{
+		try {
+			while (fis.available() > 0) {
 				current = (char) fis.read();
-				if ((current == '\n') || (current == '\r'))
-				{
+				if ((current == '\n') || (current == '\r')) {
 					lineSeparator += current;
-					if (fis.available() > 0)
-					{
+					if (fis.available() > 0) {
 						char next = (char) fis.read();
-						if ((next != current) && ((next == '\r') || (next == '\n')))
-						{
+						if ((next != current) && ((next == '\r') || (next == '\n'))) {
 							lineSeparator += next;
 						}
 					}
 					return lineSeparator;
 				}
 			}
-		}
-		finally
-		{
-			if (fis!=null)
-			{
+		} finally {
+			if (fis != null) {
 				fis.close();
 			}
 		}
 		return null;
 	}
-	
 
 }

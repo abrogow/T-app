@@ -118,7 +118,6 @@ public class MainWindow {
 		MenuBar mainMenu = new MenuBar();
 
 		Menu menu = new Menu("Menu");
-		MenuItem createDB = new MenuItem("Stwórz now¹ bazê danych");
 		MenuItem downloadDB = new MenuItem("Œci¹gnij bazê danych");
 		MenuItem exit = new MenuItem("Zamknij");
 		exit.setAccelerator(KeyCodeCombination.keyCombination("ALT+F4"));
@@ -127,7 +126,7 @@ public class MainWindow {
 				System.exit(0);
 			}
 		});
-		menu.getItems().addAll(exit, createDB, downloadDB);
+		menu.getItems().addAll(exit, downloadDB);
 		mainMenu.getMenus().addAll(menu);
 
 		topContainer.getChildren().add(mainMenu);

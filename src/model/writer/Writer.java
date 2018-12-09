@@ -19,6 +19,10 @@ public abstract class Writer {
 	private File resultFile;
 	private PrintWriter pw;
 
+	public Writer() {
+
+	}
+
 	public abstract String getDescLine(FastaRecord record);
 
 	public abstract String getSequenceLine(FastaRecord record);
@@ -27,14 +31,18 @@ public abstract class Writer {
 
 		if (record != null) {
 
-			// poprawic//
 			String descLine = getDescLine(record);
 			String sequence = getSequenceLine(record);
 
-			pw.println(descLine);
-			pw.println(sequence);
+			saveStringRecordIntoFile(descLine, sequence);
 
 		}
+	}
+
+	public void saveStringRecordIntoFile(String descLine, String sequence) {
+
+		pw.println(descLine);
+		pw.println(sequence);
 	}
 
 	public void createAndOpenFile(String fileName, String path) throws FileNotFoundException {

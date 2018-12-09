@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu Dec 06 12:57:39 CET 2018:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0167-8361-6b86-00000d726f10 
+Sat Dec 08 19:55:24 CET 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0167-8f2c-9b89-00000d61fd70 
 on database directory C:\Users\BROGO\Documents\Eclipse workspace\T_app\Fasta_DB with class loader sun.misc.Launcher$AppClassLoader@18b4aac2 
 Loaded from file:/C:/Users/BROGO/Documents/Eclipse%20workspace/OSM2/libs/derby.jar
 java.vendor=Oracle Corporation
@@ -12,5 +12,5 @@ os.version=10.0
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Thu Dec 06 12:57:48 CET 2018:
-Shutting down instance a816c00e-0167-8361-6b86-00000d726f10 on database directory C:\Users\BROGO\Documents\Eclipse workspace\T_app\Fasta_DB with class loader sun.misc.Launcher$AppClassLoader@18b4aac2 
+Sat Dec 08 20:14:30 CET 2018:
+Shutting down instance a816c00e-0167-8f2c-9b89-00000d61fd70 on database directory C:\Users\BROGO\Documents\Eclipse workspace\T_app\Fasta_DB with class loader sun.misc.Launcher$AppClassLoader@18b4aac2 

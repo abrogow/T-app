@@ -7,6 +7,10 @@ public class UniprotWriter extends Writer {
 	private String descLine;
 	private String sequence;
 
+	public UniprotWriter() {
+		super();
+	}
+
 	@Override
 	public String getSequenceLine(FastaRecord record) {
 

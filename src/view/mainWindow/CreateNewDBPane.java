@@ -21,10 +21,10 @@ public class CreateNewDBPane extends GridPane {
 	private ChoiceBox DBTypeChoiceBox;
 	private Label nameDBLabel, DBTypeLabel;
 	private TextField nameDBTextField;
-	private RadioButton alternateRecords, nonalternateRecords;
+	private RadioButton alternateRecords, nonalternateRecords, selectedRadioButton;
 	private ToggleGroup savingTypeToggleGroup;
 
-	private final List<String> types = Arrays.asList("", "Losowe sekwencje");
+	private final List<String> types = Arrays.asList("Losowe sekwencje", "Odwrócone sekwencje");
 
 	public ToggleGroup getSavingTypeToggleGroup() {
 		return savingTypeToggleGroup;
@@ -44,6 +44,10 @@ public class CreateNewDBPane extends GridPane {
 
 	public RadioButton getAlternateRecords() {
 		return alternateRecords;
+	}
+
+	public RadioButton getSelectedRadioButton() {
+		return selectedRadioButton;
 	}
 
 	public RadioButton getNonalternateRecords() {
@@ -80,17 +84,17 @@ public class CreateNewDBPane extends GridPane {
 
 	public void addControls() {
 
-		Text sceneTitle = new Text("Torzenie nowej bazy:");
+		Text sceneTitle = new Text("Tworzenie nowej bazy:");
 		this.add(sceneTitle, 0, 0, 2, 1);
 
 		this.add(nameDBLabel, 0, 1);
 		this.add(nameDBTextField, 1, 1);
 		this.add(DBTypeLabel, 0, 2);
 		this.add(DBTypeChoiceBox, 1, 2);
-		this.add(alternateRecords, 0, 4);
-		this.add(nonalternateRecords, 0, 3);
+		this.add(alternateRecords, 0, 4, 2, 1);
+		this.add(nonalternateRecords, 0, 3, 2, 1);
 
-		this.add(saveDBButton, 0, 5);
+		this.add(saveDBButton, 1, 5);
 
 	}
 
