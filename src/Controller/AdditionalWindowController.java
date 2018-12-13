@@ -3,7 +3,13 @@ package Controller;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -78,27 +84,11 @@ public class AdditionalWindowController {
 
 			if (isReaderSet()) {
 				getPathFromFileDialog();
-				// readAndSavePositions();
-				///////////////////////////
-
-				FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
-				FastaIndexBuilder indexBuilder = new FastaIndexBuilder(path, parser);
-				try {
-					indexBuilder.buildIndex();
-					FastaReader reader = new FastaReader(path, parser);
-					reader.open();
-
-					indexBuilder.createMaps();
-					indexBuilder.saveMaps();
-					reader.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				////////////////////////////////
+				// setProgressIndicator();
+				readAndSavePositions();
 				addEditFileWindow.getPositions_PathTextField().setText(path);
 				addEditFileWindow.getNameTextField().setText(fileName);
+
 			} else {
 				showAlertInfo();
 				return;
@@ -204,65 +194,56 @@ public class AdditionalWindowController {
 		fileName = selectedDirectory.getName();
 	}
 
-	// funkcja czyta plik, zapisuje pozycje do pliku, id, nazwe i gatunek do
-	// odpowiednich map
-	// private void readAndSavePositions() {
-	// uniprotReader = new UniprotReader(addEditFileWindow);
-	// try {
-	// if (path != null) {
-	// ArrayList<Long> positionsList = uniprotReader.readPositions(path);
-	// uniprotReader.savePositionsToFile(positionsList);
-	// uniprotReader.savePositionsAndIdToMap(positionsList);
-	// uniprotReader.saveMapsToFile();
-	// }
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
+	private void readAndSavePositions() {
 
-	// Task<Void> task = new Task<Void>() {
-	// @Override
-	// public Void call() {
-	// readAndSavePositions();
-	// addEditFileWindow.getPositions_PathTextField().setText(path);
-	// addEditFileWindow.getNameTextField().setText(fileName);
-	// return null;
-	// }
-	// };
+		FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
+		FastaIndexBuilder indexBuilder = new FastaIndexBuilder(path, parser);
+		try {
+			indexBuilder.buildIndex();
+			FastaReader reader = new FastaReader(path, parser);
+			reader.open();
 
-	// private void setProgressIndicator() {
-	//
-	// task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-	// public void handle(WorkerStateEvent t) {
-	// progressStage.close();
-	// }
-	// });
-	//
-	// th = new Thread(task);
-	// th.setDaemon(true);
-	// th.start();
-	//
-	// ProgressIndicator progressIndicator = new ProgressIndicator();
-	//
-	// StackPane root = new StackPane();
-	// root.getChildren().addAll(progressIndicator);
-	//
-	// Scene scene = new Scene(root, 400, 300);
-	// progressStage = new Stage();
-	// progressStage.setTitle("£adowanie...");
-	//
-	// progressStage.setScene(scene);
-	// progressStage.show();
-	// }
-
-	@SuppressWarnings("deprecation")
-	private void closeProgressIndicatior() {
-
-		if (progressStage != null)
-			progressStage.close();
-
-		th.stop();
+			indexBuilder.createMaps();
+			indexBuilder.saveMaps();
+			reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
+	Task<Void> task = new Task<Void>() {
+		@Override
+		public Void call() {
+			readAndSavePositions();
+			addEditFileWindow.getPositions_PathTextField().setText(path);
+			addEditFileWindow.getNameTextField().setText(fileName);
+			return null;
+		}
+	};
+
+	private void setProgressIndicator() {
+
+		task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+			public void handle(WorkerStateEvent t) {
+				progressStage.close();
+			}
+		});
+
+		th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
+
+		ProgressIndicator progressIndicator = new ProgressIndicator();
+
+		StackPane root = new StackPane();
+		root.getChildren().addAll(progressIndicator);
+
+		Scene scene = new Scene(root, 400, 300);
+		progressStage = new Stage();
+		progressStage.setTitle("£adowanie...");
+
+		progressStage.setScene(scene);
+		progressStage.show();
+	}
 }

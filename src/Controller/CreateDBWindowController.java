@@ -5,8 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import model.FastaRecord;
 import model.File;
 import model.reader.FastaIndexBuilder;
@@ -33,6 +40,10 @@ public class CreateDBWindowController {
 	private RandomizationTools randomization;
 	private String saveType;
 	private Writer writer;
+	private List<FastaRecord> filterList;
+	private Stage progressStage;
+	private Thread th;
+	private FilterWindowController fwc;
 
 	private final static String RANDOM_SEQUENCE = "Losowe sekwencje";
 	private final static String REVERSED_SEQUENCE = "Odwrócone sekwencje";
@@ -40,10 +51,12 @@ public class CreateDBWindowController {
 	private final static String ALTERNATE_SAVING = "Tylko rekordy z nowej bazy";
 	private static final String NONALTERNATE_SAVING = "Naprzemian- rekordy z nowej bazy, redkordy ze starej bazy";
 
-	public CreateDBWindowController(CreateNewDBPane createNewDB, FilesTable filesTable) {
+	public CreateDBWindowController(CreateNewDBPane createNewDB, FilesTable filesTable,
+			FilterWindowController filterController) {
 
 		this.createNewDB = createNewDB;
 		this.filesTable = filesTable;
+		this.fwc = filterController;
 	}
 
 	void initializeHandlers() {
@@ -57,14 +70,15 @@ public class CreateDBWindowController {
 
 			if (ifValuesSelected()) {
 
+				// setProgressIndicator();
 				try {
 					createNewDB();
-					showResultInfo();
-					reloadFileds();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				showResultInfo();
+				reloadFileds();
 
 			} else {
 				showAlertInfoForNoValues();
@@ -108,20 +122,39 @@ public class CreateDBWindowController {
 		// otwarcie pliku
 		reader.openFile();
 
-		for (String key : idHashMap.keySet()) {
+		// dla filtowanych rekordów
 
-			record = reader.getRecord(key);
-			newRecString = randomization.getRandomRecord(record, srcPath, writer, DBType);
-			newRec = parser.parse(newRecString);
-			resultList.add(newRec);
+		if (filterList.size() > 0 && fwc.isCreateNewDBSelected()) {
 
-			// jezeli zapisywanie naprzemian ze starym rekordem
-			if (NONALTERNATE_SAVING.equals(saveType))
-				resultList.add(record);
+			for (FastaRecord rec : filterList) {
+
+				newRecString = randomization.getRandomRecord(rec, srcPath, writer, DBType);
+				newRec = parser.parse(newRecString);
+				resultList.add(newRec);
+
+				// jezeli zapisywanie naprzemian ze starym rekordem
+				if (NONALTERNATE_SAVING.equals(saveType))
+					resultList.add(record);
+			}
+			writer.saveRecordsToFile(resultList, fileName, srcPath);
+			reader.close();
+		} else {
+			// dla pliku
+			for (String key : idHashMap.keySet()) {
+
+				record = reader.getRecord(key);
+				newRecString = randomization.getRandomRecord(record, srcPath, writer, DBType);
+				newRec = parser.parse(newRecString);
+				resultList.add(newRec);
+
+				// jezeli zapisywanie naprzemian ze starym rekordem
+				if (NONALTERNATE_SAVING.equals(saveType))
+					resultList.add(record);
+			}
+
+			writer.saveRecordsToFile(resultList, fileName, srcPath);
+			reader.close();
 		}
-
-		writer.saveRecordsToFile(resultList, fileName, srcPath);
-		reader.close();
 
 	}
 
@@ -131,12 +164,19 @@ public class CreateDBWindowController {
 		fileName = createNewDB.getNameDBTextField().getText();
 		RadioButton selectedRadioButton = (RadioButton) createNewDB.getSavingTypeToggleGroup().getSelectedToggle();
 		saveType = selectedRadioButton.getText();
+
+		filterList = fwc.getResultList();
+
 		if (!createNewDB.getDBTypeChoiceBox().getSelectionModel().isEmpty())
 			DBType = createNewDB.getDBTypeChoiceBox().getValue().toString();
 
-		if (file != null & !("").equals(fileName) & !createNewDB.getDBTypeChoiceBox().getSelectionModel().isEmpty()
-				& !("").equals(saveType))
-			return true;
+		if (file != null | filterList.size() > 0) {
+			if (!("").equals(fileName) & !createNewDB.getDBTypeChoiceBox().getSelectionModel().isEmpty()
+					& !("").equals(saveType))
+				return true;
+
+		}
+
 		return false;
 	}
 
@@ -169,6 +209,39 @@ public class CreateDBWindowController {
 		alert.setHeaderText(null);
 		alert.setContentText("Nowa baza zosta³a utworzona!");
 		alert.showAndWait();
+	}
+
+	Task<Void> task = new Task<Void>() {
+		@Override
+		public Void call() throws IOException {
+			createNewDB();
+			return null;
+		}
+	};
+
+	private void setProgressIndicator() {
+
+		task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+			public void handle(WorkerStateEvent t) {
+				progressStage.close();
+			}
+		});
+
+		th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
+
+		ProgressIndicator progressIndicator = new ProgressIndicator();
+
+		StackPane root = new StackPane();
+		root.getChildren().addAll(progressIndicator);
+
+		Scene scene = new Scene(root, 400, 300);
+		progressStage = new Stage();
+		progressStage.setTitle("£adowanie...");
+
+		progressStage.setScene(scene);
+		progressStage.show();
 	}
 
 }

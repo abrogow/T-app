@@ -3,8 +3,9 @@ package view.mainWindow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 
-public class ButtonsGridPane extends TemplateGridPane {
+public class ButtonsGridPane extends GridPane {
 
 	private Button addButton, removeButton, editButton;
 
@@ -38,7 +39,6 @@ public class ButtonsGridPane extends TemplateGridPane {
 		this.setPadding(new Insets(5, 5, 5, 5));
 	}
 
-	@Override
 	public void setProperties() {
 		// TODO Auto-generated method stub
 

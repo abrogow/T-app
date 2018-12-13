@@ -59,7 +59,8 @@ public class MainWindowController {
 		filterController.initializeHandlers();
 
 		// przyciski do tworzenia nowej bazy
-		CreateDBWindowController createNewDBController = new CreateDBWindowController(createNewDB, filesTable);
+		CreateDBWindowController createNewDBController = new CreateDBWindowController(createNewDB, filesTable,
+				filterController);
 		createNewDBController.initializeHandlers();
 	}
 

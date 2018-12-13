@@ -7,7 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import model.FastaRecord;
 import model.File;
@@ -34,6 +40,9 @@ public class FilterWindowController {
 	private FilesTable filesTable;
 	private String fileName;
 
+	private Stage progressStage;
+	private Thread th;
+
 	public FilterWindowController(FilterPane filterPane, FilesTable filesTable) {
 
 		this.filterPane = filterPane;
@@ -54,51 +63,23 @@ public class FilterWindowController {
 
 			if (file != null) {
 
-				// get params
-				getParamsFromFields();
-				srcPath = file.getDstPath();
-
-				// load hashmaps
-				FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
-				FastaIndexBuilder indexBuilder = new FastaIndexBuilder(srcPath, parser);
-				reader = new FastaReader(srcPath, parser);
-				reader.setFileSize();
-
-				String idHMPath = indexBuilder.getResultFilesPath(srcPath, "idHashMap");
-				String nameHMPath = indexBuilder.getResultFilesPath(srcPath, "nameHashMap");
-				String organismHMPath = indexBuilder.getResultFilesPath(srcPath, "organismNameHashMap");
-
-				try {
-					try {
-						idHashMap = reader.readIdIndex(idHMPath);
-						idHashMap.keySet();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					organismNameHashMap = reader.readOrganismIndex(organismHMPath);
-					organismNameHashMap.keySet();
-					nameHashMap = reader.readIdIndex(nameHMPath);
-					nameHashMap.keySet();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				// set hash maps in reader
-				reader.setMaps(organismNameHashMap, idHashMap, nameHashMap);
-				// filtering
+				setParams();
 				try {
 					filterRecords();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				System.out.println("Szukanie skonczone");
 
 			} else {
 				showAlertInfoForNoFile();
+				return;
 			}
 
+			if (isCreateNewDBSelected()) {
+				return;
+			}
 			filterPane.getSaveButton().setDisable(false);
 
 		});
@@ -161,11 +142,7 @@ public class FilterWindowController {
 	// :TODO przeniesc funkcje do readera
 	private void filterRecords() throws IOException {
 
-		params.keySet();
-
 		resultList = new ArrayList<FastaRecord>();
-
-		List<FastaRecord> recordsList = new ArrayList<FastaRecord>();
 		FastaRecord record = null;
 
 		// ustawienie positionsList i posiitonsMap
@@ -176,80 +153,53 @@ public class FilterWindowController {
 		reader.openFile();
 
 		// przeszukanie po gatunkach
-		if (reader.setOrganism(params.get("species")) == true) {
+		reader.setOrganism(params.get("species"));
 
-			for (int i = 0; i < organismNameHashMap.get(params.get("species")).size(); i++) {
-				record = reader.getNextRecord();
-				recordsList.add(record);
-			}
-		}
+		reader.setIdFilter(params.get("id"));
+		reader.setNameFilter(params.get("name"));
 
-		// przeszukanie po ID jezeli wypelniony gatunek oraniczamy liste przeszukania
-		String id = params.get("id");
-		Long pos;
-		if (id != null) {
-			if (recordsList.size() > 0) {
+		while ((record = reader.getNextRecord()) != null)
+			resultList.add(record);
 
-				for (FastaRecord rec : recordsList) {
-
-					pos = reader.getStartPos(rec);
-					record = reader.getRecordContainsId(id, pos);
-					if (record != null)
-						resultList.add(record);
-
-				}
-			} else {// jezeli niewypelniony gatunek:
-				for (String key : idHashMap.keySet()) {
-
-					pos = idHashMap.get(key);
-					record = reader.getRecordContainsId(id, pos);
-					if (record != null)
-						resultList.add(record);
-				}
-			}
-		}
-
-		// szukanie po nazwie je¿eli wypelniony agtunek zawezamy liste
-		String name = params.get("name");
-
-		if (name != null) {
-			if (recordsList.size() > 0 && resultList.size() == 0) {
-
-				for (FastaRecord rec : recordsList) {
-
-					pos = reader.getStartPos(rec);
-					record = reader.getRecordContainsName(name, pos);
-					if (record != null)
-						resultList.add(record);
-				}
-			} else if (resultList.size() > 0) { // je¿eli wyeplnione id
-
-				recordsList.clear();
-
-				for (FastaRecord rec : resultList) {
-
-					pos = reader.getStartPos(rec);
-					record = reader.getRecordContainsName(name, pos);
-					if (record != null)
-						recordsList.add(record);
-				}
-
-			} else { // jezeli niewypelniony gatunek i id
-				for (String key : nameHashMap.keySet()) {
-
-					pos = nameHashMap.get(key);
-					record = reader.getRecordContainsName(name, pos);
-					if (record != null)
-						resultList.add(record);
-				}
-			}
-
-		}
-
-		if (resultList.size() == 0 && recordsList.size() > 0)
-			resultList = recordsList;
-		showResultInfo(resultList.size());
 		reader.close();
+	}
+
+	private void setParams() {
+
+		// get params
+		getParamsFromFields();
+		srcPath = file.getDstPath();
+
+		// load hashmaps
+		FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
+		FastaIndexBuilder indexBuilder = new FastaIndexBuilder(srcPath, parser);
+		reader = new FastaReader(srcPath, parser);
+		reader.setFileSize();
+
+		String idHMPath = indexBuilder.getResultFilesPath(srcPath, "idHashMap");
+		String nameHMPath = indexBuilder.getResultFilesPath(srcPath, "nameHashMap");
+		String organismHMPath = indexBuilder.getResultFilesPath(srcPath, "organismNameHashMap");
+
+		try {
+			try {
+				idHashMap = reader.readIdIndex(idHMPath);
+				idHashMap.keySet();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			organismNameHashMap = reader.readOrganismIndex(organismHMPath);
+			organismNameHashMap.keySet();
+			nameHashMap = reader.readIdIndex(nameHMPath);
+			nameHashMap.keySet();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// set hash maps in reader
+		reader.setMaps(organismNameHashMap, idHashMap, nameHashMap);
+
 	}
 
 	private void reloadFieldsFilter() {
@@ -298,4 +248,55 @@ public class FilterWindowController {
 		alert.setContentText("Nie zaznaczono pliku!");
 		alert.showAndWait();
 	}
+
+	Task<Void> task = new Task<Void>() {
+		@Override
+		public Void call() {
+			try {
+				filterRecords();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+	};
+
+	private void setProgressIndicator() {
+
+		task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+			public void handle(WorkerStateEvent t) {
+				progressStage.close();
+			}
+		});
+
+		th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
+
+		ProgressIndicator progressIndicator = new ProgressIndicator();
+
+		StackPane root = new StackPane();
+		root.getChildren().addAll(progressIndicator);
+
+		Scene scene = new Scene(root, 400, 300);
+		progressStage = new Stage();
+		progressStage.setTitle("£adowanie...");
+
+		progressStage.setScene(scene);
+		progressStage.show();
+	}
+
+	public List<FastaRecord> getResultList() {
+		return resultList;
+	}
+
+	public boolean isCreateNewDBSelected() {
+
+		if (filterPane.getCreateNewDB().isSelected())
+			return true;
+		else
+			return false;
+	}
+
 }

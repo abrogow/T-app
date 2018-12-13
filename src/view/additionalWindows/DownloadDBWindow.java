@@ -7,9 +7,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import view.mainWindow.TemplateGridPane;
+import javafx.scene.layout.GridPane;
 
-public class DownloadDBWindow extends TemplateGridPane {
+public class DownloadDBWindow extends GridPane {
 
 	private Button saveButton, cancelButton;
 	private Label dbLabel, adressLabel;
@@ -59,7 +59,6 @@ public class DownloadDBWindow extends TemplateGridPane {
 
 	}
 
-	@Override
 	public void setProperties() {
 		adressTextField.setDisable(true);
 

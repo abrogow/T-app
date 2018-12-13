@@ -37,6 +37,10 @@ public class FastaReader {
 
 	private ArrayList<Long> organismPositionsList = null;
 
+	// parametry do filtrowania
+	private String idFilter;
+	private String nameFilter;
+
 	/**
 	 * 
 	 * @param filePath
@@ -44,6 +48,14 @@ public class FastaReader {
 	public FastaReader(String filePath, FastaRecordParser recordParser) {
 		this.path = filePath;
 		this.parser = recordParser;
+	}
+
+	public void setIdFilter(String idFilter) {
+		this.idFilter = idFilter;
+	}
+
+	public void setNameFilter(String nameFilter) {
+		this.nameFilter = nameFilter;
 	}
 
 	/**
@@ -135,10 +147,36 @@ public class FastaReader {
 	public FastaRecord getNextRecord() {
 		FastaRecord record = null;
 
-		if (this.hasNextRecord())
+		while (true) {
+			if (!this.hasNextRecord())
+				return null;
+
 			record = this.getRecord(this.currentRecord + 1);
 
-		return (record);
+			if (idFilter != null && !ifRecordContainsId(record))
+				continue;
+
+			if (nameFilter != null && !ifRecordContainsName(record))
+				continue;
+
+			return record;
+		}
+	}
+
+	public boolean ifRecordContainsId(FastaRecord rec) {
+
+		if (rec.getIdentyfier().contains(idFilter))
+			return true;
+		else
+			return false;
+	}
+
+	public boolean ifRecordContainsName(FastaRecord rec) {
+
+		if (rec.getEnteryName().contains(nameFilter))
+			return true;
+		else
+			return false;
 	}
 
 	/**

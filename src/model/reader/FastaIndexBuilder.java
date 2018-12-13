@@ -64,11 +64,9 @@ public class FastaIndexBuilder {
 
 		String line = null, lineSeparator = null;
 		long processedChars = 0;
-
 		lineSeparator = FileTools.getLineSeparator(new File(this.path));
 
 		this.openInputFile();
-
 		this.idHashMap = new LinkedHashMap<String, Long>();
 		this.nameHashMap = new LinkedHashMap<String, Long>();
 		this.organismNameHashMap = new LinkedHashMap<String, ArrayList<Long>>();
@@ -76,13 +74,10 @@ public class FastaIndexBuilder {
 		while ((line = this.reader.readLine()) != null) {
 			if (line.charAt(0) == '>') {
 				long position = processedChars;
-
 				FastaRecord record = this.parser.parse(line);
-
 				if (record != null) {
 					this.idHashMap.put(record.getIdentyfier(), position);
 					this.nameHashMap.put(record.getEnteryName(), position);
-
 					ArrayList<Long> list = null;
 					if ((list = this.organismNameHashMap.get(record.getOrganismName())) == null)
 						this.organismNameHashMap.put(record.getOrganismName(), (list = new ArrayList<>()));
@@ -91,8 +86,8 @@ public class FastaIndexBuilder {
 			}
 			processedChars += line.length() + lineSeparator.length();
 		}
-
 		this.closeInputFile();
+
 	}
 
 	/**

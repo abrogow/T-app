@@ -69,7 +69,7 @@ public class MainWindow {
 
 		// for filestable
 		AnchorPane anchorFilesTable = new AnchorPane();
-		anchorFilesTable.getChildren().add(filesTable);
+		anchorFilesTable.getChildren().addAll(filesTable);
 		anchorFilesTable.setTopAnchor(filesTable, 0.0);
 		anchorFilesTable.setRightAnchor(filesTable, 0.0);
 		anchorFilesTable.setLeftAnchor(filesTable, 0.0);

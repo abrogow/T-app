@@ -7,16 +7,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import model.File;
 import model.dataBase.DataBaseModel;
 
-public class FilesTable extends TemplateTable {
+public class FilesTable extends VBox {
 
 	private TableColumn<File, String> pathColumn;
 	protected TableColumn<File, String> idColumn;
 	protected TableColumn<File, String> nameColumn;
 	private TableView<File> filesTable;
 	private ObservableList<File> data = FXCollections.observableArrayList();
+	protected ScrollPane scrollPane;
 
 	public FilesTable() {
 

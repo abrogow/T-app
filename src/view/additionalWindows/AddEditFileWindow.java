@@ -24,9 +24,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.File;
 import view.mainWindow.FilesTable;
-import view.mainWindow.TemplateGridPane;
 
-public class AddEditFileWindow extends TemplateGridPane {
+public class AddEditFileWindow extends GridPane {
 
 	private Label nameLabel, descriptionLabel, id_DBLabel, version_DBLabel, sequence_idLabel, sequence_nameLabel,
 			rand_sequenceLabel, prefixLabel, rand_typeLabel, positions_pathLabel;;
@@ -60,7 +59,6 @@ public class AddEditFileWindow extends TemplateGridPane {
 
 	}
 
-	@Override
 	public void createControls() {
 
 		nameLabel = new Label("Nazwa pliku FASTA");
@@ -95,7 +93,6 @@ public class AddEditFileWindow extends TemplateGridPane {
 		cancelButton = new Button("Anuluj");
 	}
 
-	@Override
 	public void addControls() {
 
 		this.add(nameLabel, 0, 1);
@@ -127,7 +124,6 @@ public class AddEditFileWindow extends TemplateGridPane {
 
 	}
 
-	@Override
 	public void configureGrid() {
 		// TODO Auto-generated method stub
 		this.setAlignment(Pos.CENTER);
@@ -136,7 +132,6 @@ public class AddEditFileWindow extends TemplateGridPane {
 		this.setPadding(new Insets(5, 5, 5, 5));
 	}
 
-	@Override
 	public void setProperties() {
 		// TODO Auto-generated method stub
 		this.id_DBComboBox.setPrefWidth(200);

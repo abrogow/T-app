@@ -7,14 +7,16 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import model.Record;
 import model.dataBase.DataBaseModel;
 
-public class RecordsTable extends TemplateTable {
+public class RecordsTable extends VBox {
 
 	private TableView<Record> recordsTable;
 	private TableColumn<Record, String> idColumn;
 	private TableColumn<Record, String> nameColumn;
+	protected ScrollPane scrollPane;
 
 	private ObservableList<Record> data = FXCollections.observableArrayList();
 
