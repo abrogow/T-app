@@ -1,9 +1,7 @@
 package model.writer;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
@@ -103,11 +101,26 @@ public abstract class Writer {
 	 * 
 	 * @throws IOException
 	 */
-	public void replaceAndSaveRecord(String newRecord, int startPosition, String path) throws IOException {
+	public void replaceAndSaveRecord(String newRecord, Long startPos, Long endPos, String path) throws IOException {
 
-		raf = new RandomAccessFile(path, "wr");
-		BufferedReader buff = new BufferedReader(new FileReader(path));
-		raf.seek(startPosition);
+		raf = new RandomAccessFile(path, "rw");
+
+		int len = (int) (endPos - startPos);
+		byte buffer[] = new byte[len];
+
+		raf.seek(startPos);
+		raf.read(buffer, 0, len);
+
+		String recordStr = new String(buffer);
+
+		recordStr = recordStr.replace(recordStr, newRecord);
+
+		byte[] b = recordStr.getBytes();
+
+		raf.seek(startPos);
+		raf.write(b);
+
+		raf.close();
 
 	}
 }

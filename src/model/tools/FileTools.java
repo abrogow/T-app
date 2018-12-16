@@ -9,7 +9,7 @@ import java.io.IOException;
  */
 public class FileTools {
 
-	private FileTools() {
+	public FileTools() {
 	}
 
 	/**
@@ -50,7 +50,8 @@ public class FileTools {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String getLineSeparator(File file) throws IOException {
+	public static String getLineSeparator(String srcPath) throws IOException {
+		File file = new File(srcPath);
 		char current;
 		String lineSeparator = "";
 

@@ -64,7 +64,7 @@ public class FastaIndexBuilder {
 
 		String line = null, lineSeparator = null;
 		long processedChars = 0;
-		lineSeparator = FileTools.getLineSeparator(new File(this.path));
+		lineSeparator = FileTools.getLineSeparator(this.path);
 
 		this.openInputFile();
 		this.idHashMap = new LinkedHashMap<String, Long>();

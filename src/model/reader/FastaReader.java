@@ -324,6 +324,14 @@ public class FastaReader {
 		return startPos;
 	}
 
+	public Long getEndPos(Long startPos) {
+		Long endPos = null;
+
+		if (positionsMap != null)
+			endPos = positionsMap.get(startPos);
+		return endPos;
+	}
+
 	/**
 	 * Czytanie rekordu o zadanej pozycji w pliku
 	 * 
@@ -417,7 +425,6 @@ public class FastaReader {
 
 		if (idHashMap != null) {
 			positionsList = new ArrayList<Long>();
-			positionsMap = new HashMap<Long, Long>();
 
 			for (Map.Entry<String, Long> entry : idHashMap.entrySet()) {
 				positionsList.add(entry.getValue());
@@ -432,6 +439,7 @@ public class FastaReader {
 		if (fileSize == null)
 			setFileSize();
 		int j = 1;
+		this.positionsMap = new HashMap<>();
 		for (int i = 0; i < positionsList.size(); i++) {
 
 			positionsMap.put(positionsList.get(i), positionsList.get(j) - 1);

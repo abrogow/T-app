@@ -1,10 +1,15 @@
 package Controller;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 
 import model.FastaRecord;
 import model.File;
+import model.reader.FastaReader;
+import model.reader.FastaRecordParser;
+import model.reader.FastaUniprotRecordParser;
+import model.tools.FileTools;
 import model.writer.UniprotWriter;
 import model.writer.Writer;
 import view.mainWindow.RecordPane;
@@ -45,6 +50,9 @@ public class RecordPaneController {
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			reloadFields();
 			recordPane.getRecordPane().setDisable(true);
@@ -83,24 +91,41 @@ public class RecordPaneController {
 		String name = recordPane.getNameTextField().getText();
 		String sequence = recordPane.getSequenceTextField().getText();
 
-		fastaRecord = recordTableController.getFastaRecord();
-
 		fastaRecord.setIdentifier(id);
 		fastaRecord.setEnteryName(name);
 		fastaRecord.setSequence(sequence);
 	}
 
-	private void saveRecord() throws FileNotFoundException {
+	private void saveRecord() throws IOException {
 
-		getNewRecord();
+		fastaRecord = recordTableController.getFastaRecord();
 		file = recordTableController.getFile();
 		srcPath = file.getDstPath();
 		String fileName = "";
+		StringBuilder recordString = new StringBuilder();
+
+		FastaRecordParser parser = new FastaUniprotRecordParser();
+		FastaReader reader = new FastaReader(srcPath, parser);
+		FileTools fileTools = new FileTools();
+		reader.readIndex();
+		this.idHashMap = reader.getIdHashMap();
+		reader.setPositionsListFromIdHashMap(idHashMap);
+		reader.setPositionsMapFromPositionsList();
+		reader.setRaf();
+
+		Long startPos = reader.getStartPos(fastaRecord);
+		Long endPos = reader.getEndPos(startPos);
 
 		Writer writer = new UniprotWriter();
 		writer.createAndOpenFile(fileName, srcPath);
 
-		// replace record and save
+		getNewRecord();
+
+		recordString.append(writer.getDescLine(fastaRecord));
+		recordString.append(FileTools.getLineSeparator(srcPath));
+		recordString.append(writer.getSequenceLine(fastaRecord));
+
+		writer.replaceAndSaveRecord(recordString.toString(), startPos, endPos, srcPath);
 
 		writer.closeFile();
 

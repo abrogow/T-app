@@ -1,7 +1,5 @@
 package model.tools;
 
-//import model.File;
-import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
@@ -23,7 +21,7 @@ final public class RandomizationTools {
 			throws IOException {
 
 		StringBuilder rec = new StringBuilder();
-		String lineSeparator = FileTools.getLineSeparator(new File(srcPath));
+		String lineSeparator = FileTools.getLineSeparator(srcPath);
 		String desc = writer.getDescLine(record);
 		String seq = writer.getSequenceLine(record);
 		StringBuilder newSeq = new StringBuilder();
