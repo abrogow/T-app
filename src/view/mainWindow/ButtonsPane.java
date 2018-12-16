@@ -5,11 +5,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
-public class ButtonsGridPane extends GridPane {
+public class ButtonsPane extends GridPane {
 
 	private Button addButton, removeButton, editButton;
 
-	public ButtonsGridPane() {
+	public ButtonsPane() {
 
 		createControls();
 		setProperties();

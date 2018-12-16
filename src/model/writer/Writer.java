@@ -1,7 +1,9 @@
 package model.writer;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
@@ -94,5 +96,18 @@ public abstract class Writer {
 				e.printStackTrace();
 			}
 		closeFile();
+	}
+
+	/**
+	 * Metoda zamienia rekord w pliku na nowy
+	 * 
+	 * @throws IOException
+	 */
+	public void replaceAndSaveRecord(String newRecord, int startPosition, String path) throws IOException {
+
+		raf = new RandomAccessFile(path, "wr");
+		BufferedReader buff = new BufferedReader(new FileReader(path));
+		raf.seek(startPosition);
+
 	}
 }

@@ -58,6 +58,11 @@ public class FastaReader {
 		this.nameFilter = nameFilter;
 	}
 
+	public void setRaf() throws FileNotFoundException {
+
+		this.raf = new RandomAccessFile(path, "r");
+	}
+
 	/**
 	 * Otwieranie pliku do odczytu (lacznie z odczytaniem indeksow i utworzeniem
 	 * listy pozycji w pliku)
@@ -95,6 +100,10 @@ public class FastaReader {
 	public void setPositionsList(List<Long> positionsList) {
 
 		this.positionsList = positionsList;
+	}
+
+	public Map<String, Long> getIdHashMap() {
+		return idHashMap;
 	}
 
 	/**
@@ -344,7 +353,7 @@ public class FastaReader {
 	/**
 	 * Metoda czytajaca pliki indeksow
 	 */
-	private void readIndex() throws IOException {
+	public void readIndex() throws IOException {
 		this.idHashMap = this.readIdIndex(FileTools.removeExtension(this.path) + "-idHashMap.txt");
 		this.nameHashMap = this.readIdIndex(FileTools.removeExtension(this.path) + "-nameHashMap.txt");
 		this.organismHashMap = this

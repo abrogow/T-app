@@ -3,7 +3,7 @@ package model.dataBase;
 import javafx.collections.ObservableList;
 import model.File;
 import model.Model;
-import model.Record;
+import model.Rec;
 
 public class DataBaseModel extends Model {
 
@@ -26,9 +26,9 @@ public class DataBaseModel extends Model {
 	}
 
 	@Override
-	public void addRecord(Record record) {
+	public void addRecord(Rec rec) {
 
-		RecordsTableDBManager.getInstance().addRecord(record);
+		RecordsTableDBManager.getInstance().addRecord(rec);
 		// recordsDB = new RecordsTableDBManager();
 		// recordsDB.addRecord(record);
 
@@ -52,8 +52,8 @@ public class DataBaseModel extends Model {
 	}
 
 	@Override
-	public void editRecord(Record record) {
-		RecordsTableDBManager.getInstance().editRecord(record);
+	public void editRecord(Rec rec) {
+		RecordsTableDBManager.getInstance().editRecord(rec);
 	}
 
 	@Override
@@ -63,15 +63,15 @@ public class DataBaseModel extends Model {
 	}
 
 	@Override
-	public Record getRecord(long idx) {
+	public Rec getRecord(long idx) {
 		return RecordsTableDBManager.getInstance().getRecord(idx);
 	}
 
 	@Override
-	public ObservableList<Record> getAllRecords() {
+	public ObservableList<Rec> getAllRecords() {
 
-		ObservableList<Record> records = RecordsTableDBManager.getInstance().getAllRecords();
-		return records;
+		ObservableList<Rec> recs = RecordsTableDBManager.getInstance().getAllRecords();
+		return recs;
 	}
 
 	@Override

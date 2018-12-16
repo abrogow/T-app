@@ -57,9 +57,10 @@ public class CreateDBWindowController {
 		this.createNewDB = createNewDB;
 		this.filesTable = filesTable;
 		this.fwc = filterController;
+		initializeHandlers();
 	}
 
-	void initializeHandlers() {
+	private void initializeHandlers() {
 
 		initializeSaveDBButton();
 	}

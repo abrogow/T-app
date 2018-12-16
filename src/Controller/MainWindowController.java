@@ -6,17 +6,18 @@ import javafx.stage.Stage;
 import model.File;
 import model.dataBase.DataBaseModel;
 import view.additionalWindows.AddEditFileWindow;
-import view.mainWindow.ButtonsGridPane;
+import view.mainWindow.ButtonsPane;
 import view.mainWindow.CreateNewDBPane;
 import view.mainWindow.FilesTable;
 import view.mainWindow.FilterPane;
 import view.mainWindow.MainWindow;
+import view.mainWindow.RecordPane;
 import view.mainWindow.RecordsTable;
 
 public class MainWindowController {
 
 	private MainWindow mainWindow;
-	private ButtonsGridPane buttonsGridPane;
+	private ButtonsPane buttonsPane;
 	private RecordsTable recordsTable;
 	private FilesTable filesTable;
 	private AddEditFileWindow addEditFileWindow;
@@ -26,6 +27,7 @@ public class MainWindowController {
 	private Button okButton, cancelButton;
 	private Stage stage;
 	private String fileName;
+	RecordPane recordPane;
 
 	private File file;
 
@@ -34,14 +36,16 @@ public class MainWindowController {
 	// do readera
 	private static final String UNIPROT_READER = "UniProt";
 
-	public MainWindowController(ButtonsGridPane buttonsGridPane, FilesTable filesTable,
-			AddEditFileWindow addEditFileWindow, FilterPane filterPane, CreateNewDBPane createNewDB) {
+	public MainWindowController(ButtonsPane buttonsPane, FilesTable filesTable, AddEditFileWindow addEditFileWindow,
+			FilterPane filterPane, CreateNewDBPane createNewDB, RecordsTable recordsTable, RecordPane recordPane) {
 
-		this.buttonsGridPane = buttonsGridPane;
+		this.buttonsPane = buttonsPane;
 		this.filesTable = filesTable;
 		this.addEditFileWindow = addEditFileWindow;
 		this.filterPane = filterPane;
 		this.createNewDB = createNewDB;
+		this.recordsTable = recordsTable;
+		this.recordPane = recordPane;
 
 		initializeHandlers();
 
@@ -56,24 +60,31 @@ public class MainWindowController {
 
 		// przyciski do filtrowania
 		FilterWindowController filterController = new FilterWindowController(filterPane, filesTable);
-		filterController.initializeHandlers();
 
 		// przyciski do tworzenia nowej bazy
 		CreateDBWindowController createNewDBController = new CreateDBWindowController(createNewDB, filesTable,
 				filterController);
-		createNewDBController.initializeHandlers();
+
+		// tabela
+		FilesTableController filesTableController = new FilesTableController(filesTable, recordsTable);
+
+		RecordsTableController recordsTableController = new RecordsTableController(recordsTable, filesTable,
+				recordPane);
+
+		RecordPaneController recordPaneController = new RecordPaneController(recordsTable, recordPane,
+				recordsTableController);
 	}
 
 	private void initializeAddButton() {
 
-		buttonsGridPane.getAddButton().setOnAction((event) -> {
+		buttonsPane.getAddButton().setOnAction((event) -> {
 			showFileWindow(null);
 		});
 	}
 
 	private void initializeEditButton() {
 
-		buttonsGridPane.getEditButton().setOnAction((event) -> {
+		buttonsPane.getEditButton().setOnAction((event) -> {
 			file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
 			if (file != null) {
 
@@ -89,7 +100,7 @@ public class MainWindowController {
 
 	private void initializeRemoveButton() {
 
-		buttonsGridPane.getRemoveButton().setOnAction((event) -> {
+		buttonsPane.getRemoveButton().setOnAction((event) -> {
 			file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
 			if (file != null) {
 
@@ -113,29 +124,6 @@ public class MainWindowController {
 	// AddEditFileWindow recordPane = new AddEditFileWindow();
 	// recordPane.createAndShowStage(recordsTable, record);
 	// }
-
-	private void disableMainWindow() {
-
-	}
-
-	// laduje dane rekordu do formularzy
-	private void showRecordData(File file) {
-
-		if (file != null) {
-			reloadFiledsAddEditFileWindow();
-			addEditFileWindow.getIdDBComboBox().setValue(file.getId_DB().toString());
-			addEditFileWindow.getNameTextField().setText(file.getName());
-			addEditFileWindow.getDescriptionTextField().setText(file.getDescription());
-			addEditFileWindow.getSequence_idTextField().setText(file.getSequence_id());
-			addEditFileWindow.getVersion_DBTextField().setText(file.getVersion_DB());
-			addEditFileWindow.getSequence_nameTextField().setText(file.getSequence_name());
-			addEditFileWindow.getRand_sequenceTextField().setText(file.getRand_sequence().toString());
-			addEditFileWindow.getPrefixTextField().setText(file.getPrefix());
-			addEditFileWindow.getRand_typeTextField().setText(file.getRand_type().toString());
-			addEditFileWindow.getPositions_PathTextField().setText(file.getDstPath());
-
-		}
-	}
 
 	// przeladowuje pola w AddEditFileWindow
 	private void reloadFiledsAddEditFileWindow() {

@@ -47,9 +47,10 @@ public class FilterWindowController {
 
 		this.filterPane = filterPane;
 		this.filesTable = filesTable;
+		initializeHandlers();
 	}
 
-	public void initializeHandlers() {
+	private void initializeHandlers() {
 
 		initializeSearchButton();
 		initializeSaveButton();

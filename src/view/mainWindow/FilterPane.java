@@ -131,7 +131,7 @@ public class FilterPane extends GridPane {
 		this.setHgap(50);
 		this.setVgap(10);
 		this.setPadding(new Insets(5, 5, 5, 5));
-		this.setPrefSize(300, 100);
+		this.setPrefSize(600, 100);
 	}
 
 	public void setProperties() {
@@ -146,7 +146,7 @@ public class FilterPane extends GridPane {
 		stage = new Stage();
 		stage.setTitle("Nazwa nowego pliku: ");
 		GridPane gridPane = new GridPane();
-		Scene scene = new Scene(gridPane, 500, 400);
+		Scene scene = new Scene(gridPane, 600, 400);
 		newFileLabel = new Label("Nazwa nowego pliku: ");
 		newFileLabel.setAlignment(Pos.CENTER);
 		newFileTextField = new TextField();

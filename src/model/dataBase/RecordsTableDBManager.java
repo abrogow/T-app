@@ -6,13 +6,13 @@ import java.sql.Statement;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Record;
+import model.Rec;
 
 public class RecordsTableDBManager {
 
 	Statement statement = null;
 
-	private ObservableList<Record> records;
+	private ObservableList<Rec> recs;
 
 	private static RecordsTableDBManager instance = null;
 
@@ -50,14 +50,14 @@ public class RecordsTableDBManager {
 
 	}
 
-	public void addRecord(Record record) {
+	public void addRecord(Rec rec) {
 		// TODO Auto-generated method stub
 
 		System.out.println("RecordsTableDBModel.addRecord");
 		try {
 			String Query = "INSERT INTO rekordy (identifier, name," + "info," + "sequence) " + "VALUES ('"
-					+ record.getRecordIdentifier() + "', '" + record.getRecordName() + "', '" + record.getRecordInfo()
-					+ "', '" + record.getRecordSequence() + "')";
+					+ rec.getRecordIdentifier() + "', '" + rec.getRecordName() + "', '" + rec.getRecordInfo()
+					+ "', '" + rec.getRecordSequence() + "')";
 			statement.execute(Query);
 
 		} catch (Exception e) {
@@ -65,14 +65,14 @@ public class RecordsTableDBManager {
 		}
 	}
 
-	public void editRecord(Record record) {
+	public void editRecord(Rec rec) {
 		// TODO Auto-generated method stub
 
 		System.out.println("RecordsTableDBModel.editRecord");
 		try {
-			statement.execute("UPDATE rekordy " + "SET " + "identifier='" + record.getRecordIdentifier() + "',"
-					+ "name='" + record.getRecordName() + "'," + "info='" + record.getRecordInfo() + "'," + "sequence='"
-					+ record.getRecordSequence() + "' " + "WHERE id = " + record.getRecordId().getValue());
+			statement.execute("UPDATE rekordy " + "SET " + "identifier='" + rec.getRecordIdentifier() + "',"
+					+ "name='" + rec.getRecordName() + "'," + "info='" + rec.getRecordInfo() + "'," + "sequence='"
+					+ rec.getRecordSequence() + "' " + "WHERE id = " + rec.getRecordId().getValue());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -89,11 +89,11 @@ public class RecordsTableDBManager {
 		}
 	}
 
-	public Record getRecord(long idx) {
+	public Rec getRecord(long idx) {
 		// TODO Auto-generated method stub
 		System.out.println("RecordsTableDBModel.getRecord");
 		// TODO Auto-generated method stub
-		Record record = null;
+		Rec rec = null;
 		try {
 			ResultSet rs = statement.executeQuery("SELECT * FROM rekordy WHERE id=" + Long.toString(idx));
 
@@ -104,12 +104,12 @@ public class RecordsTableDBManager {
 				String sequence = rs.getString("sequence");
 				long id = Long.parseLong(rs.getString("id"));
 
-				record = new Record(id, identifier, name, info, sequence);
+				rec = new Rec(id, identifier, name, info, sequence);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return record;
+		return rec;
 
 	}
 
@@ -139,10 +139,10 @@ public class RecordsTableDBManager {
 	// return records;
 	// }
 
-	public ObservableList<Record> getAllRecords() {
+	public ObservableList<Rec> getAllRecords() {
 
 		System.out.println("RecordsTableDBCreator.getAllRecordsAsObservableList");
-		records = FXCollections.observableArrayList();
+		recs = FXCollections.observableArrayList();
 
 		try {
 			ResultSet rs = statement.executeQuery("SELECT * FROM rekordy");
@@ -153,13 +153,13 @@ public class RecordsTableDBManager {
 				String info = rs.getString("info");
 				String sequence = rs.getString("sequence");
 
-				Record rec = new Record(id, identifier, name, info, sequence);
-				records.add(rec);
+				Rec rec = new Rec(id, identifier, name, info, sequence);
+				recs.add(rec);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return records;
+		return recs;
 	}
 
 	// public Object[][] getAllRecordsAsArray() {
