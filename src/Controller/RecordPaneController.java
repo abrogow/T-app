@@ -6,6 +6,7 @@ import java.util.Map;
 
 import model.FastaRecord;
 import model.File;
+import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
 import model.reader.FastaRecordParser;
 import model.reader.FastaUniprotRecordParser;
@@ -106,7 +107,7 @@ public class RecordPaneController {
 
 		FastaRecordParser parser = new FastaUniprotRecordParser();
 		FastaReader reader = new FastaReader(srcPath, parser);
-		FileTools fileTools = new FileTools();
+		FastaIndexBuilder indexBuilder = new FastaIndexBuilder(srcPath, parser);
 		reader.readIndex();
 		this.idHashMap = reader.getIdHashMap();
 		reader.setPositionsListFromIdHashMap(idHashMap);
@@ -121,11 +122,17 @@ public class RecordPaneController {
 
 		getNewRecord();
 
+		String lineSeparator = FileTools.getLineSeparator(srcPath);
 		recordString.append(writer.getDescLine(fastaRecord));
-		recordString.append(FileTools.getLineSeparator(srcPath));
+		recordString.append(lineSeparator);
 		recordString.append(writer.getSequenceLine(fastaRecord));
 
-		writer.replaceAndSaveRecord(recordString.toString(), startPos, endPos, srcPath);
+		// replace record and update file
+		writer.replaceRecordAndUpdateFile(recordString.toString(), srcPath, Math.toIntExact(startPos),
+				Math.toIntExact(endPos));
+
+		// update hashmaps
+		indexBuilder.buildIndex();
 
 		writer.closeFile();
 

@@ -4,8 +4,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import Controller.MainWindowController;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -13,15 +11,18 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.dataBase.DataBaseModel;
 import view.additionalWindows.AddEditFileWindow;
+import view.additionalWindows.DownloadDBWindow;
 
 public class MainWindow {
+
+	private MenuItem downloadDB;
+	private MenuItem exit;
 
 	public void initializeGUI(Stage primaryStage) {
 
@@ -31,15 +32,16 @@ public class MainWindow {
 		FilesTable filesTable = new FilesTable();
 		RecordsTable recordsTable = new RecordsTable();
 		CreateNewDBPane createNewDB = new CreateNewDBPane();
+		DownloadDBWindow donloadDB = new DownloadDBWindow();
 		RecordPane recordPane = new RecordPane();
 
 		AddEditFileWindow addEditFileWindow = new AddEditFileWindow();
-		MainWindowController controller = new MainWindowController(buttons, filesTable, addEditFileWindow, filter,
-				createNewDB, recordsTable, recordPane);
 
 		DataBaseModel db = new DataBaseModel();
 
 		BorderPane root = initializeRoot(buttons, filesTable, recordsTable, filter, createNewDB, recordPane);
+		MainWindowController controller = new MainWindowController(this, buttons, filesTable, addEditFileWindow, filter,
+				createNewDB, recordsTable, recordPane, donloadDB);
 		primaryStage.setScene(new Scene(root, 1600, 1000));
 		primaryStage.setOnCloseRequest(event -> {
 
@@ -128,19 +130,22 @@ public class MainWindow {
 		MenuBar mainMenu = new MenuBar();
 
 		Menu menu = new Menu("Menu");
-		MenuItem downloadDB = new MenuItem("Œci¹gnij bazê danych");
-		MenuItem exit = new MenuItem("Zamknij");
-		exit.setAccelerator(KeyCodeCombination.keyCombination("ALT+F4"));
-		exit.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent t) {
-				System.exit(0);
-			}
-		});
+		downloadDB = new MenuItem("Œci¹gnij bazê danych");
+		exit = new MenuItem("Zamknij");
+
 		menu.getItems().addAll(exit, downloadDB);
 		mainMenu.getMenus().addAll(menu);
 
 		topContainer.getChildren().add(mainMenu);
 		root.setTop(topContainer);
+	}
+
+	public MenuItem getExitMenuItem() {
+		return exit;
+	}
+
+	public MenuItem getDonloadDBMenuItem() {
+		return downloadDB;
 	}
 
 }

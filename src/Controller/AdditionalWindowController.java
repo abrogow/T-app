@@ -202,9 +202,6 @@ public class AdditionalWindowController {
 			indexBuilder.buildIndex();
 			FastaReader reader = new FastaReader(path, parser);
 			reader.open();
-
-			indexBuilder.createMaps();
-			indexBuilder.saveMaps();
 			reader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

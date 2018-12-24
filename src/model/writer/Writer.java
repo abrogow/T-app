@@ -2,9 +2,12 @@ package model.writer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -101,26 +104,38 @@ public abstract class Writer {
 	 * 
 	 * @throws IOException
 	 */
-	public void replaceAndSaveRecord(String newRecord, Long startPos, Long endPos, String path) throws IOException {
+	public void replaceRecordAndUpdateFile(String newRecord, String path, int startPos, int endPos) throws IOException {
 
-		raf = new RandomAccessFile(path, "rw");
+		String tmpPath = "tmp.fasta";
+		File file = new File(tmpPath);
 
-		int len = (int) (endPos - startPos);
-		byte buffer[] = new byte[len];
+		raf = new RandomAccessFile(path, "r");
+		byte[] buffer = new byte[startPos - 1]; // dlugosc od poacztku do nowego pliku
+		raf.seek(0);
+		raf.read(buffer, 0, startPos - 1);
+		String preRecord = new String(buffer);
 
-		raf.seek(startPos);
-		raf.read(buffer, 0, len);
+		byte[] buffer2 = new byte[(int) (raf.length() - endPos)];
+		raf.seek(endPos);
+		raf.read(buffer2, 0, (int) (raf.length() - endPos));
+		String aftRecord = new String(buffer2);
 
-		String recordStr = new String(buffer);
+		// zapis do nowego pliku
 
-		recordStr = recordStr.replace(recordStr, newRecord);
+		RandomAccessFile raf2 = new RandomAccessFile(tmpPath, "rw");
+		raf2.writeBytes(preRecord);
+		raf2.writeBytes(newRecord);
+		raf2.writeBytes(aftRecord);
 
-		byte[] b = recordStr.getBytes();
+		File f = new File(path);
+		f.delete();
+		File newFile = new File(path);
+		OutputStream os = new FileOutputStream(path);
+		Files.copy(Paths.get(tmpPath), os);
 
-		raf.seek(startPos);
-		raf.write(b);
-
+		file.delete();
 		raf.close();
-
+		raf2.close();
+		os.close();
 	}
 }

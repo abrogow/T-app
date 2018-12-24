@@ -2,10 +2,12 @@ package Controller;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Stage;
 import model.File;
 import model.dataBase.DataBaseModel;
 import view.additionalWindows.AddEditFileWindow;
+import view.additionalWindows.DownloadDBWindow;
 import view.mainWindow.ButtonsPane;
 import view.mainWindow.CreateNewDBPane;
 import view.mainWindow.FilesTable;
@@ -17,6 +19,7 @@ import view.mainWindow.RecordsTable;
 public class MainWindowController {
 
 	private MainWindow mainWindow;
+	private DownloadDBWindow downloadDB;
 	private ButtonsPane buttonsPane;
 	private RecordsTable recordsTable;
 	private FilesTable filesTable;
@@ -36,8 +39,9 @@ public class MainWindowController {
 	// do readera
 	private static final String UNIPROT_READER = "UniProt";
 
-	public MainWindowController(ButtonsPane buttonsPane, FilesTable filesTable, AddEditFileWindow addEditFileWindow,
-			FilterPane filterPane, CreateNewDBPane createNewDB, RecordsTable recordsTable, RecordPane recordPane) {
+	public MainWindowController(MainWindow mainWindow, ButtonsPane buttonsPane, FilesTable filesTable,
+			AddEditFileWindow addEditFileWindow, FilterPane filterPane, CreateNewDBPane createNewDB,
+			RecordsTable recordsTable, RecordPane recordPane, DownloadDBWindow downloadDB) {
 
 		this.buttonsPane = buttonsPane;
 		this.filesTable = filesTable;
@@ -46,6 +50,8 @@ public class MainWindowController {
 		this.createNewDB = createNewDB;
 		this.recordsTable = recordsTable;
 		this.recordPane = recordPane;
+		this.mainWindow = mainWindow;
+		this.downloadDB = downloadDB;
 
 		initializeHandlers();
 
@@ -57,6 +63,8 @@ public class MainWindowController {
 		initializeAddButton();
 		initializeRemoveButton();
 		initializeEditButton();
+		initializeExitMenuItem();
+		initializeDonloadDBMenuItem();
 
 		// przyciski do filtrowania
 		FilterWindowController filterController = new FilterWindowController(filterPane, filesTable);
@@ -114,16 +122,30 @@ public class MainWindowController {
 		});
 	}
 
+	private void initializeExitMenuItem() {
+		mainWindow.getExitMenuItem().setAccelerator(KeyCodeCombination.keyCombination("ALT+F4"));
+		mainWindow.getExitMenuItem().setOnAction((event) -> {
+
+			System.exit(0);
+		});
+	}
+
+	private void initializeDonloadDBMenuItem() {
+
+		mainWindow.getDonloadDBMenuItem().setOnAction((event) -> {
+
+			showDonloadDBWindow();
+		});
+
+	}
+
 	private void showFileWindow(File file) {
 		addEditFileWindow.createAndShowStage(filesTable, file);
 	}
 
-	// dla rekordow
-	// private void showRecordWindow(Record record) {
-	//
-	// AddEditFileWindow recordPane = new AddEditFileWindow();
-	// recordPane.createAndShowStage(recordsTable, record);
-	// }
+	private void showDonloadDBWindow() {
+		downloadDB.createAndShowStage();
+	}
 
 	// przeladowuje pola w AddEditFileWindow
 	private void reloadFiledsAddEditFileWindow() {
