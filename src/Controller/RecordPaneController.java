@@ -11,6 +11,7 @@ import model.reader.FastaReader;
 import model.reader.FastaRecordParser;
 import model.reader.FastaUniprotRecordParser;
 import model.tools.FileTools;
+import model.web.WebReferencer;
 import model.writer.UniprotWriter;
 import model.writer.Writer;
 import view.mainWindow.RecordPane;
@@ -41,6 +42,7 @@ public class RecordPaneController {
 
 		initializeSaveButton();
 		initializeCancelButton();
+		initializeWebButton();
 	}
 
 	private void initializeSaveButton() {
@@ -66,6 +68,23 @@ public class RecordPaneController {
 
 			reloadFields();
 			recordPane.getRecordPane().setDisable(true);
+
+		});
+	}
+
+	private void initializeWebButton() {
+
+		recordPane.getWebButton().setOnAction((event) -> {
+
+			String id = recordPane.getIdTextField().getText();
+			file = recordTableController.getFile();
+			String dbType = file.getId_DB();
+			try {
+				WebReferencer.openURL(dbType, id);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 	}

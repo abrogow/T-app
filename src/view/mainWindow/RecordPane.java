@@ -13,7 +13,7 @@ public class RecordPane extends GridPane {
 
 	private Label idLabel, nameLabel, sequenceLabel;
 	private TextField idTextField, nameTextField, sequenceTextField;
-	private Button saveButton, cancelButton;
+	private Button saveButton, cancelButton, webButton;
 
 	public RecordPane() {
 
@@ -37,6 +37,7 @@ public class RecordPane extends GridPane {
 
 		saveButton = new Button("Zapisz");
 		cancelButton = new Button("Anuluj");
+		webButton = new Button("Web");
 
 	}
 
@@ -51,6 +52,7 @@ public class RecordPane extends GridPane {
 
 		this.add(saveButton, 0, 5);
 		this.add(cancelButton, 1, 5);
+		this.add(webButton, 1, 0);
 
 		this.add(idTextField, 1, 1);
 		this.add(nameTextField, 1, 2);
@@ -89,6 +91,10 @@ public class RecordPane extends GridPane {
 
 	public Button getCancelButton() {
 		return cancelButton;
+	}
+
+	public Button getWebButton() {
+		return webButton;
 	}
 
 	public TextField getIdTextField() {
