@@ -20,7 +20,7 @@ public class DownloadDBWindow extends GridPane {
 	private TextField fileNameTextField, dstPathTextField;
 	private ComboBox dbComboBox;
 	private Button loadButton, cancelButton, downloadButton;
-	private final List<String> dataBaseType = Arrays.asList("UniProt_SwissProt", "UniProt-TREMBL", "NCBI", "SGD",
+	private final List<String> dataBaseType = Arrays.asList("UniProt-SwissProt", "UniProt-TREMBL", "NCBI", "SGD",
 			"TAIR");
 	private Stage stage;
 
@@ -50,12 +50,12 @@ public class DownloadDBWindow extends GridPane {
 	private void addControls() {
 
 		this.add(fileNameLabel, 0, 1);
-		this.add(dstPathLabel, 0, 2);
-		this.add(dbLabel, 0, 3);
-		this.add(dbComboBox, 1, 3);
+		this.add(dstPathLabel, 0, 3);
+		this.add(dbLabel, 0, 2);
+		this.add(dbComboBox, 1, 2);
 		this.add(fileNameTextField, 1, 1);
-		this.add(dstPathTextField, 1, 2);
-		this.add(loadButton, 2, 2);
+		this.add(dstPathTextField, 1, 3);
+		this.add(loadButton, 2, 3);
 		this.add(cancelButton, 0, 4);
 		this.add(downloadButton, 1, 4);
 	}

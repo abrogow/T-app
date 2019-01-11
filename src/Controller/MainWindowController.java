@@ -66,13 +66,6 @@ public class MainWindowController {
 		initializeExitMenuItem();
 		initializeDonloadDBMenuItem();
 
-		// przyciski do filtrowania
-		FilterWindowController filterController = new FilterWindowController(filterPane, filesTable);
-
-		// przyciski do tworzenia nowej bazy
-		CreateDBWindowController createNewDBController = new CreateDBWindowController(createNewDB, filesTable,
-				filterController);
-
 		// tabela
 		FilesTableController filesTableController = new FilesTableController(filesTable, recordsTable);
 
@@ -81,6 +74,13 @@ public class MainWindowController {
 
 		RecordPaneController recordPaneController = new RecordPaneController(recordsTable, recordPane,
 				recordsTableController);
+
+		// przyciski do filtrowania
+		FilterWindowController filterController = new FilterWindowController(filterPane, filesTable, recordsTable);
+
+		// przyciski do tworzenia nowej bazy
+		CreateDBWindowController createNewDBController = new CreateDBWindowController(createNewDB, filesTable,
+				filterController);
 	}
 
 	private void initializeAddButton() {

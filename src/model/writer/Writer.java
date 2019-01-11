@@ -110,9 +110,9 @@ public abstract class Writer {
 		File file = new File(tmpPath);
 
 		raf = new RandomAccessFile(path, "r");
-		byte[] buffer = new byte[startPos - 1]; // dlugosc od poacztku do nowego pliku
+		byte[] buffer = new byte[startPos]; // dlugosc od poacztku do nowego pliku
 		raf.seek(0);
-		raf.read(buffer, 0, startPos - 1);
+		raf.read(buffer, 0, startPos);
 		String preRecord = new String(buffer);
 
 		byte[] buffer2 = new byte[(int) (raf.length() - endPos)];
@@ -123,17 +123,20 @@ public abstract class Writer {
 		// zapis do nowego pliku
 
 		RandomAccessFile raf2 = new RandomAccessFile(tmpPath, "rw");
+		raf2.writeBytes("");
+		raf2.seek(0);
 		raf2.writeBytes(preRecord);
 		raf2.writeBytes(newRecord);
 		raf2.writeBytes(aftRecord);
 
-		File f = new File(path);
-		f.delete();
 		File newFile = new File(path);
 		OutputStream os = new FileOutputStream(path);
+		PrintWriter writer = new PrintWriter(newFile);
+		writer.print("");
 		Files.copy(Paths.get(tmpPath), os);
 
-		file.delete();
+		// file.delete();
+		writer.close();
 		raf.close();
 		raf2.close();
 		os.close();

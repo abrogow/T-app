@@ -82,6 +82,7 @@ public class FastaIndexBuilder {
 					if ((list = this.organismNameHashMap.get(record.getOrganismName())) == null)
 						this.organismNameHashMap.put(record.getOrganismName(), (list = new ArrayList<>()));
 					list.add(position);
+					System.out.println("Record found at " + position);
 				}
 			}
 			processedChars += line.length() + lineSeparator.length();

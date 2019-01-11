@@ -1,15 +1,20 @@
 package Controller;
 
+import java.io.IOException;
+
 import javafx.scene.control.Alert;
-import javafx.stage.FileChooser;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import model.web.DatabaseDownloader;
 import view.additionalWindows.DownloadDBWindow;
 
 public class DownloadDBWindowController {
 
 	private DownloadDBWindow downloadDB;
 	private String dstPath;
+	private String dbType;
+	private String fileName;
 
 	public DownloadDBWindowController(DownloadDBWindow downloadDB) {
 
@@ -28,7 +33,15 @@ public class DownloadDBWindowController {
 
 		downloadDB.getDownloadButton().setOnAction((event) -> {
 
-			if (isDBSet()) {
+			if (isParamsSet()) {
+				try {
+					DatabaseDownloader.downloadDatabase(dbType, dstPath, fileName);
+					showSuccessMessage();
+					hideRecordWindow();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			} else {
 				showAlertInfo();
@@ -61,14 +74,19 @@ public class DownloadDBWindowController {
 	private void getPathFromFileDialog() {
 
 		Stage stage = new Stage();
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Wybierz folder docelowy pliku:");
-		java.io.File selectedDirectory = fileChooser.showOpenDialog(stage);
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setTitle("Wybierz folder docelowy pliku:");
+		java.io.File selectedDirectory = directoryChooser.showDialog(stage);
 		dstPath = selectedDirectory.getAbsolutePath();
 	}
 
-	private boolean isDBSet() {
-		if (downloadDB.getDBComboBox().getSelectionModel().isEmpty())
+	private boolean isParamsSet() {
+
+		dbType = downloadDB.getDBComboBox().getValue().toString();
+		dstPath = downloadDB.getDstPathTextField().getText();
+		fileName = downloadDB.getFileNameTextField().getText();
+
+		if (("").equals(dbType) || ("").equals(dstPath) || ("").equals(fileName))
 			return false;
 
 		else
@@ -81,7 +99,23 @@ public class DownloadDBWindowController {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("B³¹d!");
 		alert.setHeaderText(null);
-		alert.setContentText("Nie zaznaczono bazy danych!");
+		String message = "";
+		if (downloadDB.getDBComboBox().getSelectionModel().isEmpty())
+			message = "Nie zaznaczono bazy danych!";
+		else if (("").equals(downloadDB.getDstPathTextField().getText()))
+			message = "Nie wybrano œcie¿ki!";
+		else if (("").equals(downloadDB.getFileNameTextField().getText()))
+			message = "Nie podano nazwy pliku!";
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+
+	private void showSuccessMessage() {
+
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Sukces!");
+		alert.setHeaderText(null);
+		alert.setContentText("Operacja zakoñczona sukcesem");
 		alert.showAndWait();
 	}
 }

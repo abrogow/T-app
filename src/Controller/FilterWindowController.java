@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -17,6 +19,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import model.FastaRecord;
 import model.File;
+import model.Record;
 import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
 import model.reader.FastaUniprotRecordParser;
@@ -24,10 +27,12 @@ import model.writer.UniprotWriter;
 import model.writer.Writer;
 import view.mainWindow.FilesTable;
 import view.mainWindow.FilterPane;
+import view.mainWindow.RecordsTable;
 
 public class FilterWindowController {
 
 	private FilterPane filterPane;
+	RecordsTable recordsTable;
 	private Map<String, Long> idHashMap;
 	private Map<String, Long> nameHashMap;
 	private Map<String, ArrayList<Long>> organismNameHashMap;
@@ -39,12 +44,15 @@ public class FilterWindowController {
 	private File file;
 	private FilesTable filesTable;
 	private String fileName;
+	private Record tmpRec;
 
+	private ObservableList<Record> data = FXCollections.observableArrayList();
 	private Stage progressStage;
 	private Thread th;
 
-	public FilterWindowController(FilterPane filterPane, FilesTable filesTable) {
+	public FilterWindowController(FilterPane filterPane, FilesTable filesTable, RecordsTable recordsTable) {
 
+		this.recordsTable = recordsTable;
 		this.filterPane = filterPane;
 		this.filesTable = filesTable;
 		initializeHandlers();
@@ -64,9 +72,11 @@ public class FilterWindowController {
 
 			if (file != null) {
 
+				data.clear();
 				setParams();
 				try {
 					filterRecords();
+					recordsTable.updateTableView(data);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -163,6 +173,15 @@ public class FilterWindowController {
 			resultList.add(record);
 
 		reader.close();
+		String key = "";
+
+		for (FastaRecord rec : resultList) {
+
+			key = rec.getIdentyfier();
+			tmpRec = new Record(key);
+			data.add(tmpRec);
+		}
+
 	}
 
 	private void setParams() {
