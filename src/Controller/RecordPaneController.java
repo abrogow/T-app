@@ -137,7 +137,6 @@ public class RecordPaneController {
 		Long endPos = reader.getEndPos(startPos);
 
 		Writer writer = new UniprotWriter();
-		writer.createAndOpenFile(fileName, srcPath);
 
 		getNewRecord();
 
@@ -153,7 +152,7 @@ public class RecordPaneController {
 		// update hashmaps
 		indexBuilder.buildIndex();
 
-		writer.closeFile();
+		// writer.closeFile();
 
 	}
 }

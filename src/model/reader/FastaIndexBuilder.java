@@ -72,7 +72,7 @@ public class FastaIndexBuilder {
 		this.organismNameHashMap = new LinkedHashMap<String, ArrayList<Long>>();
 
 		while ((line = this.reader.readLine()) != null) {
-			if (line.charAt(0) == '>') {
+			if (line.length() > 0 && line.charAt(0) == '>') {
 				long position = processedChars;
 				FastaRecord record = this.parser.parse(line);
 				if (record != null) {
@@ -82,7 +82,6 @@ public class FastaIndexBuilder {
 					if ((list = this.organismNameHashMap.get(record.getOrganismName())) == null)
 						this.organismNameHashMap.put(record.getOrganismName(), (list = new ArrayList<>()));
 					list.add(position);
-					System.out.println("Record found at " + position);
 				}
 			}
 			processedChars += line.length() + lineSeparator.length();
@@ -165,6 +164,8 @@ public class FastaIndexBuilder {
 	 */
 	private void openInputFile() throws IOException {
 		String extension = FileTools.getExtension(this.path);
+
+		System.out.println("openInputFile: path: " + this.path);
 
 		if (extension.equals(GZIP_EXTENSION)) {
 			InputStream gzipStream = new GZIPInputStream(new FileInputStream(this.path));

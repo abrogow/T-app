@@ -3,6 +3,7 @@ package model.writer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -106,6 +107,8 @@ public abstract class Writer {
 	 */
 	public void replaceRecordAndUpdateFile(String newRecord, String path, int startPos, int endPos) throws IOException {
 
+		System.out.println("path: " + path);
+
 		String tmpPath = "tmp.fasta";
 		File file = new File(tmpPath);
 
@@ -120,25 +123,25 @@ public abstract class Writer {
 		raf.read(buffer2, 0, (int) (raf.length() - endPos));
 		String aftRecord = new String(buffer2);
 
+		raf.close();
+
 		// zapis do nowego pliku
 
-		RandomAccessFile raf2 = new RandomAccessFile(tmpPath, "rw");
-		raf2.writeBytes("");
-		raf2.seek(0);
-		raf2.writeBytes(preRecord);
-		raf2.writeBytes(newRecord);
-		raf2.writeBytes(aftRecord);
+		FileWriter fw = new FileWriter(tmpPath, false);
+		fw.write(preRecord);
+		fw.write(newRecord);
+		fw.write(aftRecord);
+		fw.close();
 
 		File newFile = new File(path);
 		OutputStream os = new FileOutputStream(path);
-		PrintWriter writer = new PrintWriter(newFile);
-		writer.print("");
+		// PrintWriter writer = new PrintWriter(newFile);
+		// writer.print("");
 		Files.copy(Paths.get(tmpPath), os);
 
 		// file.delete();
-		writer.close();
-		raf.close();
-		raf2.close();
+		// writer.close();
+
 		os.close();
 	}
 }
