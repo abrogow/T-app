@@ -9,7 +9,6 @@ import model.File;
 import model.Record;
 import model.reader.FastaReader;
 import model.reader.FastaRecordParser;
-import model.reader.FastaUniprotRecordParser;
 import view.mainWindow.FilesTable;
 import view.mainWindow.RecordPane;
 import view.mainWindow.RecordsTable;
@@ -58,7 +57,7 @@ public class RecordsTableController {
 		file = filesTable.getFile();
 		String dstPath = file.getDstPath();
 
-		FastaRecordParser parser = new FastaUniprotRecordParser();
+		FastaRecordParser parser = FastaRecordParser.getInstance(file.getId_DB());
 
 		FastaReader reader = new FastaReader(dstPath, parser);
 		reader.readIndex();

@@ -17,7 +17,7 @@ import model.File;
 import model.dataBase.DataBaseModel;
 import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
-import model.reader.FastaUniprotRecordParser;
+import model.reader.FastaRecordParser;
 import view.additionalWindows.AddEditFileWindow;
 import view.mainWindow.FilesTable;
 
@@ -37,6 +37,8 @@ public class AdditionalWindowController {
 	private String fileName;
 	private Stage progressStage;
 	private Thread th;
+	private FastaRecordParser parser;
+	private String dbType;
 
 	public AdditionalWindowController(FilesTable filesTable, AddEditFileWindow addEditFileWindow, File file) {
 
@@ -133,6 +135,8 @@ public class AdditionalWindowController {
 	}
 
 	private boolean isReaderSet() {
+
+		dbType = addEditFileWindow.getIdDBComboBox().getValue().toString();
 		if (addEditFileWindow.getIdDBComboBox().getSelectionModel().isEmpty())
 			return false;
 
@@ -196,7 +200,7 @@ public class AdditionalWindowController {
 
 	private void readAndSavePositions() {
 
-		FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
+		parser = FastaRecordParser.getInstance(dbType);
 		FastaIndexBuilder indexBuilder = new FastaIndexBuilder(path, parser);
 		try {
 			indexBuilder.buildIndex();

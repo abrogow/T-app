@@ -19,9 +19,8 @@ import model.File;
 import model.Record;
 import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
-import model.reader.FastaUniprotRecordParser;
+import model.reader.FastaRecordParser;
 import model.tools.RandomizationTools;
-import model.writer.UniprotWriter;
 import model.writer.Writer;
 import view.mainWindow.CreateNewDBPane;
 import view.mainWindow.FilesTable;
@@ -104,11 +103,11 @@ public class CreateDBWindowController {
 		String dscLine;
 
 		// set idHashMap
-		FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
+		FastaRecordParser parser = FastaRecordParser.getInstance(file.getId_DB());
 		FastaIndexBuilder indexBuilder = new FastaIndexBuilder(srcPath, parser);
 		reader = new FastaReader(srcPath, parser);
 
-		writer = new UniprotWriter();
+		writer = Writer.getInstance(file.getId_DB());
 		randomization = new RandomizationTools();
 
 		String idHMPath = indexBuilder.getResultFilesPath(srcPath, "idHashMap");
@@ -142,28 +141,9 @@ public class CreateDBWindowController {
 				if (NONALTERNATE_SAVING.equals(saveType))
 					resultList.add(record);
 			}
-			writer.saveRecordsToFile(resultList, fileName, srcPath);
+			writer.saveRecordsToFile(resultList, fileName, srcPath, file.getId_DB());
 			reader.close();
 		}
-		// } else {
-		// // dla pliku
-		// for (String key : idHashMap.keySet()) {
-		//
-		// record = reader.getRecord(key);
-		// newRecString = randomization.getRandomRecord(record, srcPath, writer,
-		// DBType);
-		// newRec = parser.parse(newRecString);
-		// resultList.add(newRec);
-		//
-		// // jezeli zapisywanie naprzemian ze starym rekordem
-		// if (NONALTERNATE_SAVING.equals(saveType))
-		// resultList.add(record);
-		// }
-
-		// writer.saveRecordsToFile(resultList, fileName, srcPath);
-		// reader.close();
-		// }
-
 	}
 
 	private boolean ifValuesSelected() {

@@ -22,10 +22,8 @@ import model.File;
 import model.Record;
 import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
-import model.reader.FastaUniprotRecordParser;
-import model.writer.UniprotWriter;
+import model.reader.FastaRecordParser;
 import model.writer.Writer;
-import view.mainWindow.FilesTable;
 import view.mainWindow.FilterPane;
 import view.mainWindow.RecordsTable;
 
@@ -42,19 +40,17 @@ public class FilterWindowController {
 	private String srcPath;
 	private Stage stage;
 	private File file;
-	private FilesTable filesTable;
 	private String fileName;
 	private Record tmpRec;
-
+	private ArrayList<Record> recordsList;
 	private ObservableList<Record> data = FXCollections.observableArrayList();
 	private Stage progressStage;
 	private Thread th;
 
-	public FilterWindowController(FilterPane filterPane, FilesTable filesTable, RecordsTable recordsTable) {
+	public FilterWindowController(FilterPane filterPane, RecordsTable recordsTable) {
 
 		this.recordsTable = recordsTable;
 		this.filterPane = filterPane;
-		this.filesTable = filesTable;
 		initializeHandlers();
 	}
 
@@ -68,9 +64,10 @@ public class FilterWindowController {
 
 		filterPane.getSearchButton().setOnAction((event) -> {
 
-			file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
+			recordsList = recordsTable.getItemsAsArrayList();
+			file = recordsTable.getFile();
 
-			if (file != null) {
+			if (!recordsList.isEmpty()) {
 
 				data.clear();
 				setParams();
@@ -117,10 +114,11 @@ public class FilterWindowController {
 				stage.close();
 
 				// TODO:trzeba zrobic rozpoznawanie writera
-				Writer writer = new UniprotWriter();
+				Writer writer = Writer.getInstance(file.getId_DB());
+				;
 				try {
 
-					writer.saveRecordsToFile(resultList, fileName, srcPath);
+					writer.saveRecordsToFile(resultList, fileName, srcPath, file.getId_DB());
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -128,6 +126,7 @@ public class FilterWindowController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				showResultInfo();
 
 			} else {
 				showAlertInfoForNewName();
@@ -187,7 +186,7 @@ public class FilterWindowController {
 		srcPath = file.getDstPath();
 
 		// load hashmaps
-		FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
+		FastaRecordParser parser = FastaRecordParser.getInstance(file.getId_DB());
 		FastaIndexBuilder indexBuilder = new FastaIndexBuilder(srcPath, parser);
 		reader = new FastaReader(srcPath, parser);
 		reader.setFileSize();
@@ -261,7 +260,7 @@ public class FilterWindowController {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("B³¹d!");
 		alert.setHeaderText(null);
-		alert.setContentText("Nie zaznaczono pliku!");
+		alert.setContentText("Nie wybrano pliku!");
 		alert.showAndWait();
 	}
 
@@ -305,6 +304,14 @@ public class FilterWindowController {
 
 	public List<FastaRecord> getResultList() {
 		return resultList;
+	}
+
+	public void showResultInfo() {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Zakoñczono sukcesem!");
+		alert.setHeaderText(null);
+		alert.setContentText("Zapisano rekordy!");
+		alert.showAndWait();
 	}
 
 }

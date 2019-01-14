@@ -9,10 +9,8 @@ import model.File;
 import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
 import model.reader.FastaRecordParser;
-import model.reader.FastaUniprotRecordParser;
 import model.tools.FileTools;
 import model.web.WebReferencer;
-import model.writer.UniprotWriter;
 import model.writer.Writer;
 import view.mainWindow.RecordPane;
 import view.mainWindow.RecordsTable;
@@ -124,7 +122,7 @@ public class RecordPaneController {
 		String fileName = "";
 		StringBuilder recordString = new StringBuilder();
 
-		FastaRecordParser parser = new FastaUniprotRecordParser();
+		FastaRecordParser parser = FastaRecordParser.getInstance(file.getId_DB());
 		FastaReader reader = new FastaReader(srcPath, parser);
 		FastaIndexBuilder indexBuilder = new FastaIndexBuilder(srcPath, parser);
 		reader.readIndex();
@@ -136,7 +134,8 @@ public class RecordPaneController {
 		Long startPos = reader.getStartPos(fastaRecord);
 		Long endPos = reader.getEndPos(startPos);
 
-		Writer writer = new UniprotWriter();
+		Writer writer = Writer.getInstance(file.getId_DB());
+		;
 
 		getNewRecord();
 

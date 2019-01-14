@@ -14,7 +14,7 @@ import java.util.List;
 
 import model.FastaRecord;
 import model.reader.FastaReader;
-import model.reader.FastaUniprotRecordParser;
+import model.reader.FastaRecordParser;
 
 public abstract class Writer {
 
@@ -22,14 +22,42 @@ public abstract class Writer {
 	private RandomAccessFile raf;
 	private File resultFile;
 	private PrintWriter pw;
+	private String sequence;
 
-	public Writer() {
+	private static final String UNIPROT_WRITER = "UniProt";
+	private static final String NCBI_WRITER = "NCBI";
+	private static final String IPI_WRITER = "IPI";
+	private static final String TAIR_WRITER = "TAIR";
+	private static final String OTHER_WRITER = "Other";
 
+	private static Writer instance = null;
+
+	public Writer(String writerType) {
+
+	}
+
+	public static Writer getInstance(String parserType) {
+		if (instance == null) {
+			if (UNIPROT_WRITER.equals(parserType))
+				return new UniprotWriter();
+			if (NCBI_WRITER.equals(parserType))
+				return new NCBIWriter();
+			else
+				return null;
+		}
+		return instance;
 	}
 
 	public abstract String getDescLine(FastaRecord record);
 
-	public abstract String getSequenceLine(FastaRecord record);
+	public String getSequenceLine(FastaRecord record) {
+
+		sequence = null;
+		if (record != null) {
+			sequence = record.getSequence();
+		}
+		return sequence;
+	}
 
 	public void saveRecordIntoFile(FastaRecord record) throws IOException {
 
@@ -70,19 +98,19 @@ public abstract class Writer {
 		java.nio.file.Path p = Paths.get(positionsFilePath);
 
 		String newPath = positionsFilePath.substring(0, positionsFilePath.lastIndexOf(File.separator));
-		String dstPath = newPath + "\\" + fileName + ".txt";
+		String dstPath = newPath + "\\" + fileName + ".fasta";
 		return dstPath;
 	}
 
 	// TODO: param record; tylko zapis
-	public void saveRecordsToFile(List<FastaRecord> resultPositions, String fileName, String srcFile)
+	public void saveRecordsToFile(List<FastaRecord> resultPositions, String fileName, String srcFile, String dbType)
 			throws IOException {
 
 		// open file
 		createAndOpenFile(fileName, srcFile);
 
 		// // TODO:rozpoznawanie readera
-		FastaUniprotRecordParser parser = new FastaUniprotRecordParser();
+		FastaRecordParser parser = FastaRecordParser.getInstance(dbType);
 		FastaReader reader = new FastaReader(srcFile, parser);
 		// // TODO:ustawianie
 

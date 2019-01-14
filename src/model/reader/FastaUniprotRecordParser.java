@@ -15,7 +15,7 @@ public class FastaUniprotRecordParser extends FastaRecordParser {
 	private FastaRecord fastaRecord;
 
 	public FastaUniprotRecordParser() {
-		super();
+		super("UniProt");
 		this.paramsMap = new HashMap<String, String>();
 	}
 
@@ -40,11 +40,6 @@ public class FastaUniprotRecordParser extends FastaRecordParser {
 				paramsMap.get("proteinName"), paramsMap.get("organismName"), paramsMap.get("geneName"),
 				paramsMap.get("proteinExistence"), paramsMap.get("sequenceVersion"),
 				paramsMap.get("sequence").replaceAll("\\s", ""));
-
-		// int index = fastaRecord.getOrganismName().indexOf(" OX=");
-		// i//f (index != -1)
-		// fastaRecord.setOrganismName(fastaRecord.getOrganismName().substring(0,
-		// index));
 
 		return (fastaRecord);
 	}

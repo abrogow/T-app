@@ -76,7 +76,7 @@ public class MainWindowController {
 				recordsTableController);
 
 		// przyciski do filtrowania
-		FilterWindowController filterController = new FilterWindowController(filterPane, filesTable, recordsTable);
+		FilterWindowController filterController = new FilterWindowController(filterPane, recordsTable);
 
 		// przyciski do tworzenia nowej bazy
 		CreateDBWindowController createNewDBController = new CreateDBWindowController(createNewDB, recordsTable);

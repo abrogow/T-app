@@ -5,20 +5,9 @@ import model.FastaRecord;
 public class UniprotWriter extends Writer {
 
 	private String descLine;
-	private String sequence;
 
 	public UniprotWriter() {
-		super();
-	}
-
-	@Override
-	public String getSequenceLine(FastaRecord record) {
-
-		sequence = null;
-		if (record != null) {
-			sequence = record.getSequence();
-		}
-		return sequence;
+		super("UniProt");
 	}
 
 	@Override
@@ -26,9 +15,8 @@ public class UniprotWriter extends Writer {
 		// TODO Auto-generated method stub
 		descLine = null;
 		if (record != null) {
-			descLine = ">sp|" + record.getIdentyfier() + "|" + record.getEnteryName() + " " + record.getProteinName()
-					+ "OS=" + record.getOrganismName() + "GN=" + record.getGenemName() + "PE="
-					+ record.getProteinExistence() + "SV=" + record.getSequenceVersion();
+			descLine = ">gi|" + record.getIdentyfier() + "|" + record.getEnteryName() + " [" + record.getOrganismName()
+					+ "]";
 		}
 		return descLine;
 	}
