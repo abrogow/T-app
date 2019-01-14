@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -22,7 +21,6 @@ public class FilterPane extends GridPane {
 	private ChoiceBox speciesChoiceBox;
 	private Button saveButton, searchButton, okButton, cancelButton;
 	private TextField newFileTextField, idTextField, nameTextField;
-	private RadioButton createNewDB;
 	private Stage stage;
 
 	private String fileName;
@@ -69,10 +67,6 @@ public class FilterPane extends GridPane {
 		return stage;
 	}
 
-	public RadioButton getCreateNewDB() {
-		return createNewDB;
-	}
-
 	public FilterPane() {
 
 		createControls();
@@ -97,8 +91,6 @@ public class FilterPane extends GridPane {
 		searchButton = new Button("Wyszukaj");
 		saveButton = new Button("Zapisz rekordy do pliku");
 
-		createNewDB = new RadioButton("Stwórz now¹ bazê danych");
-
 	}
 
 	public void addControls() {
@@ -114,9 +106,8 @@ public class FilterPane extends GridPane {
 		this.add(nameTextField, 1, 2);
 		this.add(speciesChoiceBox, 1, 3);
 
-		this.add(searchButton, 1, 6);
-		this.add(saveButton, 1, 7);
-		this.add(createNewDB, 0, 5);
+		this.add(searchButton, 1, 5);
+		this.add(saveButton, 1, 6);
 	}
 
 	public void configureGrid() {

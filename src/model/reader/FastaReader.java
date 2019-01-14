@@ -162,6 +162,9 @@ public class FastaReader {
 
 			record = this.getRecord(this.currentRecord + 1);
 
+			if (record == null)
+				throw new NullPointerException("Nie udalo sie pobrac rekordu (prawdopodobnie blad parsowania)");
+
 			if (idFilter != null && !ifRecordContainsId(record))
 				continue;
 
@@ -442,7 +445,7 @@ public class FastaReader {
 		this.positionsMap = new HashMap<>();
 		for (int i = 0; i < positionsList.size(); i++) {
 
-			positionsMap.put(positionsList.get(i), positionsList.get(j) - 1);
+			positionsMap.put(positionsList.get(i), positionsList.get(j));
 			j++;
 			// dla ostatniego rekordu endPos = fileSize
 			if (j == positionsList.size()) {

@@ -27,8 +27,8 @@ public class UniprotWriter extends Writer {
 		descLine = null;
 		if (record != null) {
 			descLine = ">sp|" + record.getIdentyfier() + "|" + record.getEnteryName() + " " + record.getProteinName()
-					+ " OS=" + record.getOrganismName() + " GN=" + record.getGenemName() + " PE="
-					+ record.getProteinExistence() + " SV=" + record.getSequenceVersion();
+					+ "OS=" + record.getOrganismName() + "GN=" + record.getGenemName() + "PE="
+					+ record.getProteinExistence() + "SV=" + record.getSequenceVersion();
 		}
 		return descLine;
 	}

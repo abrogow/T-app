@@ -79,8 +79,7 @@ public class MainWindowController {
 		FilterWindowController filterController = new FilterWindowController(filterPane, filesTable, recordsTable);
 
 		// przyciski do tworzenia nowej bazy
-		CreateDBWindowController createNewDBController = new CreateDBWindowController(createNewDB, filesTable,
-				filterController);
+		CreateDBWindowController createNewDBController = new CreateDBWindowController(createNewDB, recordsTable);
 	}
 
 	private void initializeAddButton() {

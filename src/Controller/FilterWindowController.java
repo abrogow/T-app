@@ -76,7 +76,7 @@ public class FilterWindowController {
 				setParams();
 				try {
 					filterRecords();
-					recordsTable.updateTableView(data);
+					recordsTable.updateTableView(data, file);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -85,10 +85,6 @@ public class FilterWindowController {
 
 			} else {
 				showAlertInfoForNoFile();
-				return;
-			}
-
-			if (isCreateNewDBSelected()) {
 				return;
 			}
 			filterPane.getSaveButton().setDisable(false);
@@ -309,14 +305,6 @@ public class FilterWindowController {
 
 	public List<FastaRecord> getResultList() {
 		return resultList;
-	}
-
-	public boolean isCreateNewDBSelected() {
-
-		if (filterPane.getCreateNewDB().isSelected())
-			return true;
-		else
-			return false;
 	}
 
 }

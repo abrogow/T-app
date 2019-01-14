@@ -33,7 +33,8 @@ public class FastaUniprotRecordParser extends FastaRecordParser {
 				if (paramsMap.get(KEYS[i]) == null)
 					paramsMap.put(KEYS[i], "");
 			}
-		}
+		} else
+			return null;
 
 		fastaRecord = new FastaRecord(paramsMap.get("identifier"), paramsMap.get("enteryName"),
 				paramsMap.get("proteinName"), paramsMap.get("organismName"), paramsMap.get("geneName"),

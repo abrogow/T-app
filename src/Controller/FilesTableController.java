@@ -69,7 +69,7 @@ public class FilesTableController {
 		}
 		// data.add("rec");
 
-		recordsTable.updateTableView(data);
+		recordsTable.updateTableView(data, file);
 
 	}
 }

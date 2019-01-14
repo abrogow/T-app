@@ -144,6 +144,7 @@ public class RecordPaneController {
 		recordString.append(writer.getDescLine(fastaRecord));
 		recordString.append(lineSeparator);
 		recordString.append(writer.getSequenceLine(fastaRecord));
+		recordString.append(lineSeparator);
 
 		// replace record and update file
 		writer.replaceRecordAndUpdateFile(recordString.toString(), srcPath, Math.toIntExact(startPos),

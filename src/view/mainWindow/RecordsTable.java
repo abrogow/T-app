@@ -1,5 +1,7 @@
 package view.mainWindow;
 
+import java.util.ArrayList;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ScrollPane;
@@ -7,6 +9,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import model.File;
 import model.Record;
 
 public class RecordsTable extends VBox {
@@ -14,6 +17,7 @@ public class RecordsTable extends VBox {
 	private TableView<Record> recordsTable;
 	private TableColumn<Record, String> idColumn;
 	protected ScrollPane scrollPane;
+	private File file;
 
 	private ObservableList<Record> data = FXCollections.observableArrayList();
 
@@ -22,7 +26,7 @@ public class RecordsTable extends VBox {
 	public RecordsTable() {
 
 		createTable();
-		updateTableView(data);
+		updateTableView(data, null);
 	}
 
 	public void createTable() {
@@ -44,10 +48,23 @@ public class RecordsTable extends VBox {
 		return recordsTable;
 	}
 
-	public void updateTableView(ObservableList<Record> data) {
+	public File getFile() {
+		return file;
+	}
 
+	public void updateTableView(ObservableList<Record> data, File file) {
+
+		this.file = file;
+		this.data = data;
 		recordsTable.setItems(data);
 		recordsTable.refresh();
 		System.out.println("RecordsTableController.updateTableView");
+	}
+
+	public ArrayList<Record> getItemsAsArrayList() {
+
+		ArrayList<Record> recordsList = new ArrayList<Record>(data);
+		return recordsList;
+
 	}
 }

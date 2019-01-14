@@ -16,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import model.FastaRecord;
 import model.File;
+import model.Record;
 import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
 import model.reader.FastaUniprotRecordParser;
@@ -24,6 +25,7 @@ import model.writer.UniprotWriter;
 import model.writer.Writer;
 import view.mainWindow.CreateNewDBPane;
 import view.mainWindow.FilesTable;
+import view.mainWindow.RecordsTable;
 
 public class CreateDBWindowController {
 
@@ -40,10 +42,10 @@ public class CreateDBWindowController {
 	private RandomizationTools randomization;
 	private String saveType;
 	private Writer writer;
-	private List<FastaRecord> filterList;
 	private Stage progressStage;
 	private Thread th;
-	private FilterWindowController fwc;
+	private RecordsTable recordsTable;
+	private ArrayList<Record> recordsList;
 
 	private final static String RANDOM_SEQUENCE = "Losowe sekwencje";
 	private final static String REVERSED_SEQUENCE = "Odwrócone sekwencje";
@@ -51,12 +53,10 @@ public class CreateDBWindowController {
 	private final static String ALTERNATE_SAVING = "Tylko rekordy z nowej bazy";
 	private static final String NONALTERNATE_SAVING = "Naprzemian- rekordy z nowej bazy, redkordy ze starej bazy";
 
-	public CreateDBWindowController(CreateNewDBPane createNewDB, FilesTable filesTable,
-			FilterWindowController filterController) {
+	public CreateDBWindowController(CreateNewDBPane createNewDB, RecordsTable recordsTable) {
 
 		this.createNewDB = createNewDB;
-		this.filesTable = filesTable;
-		this.fwc = filterController;
+		this.recordsTable = recordsTable;
 		initializeHandlers();
 	}
 
@@ -69,7 +69,9 @@ public class CreateDBWindowController {
 
 		createNewDB.getSaveDBButton().setOnAction((event) -> {
 
-			if (ifValuesSelected()) {
+			recordsList = recordsTable.getItemsAsArrayList();
+
+			if (ifValuesSelected() && !recordsList.isEmpty()) {
 
 				// setProgressIndicator();
 				try {
@@ -90,6 +92,7 @@ public class CreateDBWindowController {
 
 	private void createNewDB() throws IOException {
 
+		file = recordsTable.getFile();
 		srcPath = file.getDstPath();
 		resultList = new ArrayList<FastaRecord>();
 		FastaRecord record = null;
@@ -125,25 +128,12 @@ public class CreateDBWindowController {
 
 		// dla filtowanych rekordów
 
-		if (filterList.size() > 0 && fwc.isCreateNewDBSelected()) {
+		if (recordsList.size() > 0) {
 
-			for (FastaRecord rec : filterList) {
+			for (Record rec : recordsList) {
 
-				newRecString = randomization.getRandomRecord(rec, srcPath, writer, DBType);
-				newRec = parser.parse(newRecString);
-				resultList.add(newRec);
+				record = reader.getRecord(rec.getFileId());
 
-				// jezeli zapisywanie naprzemian ze starym rekordem
-				if (NONALTERNATE_SAVING.equals(saveType))
-					resultList.add(record);
-			}
-			writer.saveRecordsToFile(resultList, fileName, srcPath);
-			reader.close();
-		} else {
-			// dla pliku
-			for (String key : idHashMap.keySet()) {
-
-				record = reader.getRecord(key);
 				newRecString = randomization.getRandomRecord(record, srcPath, writer, DBType);
 				newRec = parser.parse(newRecString);
 				resultList.add(newRec);
@@ -152,26 +142,40 @@ public class CreateDBWindowController {
 				if (NONALTERNATE_SAVING.equals(saveType))
 					resultList.add(record);
 			}
-
 			writer.saveRecordsToFile(resultList, fileName, srcPath);
 			reader.close();
 		}
+		// } else {
+		// // dla pliku
+		// for (String key : idHashMap.keySet()) {
+		//
+		// record = reader.getRecord(key);
+		// newRecString = randomization.getRandomRecord(record, srcPath, writer,
+		// DBType);
+		// newRec = parser.parse(newRecString);
+		// resultList.add(newRec);
+		//
+		// // jezeli zapisywanie naprzemian ze starym rekordem
+		// if (NONALTERNATE_SAVING.equals(saveType))
+		// resultList.add(record);
+		// }
+
+		// writer.saveRecordsToFile(resultList, fileName, srcPath);
+		// reader.close();
+		// }
 
 	}
 
 	private boolean ifValuesSelected() {
 
-		file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
 		fileName = createNewDB.getNameDBTextField().getText();
 		RadioButton selectedRadioButton = (RadioButton) createNewDB.getSavingTypeToggleGroup().getSelectedToggle();
 		saveType = selectedRadioButton.getText();
 
-		filterList = fwc.getResultList();
-
 		if (!createNewDB.getDBTypeChoiceBox().getSelectionModel().isEmpty())
 			DBType = createNewDB.getDBTypeChoiceBox().getValue().toString();
 
-		if (file != null | filterList.size() > 0) {
+		if (!recordsList.isEmpty()) {
 			if (!("").equals(fileName) & !createNewDB.getDBTypeChoiceBox().getSelectionModel().isEmpty()
 					& !("").equals(saveType))
 				return true;
@@ -192,7 +196,7 @@ public class CreateDBWindowController {
 			info = "Nie zaznaczono typu bazy!";
 		if (("").equals(fileName))
 			info = "Nie wpisano nazwy nowego pliku!";
-		if (file == null)
+		if (recordsList.isEmpty())
 			info = "Nie zaznaczono pliku!";
 		alert.setContentText(info);
 		alert.showAndWait();
