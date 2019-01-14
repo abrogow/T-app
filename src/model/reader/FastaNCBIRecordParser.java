@@ -8,7 +8,7 @@ import model.FastaRecord;
 public class FastaNCBIRecordParser extends FastaRecordParser {
 
 	private String line = "gi|385862198|ref|NP_001245340.1| sodium/myo-inositol cotransporter 2 isoform 2 [Homo sapiens]";
-	private static final String REGEXP = ">gi\\|([0-9]*)\\|(.*) \\[(.*)\\][\n\r](.*)";
+	private static final String REGEXP = ">gi\\|([0-9]*)\\|(.*) \\[(.*)\\](?:[\n\r](.*))?";
 	private String poprzedniaWersjaRegExp = ">gi\\|([0-9]*)\\|(.*) \\[(.*)\\](?:[\n\r](.*))?";
 
 	public FastaNCBIRecordParser() {

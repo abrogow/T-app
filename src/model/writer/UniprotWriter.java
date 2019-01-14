@@ -15,8 +15,9 @@ public class UniprotWriter extends Writer {
 		// TODO Auto-generated method stub
 		descLine = null;
 		if (record != null) {
-			descLine = ">gi|" + record.getIdentyfier() + "|" + record.getEnteryName() + " [" + record.getOrganismName()
-					+ "]";
+			descLine = ">sp|" + record.getIdentyfier() + "|" + record.getEnteryName() + " " + record.getProteinName()
+					+ "OS=" + record.getOrganismName() + "GN=" + record.getGenemName() + "PE="
+					+ record.getProteinExistence() + "SV=" + record.getSequenceVersion();
 		}
 		return descLine;
 	}
