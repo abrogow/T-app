@@ -26,6 +26,10 @@ public abstract class FastaRecordParser {
 				return new FastaUniprotRecordParser();
 			if (NCBI_PARSER.equals(parserType))
 				return new FastaNCBIRecordParser();
+			if (IPI_PARSER.equals(parserType))
+				return new FastaIPIRecordParser();
+			if (TAIR_PARSER.equals(parserType))
+				return new FastaTAIRRecordParser();
 			else
 				return null;
 		}

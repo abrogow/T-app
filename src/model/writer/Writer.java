@@ -39,9 +39,9 @@ public abstract class Writer {
 	public static Writer getInstance(String parserType) {
 		if (instance == null) {
 			if (UNIPROT_WRITER.equals(parserType))
-				return new UniprotWriter();
+				return new UniprotBuilder();
 			if (NCBI_WRITER.equals(parserType))
-				return new NCBIWriter();
+				return new NCBIBuilder();
 			else
 				return null;
 		}

@@ -1,4 +1,4 @@
-package Controller;
+package controller.additionalWindows;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -103,6 +103,7 @@ public class AdditionalWindowController {
 
 		Window stage = addEditFileWindow.getScene().getWindow();
 		stage.hide();
+
 	}
 
 	private void clearFieldsAdditionalWindow() {

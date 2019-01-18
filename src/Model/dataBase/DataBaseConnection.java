@@ -42,20 +42,7 @@ public class DataBaseConnection {
 			statement = connection.createStatement();
 
 			// przekazuje statement do klas
-			RecordsTableDBManager.getInstance().setDBStatement(statement);
 			FilesTableDBManager.getInstance().setDBStatement(statement);
-
-			// tworzenie tabeli rekordy
-			result = dbmd.getTables(null, null, "REKORDY", null);
-			if (!result.next()) {
-
-				RecordsTableDBManager.getInstance().createTable();
-
-			} else {
-				System.out.println("Tabela rekordów juz istnieje");
-				// usuwanie tabeli
-				// statement.execute( "DROP TABLE REKORDY");
-			}
 
 			result = dbmd.getTables(null, null, "PLIKI", null);
 			if (!result.next()) {

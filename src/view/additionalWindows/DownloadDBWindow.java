@@ -3,7 +3,7 @@ package view.additionalWindows;
 import java.util.Arrays;
 import java.util.List;
 
-import Controller.DownloadDBWindowController;
+import controller.additionalWindows.DownloadDBWindowController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,6 +12,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class DownloadDBWindow extends GridPane {
@@ -29,6 +30,10 @@ public class DownloadDBWindow extends GridPane {
 		addControls();
 		setProperties();
 		configureGrid();
+	}
+
+	public Stage getStage() {
+		return stage;
 	}
 
 	private void createControls() {
@@ -77,8 +82,10 @@ public class DownloadDBWindow extends GridPane {
 
 		DownloadDBWindowController controller = new DownloadDBWindowController(this);
 		stage = new Stage();
+		stage.setTitle("Œci¹ganie bazy danych");
 		stage.setScene(new Scene(this, 800, 500));
-		stage.show();
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.showAndWait();
 	}
 
 	public Button getCancelButton() {

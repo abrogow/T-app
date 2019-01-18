@@ -3,7 +3,8 @@ package view.mainWindow;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import Controller.MainWindowController;
+import controller.mainWindow.MainWindowController;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -26,7 +27,7 @@ public class MainWindow {
 
 	public void initializeGUI(Stage primaryStage) {
 
-		primaryStage.setTitle("");
+		primaryStage.setTitle("FastaViewer");
 		ButtonsPane buttons = new ButtonsPane();
 		FilterPane filter = new FilterPane();
 		FilesTable filesTable = new FilesTable();
@@ -52,6 +53,7 @@ public class MainWindow {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
+			Platform.exit();
 		});
 		primaryStage.show();
 	}

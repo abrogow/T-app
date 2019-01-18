@@ -26,14 +26,14 @@ public class ButtonsPane extends GridPane {
 
 	public void addControls() {
 
-		this.add(addButton, 0, 1);
-		this.add(editButton, 1, 1);
-		this.add(removeButton, 2, 1);
+		this.add(addButton, 1, 1);
+		this.add(editButton, 2, 1);
+		this.add(removeButton, 3, 1);
 	}
 
 	public void configureGrid() {
 
-		this.setAlignment(Pos.CENTER);
+		this.setAlignment(Pos.BOTTOM_LEFT);
 		this.setHgap(50);
 		this.setVgap(10);
 		this.setPadding(new Insets(5, 5, 5, 5));

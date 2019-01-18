@@ -71,7 +71,7 @@ public class RecordPane extends GridPane {
 		this.setHgap(50);
 		this.setVgap(10);
 		this.setPadding(new Insets(5, 5, 5, 5));
-		this.setPrefSize(500, 300);
+		this.setPrefSize(500, 100);
 	}
 
 	public void setDefValue() {
@@ -83,6 +83,11 @@ public class RecordPane extends GridPane {
 
 		this.setStyle("-fx-padding: 5;" + "-fx-border-style: solid inside;" + "-fx-border-width: 0.5;"
 				+ "-fx-border-insets: 5;" + "-fx-border-radius: 5;" + "-fx-border-color: grey;");
+		// Image image = new
+		// Image(getClass().getResourceAsStream("C:\\Users\\BROGO\\Desktop\\INZYNIERKA\\webButton.png"));
+		// ImageView iv = new ImageView();
+		// iv.setImage(image);
+		// webButton.setGraphic(iv);
 	}
 
 	public Button getSaveButton() {

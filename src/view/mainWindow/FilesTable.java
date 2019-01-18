@@ -36,13 +36,15 @@ public class FilesTable extends VBox {
 		pathColumn.setPrefWidth(230);
 
 		filesTable = new TableView<File>();
-		filesTable.getColumns().addAll(idColumn, nameColumn, pathColumn);
+		filesTable.getColumns().addAll(nameColumn);
 		filesTable.setPrefSize(500, 900);
 		filesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-		idColumn.setCellValueFactory(new PropertyValueFactory<File, String>("fileId"));
+		// idColumn.setCellValueFactory(new PropertyValueFactory<File,
+		// String>("fileId"));
 		nameColumn.setCellValueFactory(new PropertyValueFactory<File, String>("name"));
-		pathColumn.setCellValueFactory(new PropertyValueFactory<File, String>("dstPath"));
+		// pathColumn.setCellValueFactory(new PropertyValueFactory<File,
+		// String>("dstPath"));
 		;
 		this.getChildren().addAll(filesTable);
 		this.setPrefSize(450, 900);
@@ -68,7 +70,7 @@ public class FilesTable extends VBox {
 	public void setFile(File file) {
 		this.file = file;
 	}
-	
+
 	public File getFile() {
 		return file;
 	}

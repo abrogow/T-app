@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="/OSM2/libs/derby.jar"/>
 	<classpathentry kind="lib" path="E:/Java Oxygen/eclipse/commons-io-2.6/commons-io-2.6.jar"/>
 	<classpathentry kind="lib" path="libs/derby.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.8.0_144/jre/lib/ext/jfxrt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

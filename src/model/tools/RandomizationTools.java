@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Random;
 
 import model.FastaRecord;
-import model.builder.FastaRecordBuilder;
 import model.writer.Writer;
 
 final public class RandomizationTools {
@@ -15,7 +14,6 @@ final public class RandomizationTools {
 	private final static String REVERSED_SEQUENCE = "Odwrócone sekwencje";
 
 	private Writer writer;
-	private FastaRecordBuilder builder;
 
 	public String getRandomRecord(FastaRecord record, String srcPath, Writer writer, String seqType)
 			throws IOException {

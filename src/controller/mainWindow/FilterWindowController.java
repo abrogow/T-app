@@ -1,4 +1,4 @@
-package Controller;
+package controller.mainWindow;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

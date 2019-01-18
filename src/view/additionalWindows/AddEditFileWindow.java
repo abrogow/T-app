@@ -6,11 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import Controller.AdditionalWindowController;
+import controller.additionalWindows.AdditionalWindowController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -21,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.File;
 import view.mainWindow.FilesTable;
@@ -37,7 +39,6 @@ public class AddEditFileWindow extends GridPane {
 	private ComboBox id_DBComboBox;
 
 	private Button loadButton;
-	private Button webButton;
 	private Button saveButton;
 	private Button cancelButton;
 
@@ -47,6 +48,7 @@ public class AddEditFileWindow extends GridPane {
 
 	private ProgressBar progressBar;
 	private TextField progressTextField;
+	private Parent root;
 
 	private final List<String> dataBaseType = Arrays.asList("UniProt", "NCBI", "IPI", "TAIR", "Other");
 
@@ -63,13 +65,13 @@ public class AddEditFileWindow extends GridPane {
 
 		nameLabel = new Label("Nazwa pliku FASTA");
 		descriptionLabel = new Label("Opis pliku");
-		id_DBLabel = new Label("Identyfikator bazy danych (long)");
+		id_DBLabel = new Label("Identyfikator bazy danych ");
 		version_DBLabel = new Label("Wersja bazy danych");
 		sequence_idLabel = new Label("Wyra¿enie regularne identyfikatorów sekwencji w linii opisu");
 		sequence_nameLabel = new Label("Wyra¿enie regularne nazw sekewncji w linii opisu");
-		rand_sequenceLabel = new Label("Infoormacja czy plik zawiera sekwencje randomizowane(long)");
+		rand_sequenceLabel = new Label("Infoormacja czy plik zawiera sekwencje randomizowane");
 		prefixLabel = new Label("Przedrostek identyfikatorów sekwencji randomizowanych");
-		rand_typeLabel = new Label("Rodzaj randomizacji(long)");
+		rand_typeLabel = new Label("Rodzaj randomizacji");
 		positions_pathLabel = new Label("Œcie¿ka do pliku");
 
 		descriptionTextField = new TextField();
@@ -88,16 +90,15 @@ public class AddEditFileWindow extends GridPane {
 		positions_pathTextFiled = new TextField();
 
 		loadButton = new Button("Wczytaj plik");
-		webButton = new Button("Icon");
 		saveButton = new Button("Zapisz");
 		cancelButton = new Button("Anuluj");
 	}
 
 	public void addControls() {
 
-		this.add(nameLabel, 0, 1);
-		this.add(descriptionLabel, 0, 2);
-		this.add(id_DBLabel, 0, 3);
+		this.add(nameLabel, 0, 2);
+		this.add(descriptionLabel, 0, 3);
+		this.add(id_DBLabel, 0, 1);
 		this.add(version_DBLabel, 0, 4);
 		this.add(sequence_idLabel, 0, 5);
 		this.add(sequence_nameLabel, 0, 6);
@@ -106,9 +107,9 @@ public class AddEditFileWindow extends GridPane {
 		this.add(rand_typeLabel, 0, 9);
 		this.add(positions_pathLabel, 0, 10);
 
-		this.add(nameTextField, 1, 1);
-		this.add(descriptionTextField, 1, 2);
-		this.add(id_DBComboBox, 1, 3);
+		this.add(nameTextField, 1, 2);
+		this.add(descriptionTextField, 1, 3);
+		this.add(id_DBComboBox, 1, 1);
 		this.add(version_DBTextField, 1, 4);
 		this.add(sequence_idTextField, 1, 5);
 		this.add(sequence_nameTextField, 1, 6);
@@ -118,7 +119,6 @@ public class AddEditFileWindow extends GridPane {
 		this.add(positions_pathTextFiled, 1, 10);
 
 		this.add(loadButton, 2, 1);
-		this.add(webButton, 2, 2);
 		this.add(saveButton, 0, 11);
 		this.add(cancelButton, 1, 11);
 
@@ -140,10 +140,6 @@ public class AddEditFileWindow extends GridPane {
 
 	public Button getLoadButton() {
 		return loadButton;
-	}
-
-	public Button getWebButton() {
-		return webButton;
 	}
 
 	public Button getSaveButton() {
@@ -211,8 +207,12 @@ public class AddEditFileWindow extends GridPane {
 
 		AdditionalWindowController controller = new AdditionalWindowController(filesTable, this, file);
 		stage = new Stage();
-		stage.setScene(new Scene(this, 800, 500));
-		stage.show();
+		stage.setTitle("Dodawanie/Edycja pliku");
+		root = this;
+		stage.setScene(new Scene(root, 800, 500));
+		stage.initModality(Modality.APPLICATION_MODAL);
+		// stage.initOwner(aboutButton.getScene().getWindow());
+		stage.showAndWait();
 	}
 
 	public void setDefValue(File file) {

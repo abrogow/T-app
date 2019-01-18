@@ -1,11 +1,10 @@
-package Controller;
+package controller.additionalWindows;
 
 import java.io.IOException;
 
 import javafx.scene.control.Alert;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import model.web.DatabaseDownloader;
 import view.additionalWindows.DownloadDBWindow;
 
@@ -67,8 +66,8 @@ public class DownloadDBWindowController {
 
 	private void hideRecordWindow() {
 
-		Window stage = downloadDB.getScene().getWindow();
-		stage.hide();
+		Stage stage = downloadDB.getStage();
+		stage.close();
 	}
 
 	private void getPathFromFileDialog() {
