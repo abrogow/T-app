@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.Map;
 
 import javafx.scene.control.TableRow;
+import model.FastaFile;
 import model.FastaRecord;
-import model.File;
-import model.Record;
 import model.reader.FastaReader;
 import model.reader.FastaRecordParser;
 import view.mainWindow.FilesTable;
+import view.mainWindow.Record;
 import view.mainWindow.RecordPane;
 import view.mainWindow.RecordsTable;
 
@@ -18,7 +18,7 @@ public class RecordsTableController {
 	private RecordsTable recordsTable;
 	RecordPane recordPane;
 	private FilesTable filesTable;
-	private File file;
+	private FastaFile fastaFile;
 	private Map<String, Long> idHashMap = null;
 	FastaRecord fastaRecord;
 
@@ -54,10 +54,10 @@ public class RecordsTableController {
 
 		Record record = recordsTable.getRecordsTable().getSelectionModel().getSelectedItem();
 		String id = record.getFileId();
-		file = filesTable.getFile();
-		String dstPath = file.getDstPath();
+		fastaFile = filesTable.getFile();
+		String dstPath = fastaFile.getDstPath();
 
-		FastaRecordParser parser = FastaRecordParser.getInstance(file.getId_DB());
+		FastaRecordParser parser = FastaRecordParser.getInstance(fastaFile.getId_DB());
 
 		FastaReader reader = new FastaReader(dstPath, parser);
 		reader.readIndex();
@@ -79,8 +79,8 @@ public class RecordsTableController {
 		recordPane.getSequenceTextField().setText(fastaRecord.getSequence());
 	}
 
-	public File getFile() {
-		return file;
+	public FastaFile getFile() {
+		return fastaFile;
 	}
 
 	public FastaRecord getFastaRecord() {

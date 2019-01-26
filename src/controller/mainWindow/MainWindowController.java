@@ -4,7 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Stage;
-import model.File;
+import model.FastaFile;
 import model.dataBase.DataBaseModel;
 import view.additionalWindows.AddEditFileWindow;
 import view.additionalWindows.DownloadDBWindow;
@@ -32,7 +32,7 @@ public class MainWindowController {
 	private String fileName;
 	RecordPane recordPane;
 
-	private File file;
+	private FastaFile fastaFile;
 
 	// do filtra
 
@@ -92,11 +92,11 @@ public class MainWindowController {
 	private void initializeEditButton() {
 
 		buttonsPane.getEditButton().setOnAction((event) -> {
-			file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
-			if (file != null) {
+			fastaFile = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
+			if (fastaFile != null) {
 
-				Long idx = file.getFileId();
-				File f = DataBaseModel.getInstance().getFile(idx.longValue());
+				Long idx = fastaFile.getFileId();
+				FastaFile f = DataBaseModel.getInstance().getFile(idx.longValue());
 				showFileWindow(f);
 
 			} else {
@@ -108,10 +108,10 @@ public class MainWindowController {
 	private void initializeRemoveButton() {
 
 		buttonsPane.getRemoveButton().setOnAction((event) -> {
-			file = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
-			if (file != null) {
+			fastaFile = filesTable.getFilesTable().getSelectionModel().getSelectedItem();
+			if (fastaFile != null) {
 
-				Long idx = file.getFileId();
+				Long idx = fastaFile.getFileId();
 				DataBaseModel.getInstance().removeFile((int) (long) idx);
 				filesTable.updateTableView();
 
@@ -138,8 +138,8 @@ public class MainWindowController {
 
 	}
 
-	private void showFileWindow(File file) {
-		addEditFileWindow.createAndShowStage(filesTable, file);
+	private void showFileWindow(FastaFile fastaFile) {
+		addEditFileWindow.createAndShowStage(filesTable, fastaFile);
 	}
 
 	private void showDonloadDBWindow() {

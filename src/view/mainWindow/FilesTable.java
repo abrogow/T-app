@@ -7,18 +7,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import model.File;
+import model.FastaFile;
 import model.dataBase.DataBaseModel;
 
 public class FilesTable extends VBox {
 
-	private TableColumn<File, String> pathColumn;
-	protected TableColumn<File, String> idColumn;
-	protected TableColumn<File, String> nameColumn;
-	private TableView<File> filesTable;
-	private ObservableList<File> data = FXCollections.observableArrayList();
+	private TableColumn<FastaFile, String> pathColumn;
+	protected TableColumn<FastaFile, String> idColumn;
+	protected TableColumn<FastaFile, String> nameColumn;
+	private TableView<FastaFile> filesTable;
+	private ObservableList<FastaFile> data = FXCollections.observableArrayList();
 	protected ScrollPane scrollPane;
-	private File file;
+	private FastaFile fastaFile;
 
 	public FilesTable() {
 
@@ -28,21 +28,21 @@ public class FilesTable extends VBox {
 
 	public void createTable() {
 
-		idColumn = new TableColumn<File, String>("Id");
+		idColumn = new TableColumn<FastaFile, String>("Id");
 		idColumn.setPrefWidth(70);
-		nameColumn = new TableColumn<File, String>("Nazwa pliku");
+		nameColumn = new TableColumn<FastaFile, String>("Nazwa pliku");
 		nameColumn.setPrefWidth(200);
-		pathColumn = new TableColumn<File, String>("Scie¿ka do pozycji rekordów");
+		pathColumn = new TableColumn<FastaFile, String>("Scie¿ka do pozycji rekordów");
 		pathColumn.setPrefWidth(230);
 
-		filesTable = new TableView<File>();
+		filesTable = new TableView<FastaFile>();
 		filesTable.getColumns().addAll(nameColumn);
 		filesTable.setPrefSize(500, 900);
 		filesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		// idColumn.setCellValueFactory(new PropertyValueFactory<File,
 		// String>("fileId"));
-		nameColumn.setCellValueFactory(new PropertyValueFactory<File, String>("name"));
+		nameColumn.setCellValueFactory(new PropertyValueFactory<FastaFile, String>("name"));
 		// pathColumn.setCellValueFactory(new PropertyValueFactory<File,
 		// String>("dstPath"));
 		;
@@ -50,7 +50,7 @@ public class FilesTable extends VBox {
 		this.setPrefSize(450, 900);
 	}
 
-	public TableView<File> getFilesTable() {
+	public TableView<FastaFile> getFilesTable() {
 
 		return filesTable;
 	}
@@ -67,12 +67,12 @@ public class FilesTable extends VBox {
 		// recordsTable.setItems(DataBaseModel.getInstance().getAllRecords());
 	}
 
-	public void setFile(File file) {
-		this.file = file;
+	public void setFile(FastaFile fastaFile) {
+		this.fastaFile = fastaFile;
 	}
 
-	public File getFile() {
-		return file;
+	public FastaFile getFile() {
+		return fastaFile;
 	}
 
 }

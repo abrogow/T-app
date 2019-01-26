@@ -14,23 +14,23 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import model.FastaFile;
 import model.FastaRecord;
-import model.File;
-import model.Record;
 import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
 import model.reader.FastaRecordParser;
 import model.tools.RandomizationTools;
-import model.writer.Writer;
+import model.writer.FastaWriter;
 import view.mainWindow.CreateNewDBPane;
 import view.mainWindow.FilesTable;
+import view.mainWindow.Record;
 import view.mainWindow.RecordsTable;
 
 public class CreateDBWindowController {
 
 	private CreateNewDBPane createNewDB;
 	private FilesTable filesTable;
-	private File file;
+	private FastaFile fastaFile;
 	private String fileName;
 	private String DBType;
 	private String srcPath;
@@ -40,7 +40,7 @@ public class CreateDBWindowController {
 	private String seqType;
 	private RandomizationTools randomization;
 	private String saveType;
-	private Writer writer;
+	private FastaWriter fastaWriter;
 	private Stage progressStage;
 	private Thread th;
 	private RecordsTable recordsTable;
@@ -50,7 +50,7 @@ public class CreateDBWindowController {
 	private final static String REVERSED_SEQUENCE = "Odwrócone sekwencje";
 
 	private final static String ALTERNATE_SAVING = "Tylko rekordy z nowej bazy";
-	private static final String NONALTERNATE_SAVING = "Naprzemian- rekordy z nowej bazy, redkordy ze starej bazy";
+	private static final String NONALTERNATE_SAVING = "Na przemian- rekordy z nowej bazy, redkordy ze starej bazy";
 
 	public CreateDBWindowController(CreateNewDBPane createNewDB, RecordsTable recordsTable) {
 
@@ -91,8 +91,8 @@ public class CreateDBWindowController {
 
 	private void createNewDB() throws IOException {
 
-		file = recordsTable.getFile();
-		srcPath = file.getDstPath();
+		fastaFile = recordsTable.getFile();
+		srcPath = fastaFile.getDstPath();
 		resultList = new ArrayList<FastaRecord>();
 		FastaRecord record = null;
 
@@ -103,11 +103,11 @@ public class CreateDBWindowController {
 		String dscLine;
 
 		// set idHashMap
-		FastaRecordParser parser = FastaRecordParser.getInstance(file.getId_DB());
+		FastaRecordParser parser = FastaRecordParser.getInstance(fastaFile.getId_DB());
 		FastaIndexBuilder indexBuilder = new FastaIndexBuilder(srcPath, parser);
 		reader = new FastaReader(srcPath, parser);
 
-		writer = Writer.getInstance(file.getId_DB());
+		fastaWriter = FastaWriter.getInstance(fastaFile.getId_DB());
 		randomization = new RandomizationTools();
 
 		String idHMPath = indexBuilder.getResultFilesPath(srcPath, "idHashMap");
@@ -133,7 +133,7 @@ public class CreateDBWindowController {
 
 				record = reader.getRecord(rec.getFileId());
 
-				newRecString = randomization.getRandomRecord(record, srcPath, writer, DBType);
+				newRecString = randomization.getNewRecord(record, srcPath, fastaWriter, DBType);
 				newRec = parser.parse(newRecString);
 				resultList.add(newRec);
 
@@ -141,7 +141,7 @@ public class CreateDBWindowController {
 				if (NONALTERNATE_SAVING.equals(saveType))
 					resultList.add(record);
 			}
-			writer.saveRecordsToFile(resultList, fileName, srcPath, file.getId_DB());
+			fastaWriter.saveRecordsToFile(resultList, fileName, srcPath, fastaFile.getId_DB());
 			reader.close();
 		}
 	}

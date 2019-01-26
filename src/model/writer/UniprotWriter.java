@@ -2,11 +2,11 @@ package model.writer;
 
 import model.FastaRecord;
 
-public class UniprotBuilder extends Writer {
+public class UniprotWriter extends FastaWriter {
 
 	private String descLine;
 
-	public UniprotBuilder() {
+	public UniprotWriter() {
 		super("UniProt");
 	}
 

@@ -9,15 +9,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import model.File;
-import model.Record;
+import model.FastaFile;
 
 public class RecordsTable extends VBox {
 
 	private TableView<Record> recordsTable;
 	private TableColumn<Record, String> idColumn;
 	protected ScrollPane scrollPane;
-	private File file;
+	private FastaFile fastaFile;
 
 	private ObservableList<Record> data = FXCollections.observableArrayList();
 
@@ -48,13 +47,13 @@ public class RecordsTable extends VBox {
 		return recordsTable;
 	}
 
-	public File getFile() {
-		return file;
+	public FastaFile getFile() {
+		return fastaFile;
 	}
 
-	public void updateTableView(ObservableList<Record> data, File file) {
+	public void updateTableView(ObservableList<Record> data, FastaFile fastaFile) {
 
-		this.file = file;
+		this.fastaFile = fastaFile;
 		this.data = data;
 		recordsTable.setItems(data);
 		recordsTable.refresh();

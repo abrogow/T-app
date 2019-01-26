@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.util.Map;
 
 import model.FastaRecord;
-import model.File;
+import model.FastaFile;
 import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
 import model.reader.FastaRecordParser;
 import model.tools.FileTools;
 import model.web.WebReferencer;
-import model.writer.Writer;
+import model.writer.FastaWriter;
 import view.mainWindow.RecordPane;
 import view.mainWindow.RecordsTable;
 
@@ -23,7 +23,7 @@ public class RecordPaneController {
 
 	private Map<String, Long> idHashMap = null;
 	FastaRecord fastaRecord;
-	private File file;
+	private FastaFile fastaFile;
 	private String srcPath;
 
 	public RecordPaneController(RecordsTable recordsTable, RecordPane recordPane,
@@ -75,8 +75,8 @@ public class RecordPaneController {
 		recordPane.getWebButton().setOnAction((event) -> {
 
 			String id = recordPane.getIdTextField().getText();
-			file = recordTableController.getFile();
-			String dbType = file.getId_DB();
+			fastaFile = recordTableController.getFile();
+			String dbType = fastaFile.getId_DB();
 			try {
 				WebReferencer.openURL(dbType, id);
 			} catch (Exception e) {
@@ -117,12 +117,12 @@ public class RecordPaneController {
 	private void saveRecord() throws IOException {
 
 		fastaRecord = recordTableController.getFastaRecord();
-		file = recordTableController.getFile();
-		srcPath = file.getDstPath();
+		fastaFile = recordTableController.getFile();
+		srcPath = fastaFile.getDstPath();
 		String fileName = "";
 		StringBuilder recordString = new StringBuilder();
 
-		FastaRecordParser parser = FastaRecordParser.getInstance(file.getId_DB());
+		FastaRecordParser parser = FastaRecordParser.getInstance(fastaFile.getId_DB());
 		FastaReader reader = new FastaReader(srcPath, parser);
 		FastaIndexBuilder indexBuilder = new FastaIndexBuilder(srcPath, parser);
 		reader.readIndex();
@@ -134,19 +134,19 @@ public class RecordPaneController {
 		Long startPos = reader.getStartPos(fastaRecord);
 		Long endPos = reader.getEndPos(startPos);
 
-		Writer writer = Writer.getInstance(file.getId_DB());
+		FastaWriter fastaWriter = FastaWriter.getInstance(fastaFile.getId_DB());
 		;
 
 		getNewRecord();
 
 		String lineSeparator = FileTools.getLineSeparator(srcPath);
-		recordString.append(writer.getDescLine(fastaRecord));
+		recordString.append(fastaWriter.getDescLine(fastaRecord));
 		recordString.append(lineSeparator);
-		recordString.append(writer.getSequenceLine(fastaRecord));
+		recordString.append(fastaWriter.getSequenceLine(fastaRecord));
 		recordString.append(lineSeparator);
 
 		// replace record and update file
-		writer.replaceRecordAndUpdateFile(recordString.toString(), srcPath, Math.toIntExact(startPos),
+		fastaWriter.replaceRecordAndUpdateFile(recordString.toString(), srcPath, Math.toIntExact(startPos),
 				Math.toIntExact(endPos));
 
 		// update hashmaps

@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -12,7 +13,8 @@ import javafx.scene.text.Text;
 public class RecordPane extends GridPane {
 
 	private Label idLabel, nameLabel, sequenceLabel;
-	private TextField idTextField, nameTextField, sequenceTextField;
+	private TextField idTextField, nameTextField;
+	private TextArea sequenceTextField;
 	private Button saveButton, cancelButton, webButton;
 
 	public RecordPane() {
@@ -33,11 +35,14 @@ public class RecordPane extends GridPane {
 
 		idTextField = new TextField();
 		nameTextField = new TextField();
-		sequenceTextField = new TextField();
+		sequenceTextField = new TextArea();
 
 		saveButton = new Button("Zapisz");
 		cancelButton = new Button("Anuluj");
-		webButton = new Button("Web");
+		webButton = new Button("");
+		webButton.setStyle(
+				"-fx-background-image: url(\"file:webButton.jpg\");" + "-fx-min-height: 61px;" + "-fx-min-width: 61px;"
+						+ "-fx-background-position: center center;" + "-fx-background-size: 61px 61px;");
 
 	}
 
@@ -71,7 +76,8 @@ public class RecordPane extends GridPane {
 		this.setHgap(50);
 		this.setVgap(10);
 		this.setPadding(new Insets(5, 5, 5, 5));
-		this.setPrefSize(500, 100);
+		this.setPrefSize(500, 400);
+
 	}
 
 	public void setDefValue() {
@@ -88,6 +94,9 @@ public class RecordPane extends GridPane {
 		// ImageView iv = new ImageView();
 		// iv.setImage(image);
 		// webButton.setGraphic(iv);
+		sequenceTextField.setPrefHeight(800);
+		sequenceTextField.setWrapText(true);
+
 	}
 
 	public Button getSaveButton() {
@@ -110,7 +119,7 @@ public class RecordPane extends GridPane {
 		return nameTextField;
 	}
 
-	public TextField getSequenceTextField() {
+	public TextArea getSequenceTextField() {
 		return sequenceTextField;
 	}
 

@@ -6,18 +6,18 @@ import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableRow;
-import model.File;
-import model.Record;
+import model.FastaFile;
 import model.reader.FastaReader;
 import model.reader.FastaRecordParser;
 import view.mainWindow.FilesTable;
+import view.mainWindow.Record;
 import view.mainWindow.RecordsTable;
 
 public class FilesTableController {
 
 	private FilesTable filesTable;
 	private RecordsTable recordsTable;
-	private File file;
+	private FastaFile fastaFile;
 	private String dstPath;
 	private Map<String, Long> idHashMap = null;
 	private ObservableList<Record> data = FXCollections.observableArrayList();
@@ -33,7 +33,7 @@ public class FilesTableController {
 	private void initializeHandlers() {
 
 		filesTable.getFilesTable().setRowFactory(tv -> {
-			TableRow<File> row = new TableRow<>();
+			TableRow<FastaFile> row = new TableRow<>();
 			row.setOnMouseClicked(event -> {
 				if (event.getClickCount() == 2 && (!row.isEmpty())) {
 					try {
@@ -48,14 +48,14 @@ public class FilesTableController {
 		});
 	}
 
-	private void updateTableView(TableRow<File> row) throws IOException {
+	private void updateTableView(TableRow<FastaFile> row) throws IOException {
 
-		file = row.getItem();
-		filesTable.setFile(file);
-		dstPath = file.getDstPath();
+		fastaFile = row.getItem();
+		filesTable.setFile(fastaFile);
+		dstPath = fastaFile.getDstPath();
 		data.clear();
 
-		FastaRecordParser parser = FastaRecordParser.getInstance(file.getId_DB());
+		FastaRecordParser parser = FastaRecordParser.getInstance(fastaFile.getId_DB());
 
 		FastaReader reader = new FastaReader(dstPath, parser);
 		reader.readIndex();
@@ -68,7 +68,7 @@ public class FilesTableController {
 		}
 		// data.add("rec");
 
-		recordsTable.updateTableView(data, file);
+		recordsTable.updateTableView(data, fastaFile);
 
 	}
 }

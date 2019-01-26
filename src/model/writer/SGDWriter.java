@@ -1,5 +1,5 @@
 package model.writer;
 
-public class SGDBuilder {
+public class SGDWriter {
 
 }

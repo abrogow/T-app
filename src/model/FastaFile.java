@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import model.reader.FastaReader;
 
-public class File {
+public class FastaFile {
 
 	private SimpleLongProperty id;
 	private SimpleStringProperty name;
@@ -19,7 +19,7 @@ public class File {
 	private SimpleStringProperty dstPath;
 	private FastaReader reader;
 
-	public File(String name, String description, String id_DB, String version_DB, String sequence_id,
+	public FastaFile(String name, String description, String id_DB, String version_DB, String sequence_id,
 			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String dstPath) {
 
 		this.name = new SimpleStringProperty(name);
@@ -35,7 +35,7 @@ public class File {
 		this.reader = null;
 	}
 
-	public File(Long id, String name, String description, String id_DB, String version_DB, String sequence_id,
+	public FastaFile(Long id, String name, String description, String id_DB, String version_DB, String sequence_id,
 			String sequence_name, Long rand_sequence, String prefix, Long rand_type, String dstPath) {
 
 		super();
@@ -53,13 +53,7 @@ public class File {
 		this.reader = null;
 	}
 
-	public File() {
-
-	}
-
-	public Object[] toArray() {
-		return new Object[] { id, name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence,
-				prefix, rand_type, dstPath };
+	public FastaFile() {
 
 	}
 
@@ -151,10 +145,4 @@ public class File {
 		this.dstPath.set(dstPath);
 	}
 
-	// public static Reader createReader() {
-	// if (UNIPROT_READER.equals(id_DB))
-	// return new UniprotReader(addEditFileWindow);
-	// else
-	// return null;
-	// }
 }

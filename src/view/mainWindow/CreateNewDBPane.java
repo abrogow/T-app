@@ -68,7 +68,7 @@ public class CreateNewDBPane extends GridPane {
 		DBTypeLabel = new Label("Typ bazy: ");
 
 		alternateRecords = new RadioButton("Tylko rekordy z nowej bazy");
-		nonalternateRecords = new RadioButton("Naprzemian- rekordy z nowej bazy, redkordy ze starej bazy");
+		nonalternateRecords = new RadioButton("Na przemian- rekordy z nowej bazy, redkordy ze starej bazy");
 
 		savingTypeToggleGroup = new ToggleGroup();
 		alternateRecords.setToggleGroup(savingTypeToggleGroup);

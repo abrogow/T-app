@@ -1,10 +1,9 @@
 package model.dataBase;
 
 import javafx.collections.ObservableList;
-import model.File;
-import model.Model;
+import model.FastaFile;
 
-public class DataBaseModel extends Model {
+public class DataBaseModel {
 
 	private static DataBaseModel instance = null;
 	private FilesTableDBManager filesDB;
@@ -23,33 +22,28 @@ public class DataBaseModel extends Model {
 		dbConnection.createDataBase();
 	}
 
-	@Override
-	public void addFile(File file) {
+	public void addFile(FastaFile fastaFile) {
 
-		FilesTableDBManager.getInstance().addFile(file);
+		FilesTableDBManager.getInstance().addFile(fastaFile);
 	}
 
-	@Override
 	public void removeFile(int idx) {
 
 		FilesTableDBManager.getInstance().removeFile(idx);
 	}
 
-	@Override
-	public void editFile(File file) {
+	public void editFile(FastaFile fastaFile) {
 
-		FilesTableDBManager.getInstance().editFile(file);
+		FilesTableDBManager.getInstance().editFile(fastaFile);
 	}
 
-	@Override
-	public ObservableList<File> getAllFiles() {
+	public ObservableList<FastaFile> getAllFiles() {
 
-		ObservableList<File> files = FilesTableDBManager.getInstance().getAllFiles();
-		return files;
+		ObservableList<FastaFile> fastaFiles = FilesTableDBManager.getInstance().getAllFiles();
+		return fastaFiles;
 	}
 
-	@Override
-	public File getFile(Long idx) {
+	public FastaFile getFile(Long idx) {
 		return FilesTableDBManager.getInstance().getFile(idx);
 	}
 

@@ -24,7 +24,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.File;
+import model.FastaFile;
 import view.mainWindow.FilesTable;
 
 public class AddEditFileWindow extends GridPane {
@@ -43,7 +43,7 @@ public class AddEditFileWindow extends GridPane {
 	private Button cancelButton;
 
 	private Stage stage;
-	private File file;
+	private FastaFile fastaFile;
 	private FilesTable filesTable;
 
 	private ProgressBar progressBar;
@@ -198,14 +198,14 @@ public class AddEditFileWindow extends GridPane {
 		return positions_pathTextFiled;
 	}
 
-	public void createAndShowStage(FilesTable filesTable, File file) {
+	public void createAndShowStage(FilesTable filesTable, FastaFile fastaFile) {
 		// TODO Auto-generated method stub
 
-		if (file != null) {
-			this.setDefValue(file);
+		if (fastaFile != null) {
+			this.setDefValue(fastaFile);
 		}
 
-		AdditionalWindowController controller = new AdditionalWindowController(filesTable, this, file);
+		AdditionalWindowController controller = new AdditionalWindowController(filesTable, this, fastaFile);
 		stage = new Stage();
 		stage.setTitle("Dodawanie/Edycja pliku");
 		root = this;
@@ -215,23 +215,23 @@ public class AddEditFileWindow extends GridPane {
 		stage.showAndWait();
 	}
 
-	public void setDefValue(File file) {
+	public void setDefValue(FastaFile fastaFile) {
 
-		this.getIdDBComboBox().setValue(file.getId_DB().toString());
-		this.getNameTextField().setText(file.getName());
-		this.getDescriptionTextField().setText(file.getDescription());
-		this.getSequence_idTextField().setText(file.getSequence_id());
-		this.getVersion_DBTextField().setText(file.getVersion_DB());
-		this.getSequence_nameTextField().setText(file.getSequence_name());
-		this.getRand_sequenceTextField().setText(file.getRand_sequence().toString());
-		this.getPrefixTextField().setText(file.getPrefix());
-		this.getRand_typeTextField().setText(file.getRand_type().toString());
-		this.getPositions_PathTextField().setText(file.getDstPath());
+		this.getIdDBComboBox().setValue(fastaFile.getId_DB().toString());
+		this.getNameTextField().setText(fastaFile.getName());
+		this.getDescriptionTextField().setText(fastaFile.getDescription());
+		this.getSequence_idTextField().setText(fastaFile.getSequence_id());
+		this.getVersion_DBTextField().setText(fastaFile.getVersion_DB());
+		this.getSequence_nameTextField().setText(fastaFile.getSequence_name());
+		this.getRand_sequenceTextField().setText(fastaFile.getRand_sequence().toString());
+		this.getPrefixTextField().setText(fastaFile.getPrefix());
+		this.getRand_typeTextField().setText(fastaFile.getRand_type().toString());
+		this.getPositions_PathTextField().setText(fastaFile.getDstPath());
 
 	}
 
-	public File getfile() {
-		return file;
+	public FastaFile getfile() {
+		return fastaFile;
 	}
 
 	public ProgressIndicator createProgressIndicator() {

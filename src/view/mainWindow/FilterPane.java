@@ -147,10 +147,15 @@ public class FilterPane extends GridPane {
 		cancelButton = new Button("Anuluj");
 		cancelButton.setAlignment(Pos.CENTER);
 
-		gridPane.add(newFileLabel, 0, 1);
-		gridPane.add(newFileTextField, 1, 1);
-		gridPane.add(okButton, 0, 2);
-		gridPane.add(cancelButton, 1, 2);
+		gridPane.add(newFileLabel, 1, 2);
+		gridPane.add(newFileTextField, 2, 2);
+		gridPane.add(okButton, 1, 3);
+		gridPane.add(cancelButton, 2, 3);
+
+		gridPane.setAlignment(Pos.CENTER);
+		gridPane.setHgap(50);
+		gridPane.setVgap(10);
+		gridPane.setPadding(new Insets(5, 5, 5, 5));
 
 		stage.setScene(scene);
 		return stage;

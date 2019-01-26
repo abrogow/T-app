@@ -13,7 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import model.File;
+import model.FastaFile;
 import model.dataBase.DataBaseModel;
 import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
@@ -40,24 +40,23 @@ public class AdditionalWindowController {
 	private FastaRecordParser parser;
 	private String dbType;
 
-	public AdditionalWindowController(FilesTable filesTable, AddEditFileWindow addEditFileWindow, File file) {
+	public AdditionalWindowController(FilesTable filesTable, AddEditFileWindow addEditFileWindow, FastaFile fastaFile) {
 
 		this.filesTable = filesTable;
 		this.addEditFileWindow = addEditFileWindow;
 
-		initializeHandlers(file);
+		initializeHandlers(fastaFile);
 	}
 
 	// metoda inicjalizuje handlery przyciskow
-	private void initializeHandlers(File file) {
+	private void initializeHandlers(FastaFile fastaFile) {
 
-		initializeSaveButton(file);
+		initializeSaveButton(fastaFile);
 		initializeCancelButton();
-		initializeWebButton();
 		initializeLoadButton();
 	}
 
-	private void initializeSaveButton(File f) {
+	private void initializeSaveButton(FastaFile f) {
 
 		addEditFileWindow.getSaveButton().setOnAction((event) -> {
 
@@ -74,10 +73,6 @@ public class AdditionalWindowController {
 	private void initializeCancelButton() {
 
 		addEditFileWindow.getCancelButton().setOnAction((event) -> hideRecordAdditionalWidnow());
-	}
-
-	private void initializeWebButton() {
-
 	}
 
 	private void initializeLoadButton() {
@@ -106,35 +101,6 @@ public class AdditionalWindowController {
 
 	}
 
-	private void clearFieldsAdditionalWindow() {
-
-		addEditFileWindow.getIdDBComboBox().setValue("");
-		addEditFileWindow.getNameTextField().setText("");
-		addEditFileWindow.getDescriptionTextField().setText("");
-		addEditFileWindow.getSequence_idTextField().setText("");
-		addEditFileWindow.getVersion_DBTextField().setText("");
-		addEditFileWindow.getSequence_nameTextField().setText("");
-		addEditFileWindow.getRand_sequenceTextField().setText("");
-		addEditFileWindow.getPrefixTextField().setText("");
-		addEditFileWindow.getRand_typeTextField().setText("");
-		addEditFileWindow.getPositions_PathTextField().setText("");
-	}
-
-	// przeladowuje pola w RecordAdditionalWindow (mozna bedzie uzyc do kolorow)
-	private void reloadFiledsRecordAdditionalWindow() {
-
-		addEditFileWindow.getIdDBComboBox().setStyle(null);
-		addEditFileWindow.getNameTextField().setStyle(null);
-		addEditFileWindow.getDescriptionTextField().setStyle(null);
-		addEditFileWindow.getSequence_idTextField().setStyle(null);
-		addEditFileWindow.getVersion_DBTextField().setStyle(null);
-		addEditFileWindow.getSequence_nameTextField().setStyle(null);
-		addEditFileWindow.getRand_sequenceTextField().setStyle(null);
-		addEditFileWindow.getPrefixTextField().setStyle(null);
-		addEditFileWindow.getRand_typeTextField().setStyle(null);
-		addEditFileWindow.getPositions_PathTextField().setStyle(null);
-	}
-
 	private boolean isReaderSet() {
 
 		dbType = addEditFileWindow.getIdDBComboBox().getValue().toString();
@@ -156,7 +122,7 @@ public class AdditionalWindowController {
 	}
 
 	// zapisuje nowy lub edytowany plik do bazy
-	private void saveFile(File f) {
+	private void saveFile(FastaFile f) {
 
 		String id_DB = addEditFileWindow.getIdDBComboBox().getValue().toString();
 		String name = addEditFileWindow.getNameTextField().getText();
@@ -169,19 +135,19 @@ public class AdditionalWindowController {
 		Long rand_type = Long.parseLong(addEditFileWindow.getRand_typeTextField().getText());
 		String positions_path = addEditFileWindow.getPositions_PathTextField().getText();
 
-		File file = new File(name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence, prefix,
+		FastaFile fastaFile = new FastaFile(name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence, prefix,
 				rand_type, positions_path);
 
-		if (file != null) {
+		if (fastaFile != null) {
 			if (f != null) {
 				Long id = f.getFileId();
-				file = new File(id, name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence,
+				fastaFile = new FastaFile(id, name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence,
 						prefix, rand_type, positions_path);
-				DataBaseModel.getInstance().editFile(file);
+				DataBaseModel.getInstance().editFile(fastaFile);
 				System.out.println("EDIT FILE");
 			} else {
 
-				DataBaseModel.getInstance().addFile(file);
+				DataBaseModel.getInstance().addFile(fastaFile);
 				System.out.println("ADD FILE");
 
 			}

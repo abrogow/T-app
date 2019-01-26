@@ -114,7 +114,7 @@ public class DownloadDBWindowController {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Sukces!");
 		alert.setHeaderText(null);
-		alert.setContentText("Operacja zakoñczona sukcesem");
+		alert.setContentText("Baza danych zosta³a pobrana!");
 		alert.showAndWait();
 	}
 }

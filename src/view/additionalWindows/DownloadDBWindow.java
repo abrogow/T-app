@@ -49,7 +49,7 @@ public class DownloadDBWindow extends GridPane {
 		dstPathTextField = new TextField();
 		loadButton = new Button("Przegl¹daj");
 		cancelButton = new Button("Anuluj");
-		downloadButton = new Button("Œci¹gnij");
+		downloadButton = new Button("Pobierz");
 	}
 
 	private void addControls() {
@@ -71,6 +71,7 @@ public class DownloadDBWindow extends GridPane {
 		this.setHgap(50);
 		this.setVgap(10);
 		this.setPadding(new Insets(5, 5, 5, 5));
+		dbComboBox.setPrefSize(190, 10);
 	}
 
 	private void configureGrid() {
@@ -82,7 +83,7 @@ public class DownloadDBWindow extends GridPane {
 
 		DownloadDBWindowController controller = new DownloadDBWindowController(this);
 		stage = new Stage();
-		stage.setTitle("Œci¹ganie bazy danych");
+		stage.setTitle("Pobieranie bazy danych");
 		stage.setScene(new Scene(this, 800, 500));
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.showAndWait();

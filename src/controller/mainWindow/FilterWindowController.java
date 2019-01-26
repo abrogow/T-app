@@ -17,14 +17,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import model.FastaFile;
 import model.FastaRecord;
-import model.File;
-import model.Record;
 import model.reader.FastaIndexBuilder;
 import model.reader.FastaReader;
 import model.reader.FastaRecordParser;
-import model.writer.Writer;
+import model.writer.FastaWriter;
 import view.mainWindow.FilterPane;
+import view.mainWindow.Record;
 import view.mainWindow.RecordsTable;
 
 public class FilterWindowController {
@@ -39,7 +39,7 @@ public class FilterWindowController {
 	private FastaReader reader;
 	private String srcPath;
 	private Stage stage;
-	private File file;
+	private FastaFile fastaFile;
 	private String fileName;
 	private Record tmpRec;
 	private ArrayList<Record> recordsList;
@@ -65,7 +65,7 @@ public class FilterWindowController {
 		filterPane.getSearchButton().setOnAction((event) -> {
 
 			recordsList = recordsTable.getItemsAsArrayList();
-			file = recordsTable.getFile();
+			fastaFile = recordsTable.getFile();
 
 			if (!recordsList.isEmpty()) {
 
@@ -73,7 +73,7 @@ public class FilterWindowController {
 				setParams();
 				try {
 					filterRecords();
-					recordsTable.updateTableView(data, file);
+					recordsTable.updateTableView(data, fastaFile);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -114,11 +114,11 @@ public class FilterWindowController {
 				stage.close();
 
 				// TODO:trzeba zrobic rozpoznawanie writera
-				Writer writer = Writer.getInstance(file.getId_DB());
+				FastaWriter fastaWriter = FastaWriter.getInstance(fastaFile.getId_DB());
 				;
 				try {
 
-					writer.saveRecordsToFile(resultList, fileName, srcPath, file.getId_DB());
+					fastaWriter.saveRecordsToFile(resultList, fileName, srcPath, fastaFile.getId_DB());
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -177,16 +177,18 @@ public class FilterWindowController {
 			data.add(tmpRec);
 		}
 
+		System.out.println(resultList.size());
+
 	}
 
 	private void setParams() {
 
 		// get params
 		getParamsFromFields();
-		srcPath = file.getDstPath();
+		srcPath = fastaFile.getDstPath();
 
 		// load hashmaps
-		FastaRecordParser parser = FastaRecordParser.getInstance(file.getId_DB());
+		FastaRecordParser parser = FastaRecordParser.getInstance(fastaFile.getId_DB());
 		FastaIndexBuilder indexBuilder = new FastaIndexBuilder(srcPath, parser);
 		reader = new FastaReader(srcPath, parser);
 		reader.setFileSize();

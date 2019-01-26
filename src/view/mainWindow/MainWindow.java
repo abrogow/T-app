@@ -132,7 +132,7 @@ public class MainWindow {
 		MenuBar mainMenu = new MenuBar();
 
 		Menu menu = new Menu("Menu");
-		downloadDB = new MenuItem("Œci¹gnij bazê danych");
+		downloadDB = new MenuItem("Pobierz bazê danych");
 		exit = new MenuItem("Zamknij");
 
 		menu.getItems().addAll(exit, downloadDB);

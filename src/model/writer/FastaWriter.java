@@ -16,7 +16,7 @@ import model.FastaRecord;
 import model.reader.FastaReader;
 import model.reader.FastaRecordParser;
 
-public abstract class Writer {
+public abstract class FastaWriter {
 
 	private String positionsFilePath;
 	private RandomAccessFile raf;
@@ -30,18 +30,18 @@ public abstract class Writer {
 	private static final String TAIR_WRITER = "TAIR";
 	private static final String OTHER_WRITER = "Other";
 
-	private static Writer instance = null;
+	private static FastaWriter instance = null;
 
-	public Writer(String writerType) {
+	public FastaWriter(String writerType) {
 
 	}
 
-	public static Writer getInstance(String parserType) {
+	public static FastaWriter getInstance(String parserType) {
 		if (instance == null) {
 			if (UNIPROT_WRITER.equals(parserType))
-				return new UniprotBuilder();
+				return new UniprotWriter();
 			if (NCBI_WRITER.equals(parserType))
-				return new NCBIBuilder();
+				return new NCBIWriter();
 			else
 				return null;
 		}

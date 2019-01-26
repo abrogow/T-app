@@ -2,11 +2,11 @@ package model.writer;
 
 import model.FastaRecord;
 
-public class NCBIBuilder extends Writer {
+public class NCBIWriter extends FastaWriter {
 
 	private String descLine;
 
-	public NCBIBuilder() {
+	public NCBIWriter() {
 		super("NCBI");
 	}
 

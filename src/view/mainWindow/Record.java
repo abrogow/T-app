@@ -1,4 +1,4 @@
-package model;
+package view.mainWindow;
 
 import javafx.beans.property.SimpleStringProperty;
 

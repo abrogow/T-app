@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import model.FastaRecord;
-import model.writer.Writer;
+import model.writer.FastaWriter;
 
 final public class RandomizationTools {
 	public final static char AMINOACIDS[] = { 'L', 'A', 'G', 'S', 'V', 'E', 'K', 'I', 'T', 'R', 'D', 'P', 'N', 'F', 'Q',
@@ -13,17 +13,15 @@ final public class RandomizationTools {
 	private final static String RANDOM_SEQUENCE = "Losowe sekwencje";
 	private final static String REVERSED_SEQUENCE = "Odwrócone sekwencje";
 
-	private Writer writer;
+	private FastaWriter fastaWriter;
 
-	public String getRandomRecord(FastaRecord record, String srcPath, Writer writer, String seqType)
-			throws IOException {
+	public String getNewRecord(FastaRecord record, String srcPath, FastaWriter fastaWriter, String seqType) throws IOException {
 
 		StringBuilder rec = new StringBuilder();
 		String lineSeparator = FileTools.getLineSeparator(srcPath);
-		String desc = writer.getDescLine(record);
-		String seq = writer.getSequenceLine(record);
+		String desc = fastaWriter.getDescLine(record);
+		String seq = fastaWriter.getSequenceLine(record);
 		StringBuilder newSeq = new StringBuilder();
-		;
 
 		if (RANDOM_SEQUENCE.equals(seqType))
 			newSeq = new StringBuilder(getRandomSequence(seq));

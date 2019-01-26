@@ -6,12 +6,12 @@ import java.sql.Statement;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.File;
+import model.FastaFile;
 
 public class FilesTableDBManager {
 
 	Statement statement = null;
-	private ObservableList<File> files;
+	private ObservableList<FastaFile> fastaFiles;
 
 	private static FilesTableDBManager instance = null;
 
@@ -46,51 +46,38 @@ public class FilesTableDBManager {
 				+ "sequence_id		VARCHAR(256)," + "sequence_name		VARCHAR(256)," + "rand_sequence		INT,"
 				+ "prefix		VARCHAR(256)," + "rand_type		INT," + "positions_path		VARCHAR(256),"
 				+ "id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)" + ")");
-
-		System.out.println("Utworzono tabele pliki");
 	}
 
-	public void addFile(File file) {
-		// TODO Auto-generated method stub
+	public void addFile(FastaFile fastaFile) {
 
-		System.out.println("FilesTableDBModel.addFile");
 		try {
-			System.out.println(
-					"INSERT INTO pliki (name, description, id_DB, version_DB,sequence_id, sequence_name,rand_sequence, prefix, rand_type, positions_path) "
-							+ " VALUES('" + file.getName() + "', '" + file.getDescription() + "', '" + file.getId_DB()
-							+ "', '" + file.getVersion_DB() + "', '" + file.getSequence_id() + "', '"
-							+ file.getSequence_name() + "', " + file.getRand_sequence() + ", '" + file.getPrefix()
-							+ "', " + file.getRand_type() + ", '" + file.getDstPath() + "')");
 			statement.execute(
-					"INSERT INTO pliki (name, description, id_DB, version_DB,sequence_id, sequence_name,rand_sequence, prefix, rand_type, positions_path) "
-							+ " VALUES('" + file.getName() + "', '" + file.getDescription() + "', '" + file.getId_DB()
-							+ "', '" + file.getVersion_DB() + "', '" + file.getSequence_id() + "', '"
-							+ file.getSequence_name() + "', " + file.getRand_sequence() + ", '" + file.getPrefix()
-							+ "', " + file.getRand_type() + ", '" + file.getDstPath() + "')");
+					"INSERT INTO pliki (name, description, id_DB, version_DB,sequence_id, sequence_name,rand_sequence,"
+							+ "prefix, rand_type, positions_path) " + " VALUES('" + fastaFile.getName() + "', '"
+							+ fastaFile.getDescription() + "', '" + fastaFile.getId_DB() + "', '" + fastaFile.getVersion_DB() + "', '"
+							+ fastaFile.getSequence_id() + "', '" + fastaFile.getSequence_name() + "', " + fastaFile.getRand_sequence()
+							+ ", '" + fastaFile.getPrefix() + "', " + fastaFile.getRand_type() + ", '" + fastaFile.getDstPath()
+							+ "')");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void editFile(File file) {
-		// TODO Auto-generated method stub
+	public void editFile(FastaFile fastaFile) {
 
-		System.out.println("FilesTableDBModel.editFile");
 		try {
-			statement.execute("UPDATE pliki " + "SET name='" + file.getName() + "'," + "description='"
-					+ file.getDescription() + "'," + "id_DB='" + file.getId_DB() + "'," + "version_DB='"
-					+ file.getVersion_DB() + "'," + "sequence_id='" + file.getSequence_id() + "'," + "sequence_name='"
-					+ file.getSequence_name() + "'," + "rand_sequence=" + file.getRand_sequence() + "," + "prefix='"
-					+ file.getPrefix() + "'," + "rand_type=" + file.getRand_type() + ", " + "positions_path='"
-					+ file.getDstPath() + " WHERE id = " + file.getFileId());
+			statement.execute("UPDATE pliki " + "SET name='" + fastaFile.getName() + "'," + "description='"
+					+ fastaFile.getDescription() + "'," + "id_DB='" + fastaFile.getId_DB() + "'," + "version_DB='"
+					+ fastaFile.getVersion_DB() + "'," + "sequence_id='" + fastaFile.getSequence_id() + "'," + "sequence_name='"
+					+ fastaFile.getSequence_name() + "'," + "rand_sequence=" + fastaFile.getRand_sequence() + "," + "prefix='"
+					+ fastaFile.getPrefix() + "'," + "rand_type=" + fastaFile.getRand_type() + ", " + "positions_path='"
+					+ fastaFile.getDstPath() + " WHERE id = " + fastaFile.getFileId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void removeFile(int idx) {
-		// TODO Auto-generated method stub
-		System.out.println("FilesTableDBModel.removeFile");
 
 		try {
 			statement.execute("DELETE FROM pliki WHERE id =" + Integer.toString(idx));
@@ -99,11 +86,9 @@ public class FilesTableDBManager {
 		}
 	}
 
-	public File getFile(long idx) {
-		// TODO Auto-generated method stub
-		System.out.println("FilesTableDBModel.getFile");
-		// TODO Auto-generated method stub
-		File file = null;
+	public FastaFile getFile(long idx) {
+
+		FastaFile fastaFile = null;
 		try {
 			ResultSet rs = statement.executeQuery("SELECT * FROM pliki WHERE id=" + Long.toString(idx));
 
@@ -120,20 +105,20 @@ public class FilesTableDBManager {
 				String positions_path = rs.getString("positions_path");
 				long id = Long.parseLong(rs.getString("id"));
 
-				file = new File(id, name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence,
+				fastaFile = new FastaFile(id, name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence,
 						prefix, rand_type, positions_path);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return file;
+		return fastaFile;
 
 	}
 
-	public ObservableList<File> getAllFiles() {
+	public ObservableList<FastaFile> getAllFiles() {
 
 		System.out.println("FilesTableDBManager.getAllFilesAsObservableList");
-		files = FXCollections.observableArrayList();
+		fastaFiles = FXCollections.observableArrayList();
 
 		try {
 			ResultSet rs = statement.executeQuery("SELECT * FROM pliki");
@@ -150,14 +135,14 @@ public class FilesTableDBManager {
 				String positions_path = rs.getString("positions_path");
 				long id = Long.parseLong(rs.getString("id"));
 
-				File file = new File(id, name, description, id_DB, version_DB, sequence_id, sequence_name,
+				FastaFile fastaFile = new FastaFile(id, name, description, id_DB, version_DB, sequence_id, sequence_name,
 						rand_sequence, prefix, rand_type, positions_path);
-				files.add(file);
+				fastaFiles.add(fastaFile);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return files;
+		return fastaFiles;
 
 	}
 
