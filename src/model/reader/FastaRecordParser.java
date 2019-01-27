@@ -11,7 +11,7 @@ public abstract class FastaRecordParser {
 	private static final String NCBI_PARSER = "NCBI";
 	private static final String IPI_PARSER = "IPI";
 	private static final String TAIR_PARSER = "TAIR";
-	private static final String OTHER_PARSER = "Other";
+	private static final String SGD_PARSER = "SGD";
 
 	private static FastaRecordParser instance = null;
 
@@ -30,6 +30,8 @@ public abstract class FastaRecordParser {
 				return new FastaIPIRecordParser();
 			if (TAIR_PARSER.equals(parserType))
 				return new FastaTAIRRecordParser();
+			if (SGD_PARSER.equals(parserType))
+				return new FastaSGDRecordParser();
 			else
 				return null;
 		}

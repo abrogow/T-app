@@ -382,7 +382,7 @@ public class FastaReader {
 
 		BufferedReader reader = new BufferedReader(new FileReader(filepath));
 		while ((line = reader.readLine()) != null) {
-			if ((index = line.indexOf("=")) != -1)
+			if ((index = line.lastIndexOf("=")) != -1)
 				map.put(line.substring(0, index), Long.parseLong(line.substring(index + 1)));
 		}
 		reader.close();

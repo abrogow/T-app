@@ -8,8 +8,7 @@ import model.FastaRecord;
 public class FastaNCBIRecordParser extends FastaRecordParser {
 
 	private String line = "gi|385862198|ref|NP_001245340.1| sodium/myo-inositol cotransporter 2 isoform 2 [Homo sapiens]";
-	private static final String REGEXP = ">gi\\|([0-9]*)\\|(.*) \\[(.*)\\](?:[\n\r](.*))?";
-	private String poprzedniaWersjaRegExp = ">gi\\|([0-9]*)\\|(.*) \\[(.*)\\](?:[\n\r](.*))?";
+	private static final String REGEXP = ">gi\\|([0-9]*)\\|([^\n\r]*)(.*)";
 
 	public FastaNCBIRecordParser() {
 		super("NCBI");
@@ -17,20 +16,27 @@ public class FastaNCBIRecordParser extends FastaRecordParser {
 
 	@Override
 	public FastaRecord parse(String recordStr) {
-		String id = null, name = null, sequence = null, organismName = null;
+		String id = null, name = null, sequence = null;
 		FastaRecord fastaRecord = null;
 
-		Matcher matcher = Pattern.compile(REGEXP).matcher(recordStr);
+		Matcher matcher = Pattern.compile(REGEXP, Pattern.DOTALL).matcher(recordStr);
 		if (matcher.find() && matcher.groupCount() > 0) {
 
 			id = matcher.group(1);
 			name = matcher.group(2);
-			organismName = matcher.group(3);
-			sequence = matcher.group(4);
+			sequence = matcher.group(3);
+
+			int j;
+			for (j = 0; j < sequence.length(); j++) {
+				if (sequence.charAt(j) != '\n' && sequence.charAt(j) != '\r')
+					break;
+			}
+			sequence = sequence.substring(j);
+
 		} else
 			return null;
 
-		fastaRecord = new FastaRecord(id, name, organismName, sequence);
+		fastaRecord = new FastaRecord(id, name, sequence);
 		return (fastaRecord);
 	}
 

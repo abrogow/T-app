@@ -28,7 +28,7 @@ public abstract class FastaWriter {
 	private static final String NCBI_WRITER = "NCBI";
 	private static final String IPI_WRITER = "IPI";
 	private static final String TAIR_WRITER = "TAIR";
-	private static final String OTHER_WRITER = "Other";
+	private static final String SGD_WRITER = "SGD";
 
 	private static FastaWriter instance = null;
 
@@ -42,6 +42,12 @@ public abstract class FastaWriter {
 				return new UniprotWriter();
 			if (NCBI_WRITER.equals(parserType))
 				return new NCBIWriter();
+			if (IPI_WRITER.equals(parserType))
+				return new IPIWriter();
+			if (TAIR_WRITER.equals(parserType))
+				return new TAIRWriter();
+			if (SGD_WRITER.equals(parserType))
+				return new SGDWriter();
 			else
 				return null;
 		}

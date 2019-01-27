@@ -16,8 +16,8 @@ public class NCBIWriter extends FastaWriter {
 
 		descLine = null;
 		if (record != null) {
-			descLine = ">gi|" + record.getIdentyfier() + "|" + record.getEnteryName() + " [" + record.getOrganismName()
-					+ "]";
+			descLine = ">gi|" + record.getIdentyfier() + "|" + record.getEnteryName();
+			;
 		}
 		return descLine;
 

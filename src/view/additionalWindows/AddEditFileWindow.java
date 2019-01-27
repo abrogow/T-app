@@ -50,7 +50,9 @@ public class AddEditFileWindow extends GridPane {
 	private TextField progressTextField;
 	private Parent root;
 
-	private final List<String> dataBaseType = Arrays.asList("UniProt", "NCBI", "IPI", "TAIR", "Other");
+	private Scene scene;
+
+	private final List<String> dataBaseType = Arrays.asList("UniProt", "NCBI", "IPI", "TAIR", "SGD");
 
 	public AddEditFileWindow() {
 
@@ -59,6 +61,7 @@ public class AddEditFileWindow extends GridPane {
 		setProperties();
 		configureGrid();
 
+		this.scene = new Scene(this, 800, 500);
 	}
 
 	public void createControls() {
@@ -201,15 +204,12 @@ public class AddEditFileWindow extends GridPane {
 	public void createAndShowStage(FilesTable filesTable, FastaFile fastaFile) {
 		// TODO Auto-generated method stub
 
-		if (fastaFile != null) {
-			this.setDefValue(fastaFile);
-		}
+		this.setDefValue(fastaFile);
 
 		AdditionalWindowController controller = new AdditionalWindowController(filesTable, this, fastaFile);
 		stage = new Stage();
 		stage.setTitle("Dodawanie/Edycja pliku");
-		root = this;
-		stage.setScene(new Scene(root, 800, 500));
+		stage.setScene(this.scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		// stage.initOwner(aboutButton.getScene().getWindow());
 		stage.showAndWait();
@@ -217,16 +217,29 @@ public class AddEditFileWindow extends GridPane {
 
 	public void setDefValue(FastaFile fastaFile) {
 
-		this.getIdDBComboBox().setValue(fastaFile.getId_DB().toString());
-		this.getNameTextField().setText(fastaFile.getName());
-		this.getDescriptionTextField().setText(fastaFile.getDescription());
-		this.getSequence_idTextField().setText(fastaFile.getSequence_id());
-		this.getVersion_DBTextField().setText(fastaFile.getVersion_DB());
-		this.getSequence_nameTextField().setText(fastaFile.getSequence_name());
-		this.getRand_sequenceTextField().setText(fastaFile.getRand_sequence().toString());
-		this.getPrefixTextField().setText(fastaFile.getPrefix());
-		this.getRand_typeTextField().setText(fastaFile.getRand_type().toString());
-		this.getPositions_PathTextField().setText(fastaFile.getDstPath());
+		if (fastaFile != null) {
+			this.getIdDBComboBox().setValue(fastaFile.getId_DB().toString());
+			this.getNameTextField().setText(fastaFile.getName());
+			this.getDescriptionTextField().setText(fastaFile.getDescription());
+			this.getSequence_idTextField().setText(fastaFile.getSequence_id());
+			this.getVersion_DBTextField().setText(fastaFile.getVersion_DB());
+			this.getSequence_nameTextField().setText(fastaFile.getSequence_name());
+			this.getRand_sequenceTextField().setText(fastaFile.getRand_sequence().toString());
+			this.getPrefixTextField().setText(fastaFile.getPrefix());
+			this.getRand_typeTextField().setText(fastaFile.getRand_type().toString());
+			this.getPositions_PathTextField().setText(fastaFile.getDstPath());
+		} else {
+			this.getIdDBComboBox().getSelectionModel().clearSelection();
+			this.getNameTextField().setText("");
+			this.getDescriptionTextField().setText("");
+			this.getSequence_idTextField().setText("");
+			this.getVersion_DBTextField().setText("");
+			this.getSequence_nameTextField().setText("");
+			this.getRand_sequenceTextField().setText("");
+			this.getPrefixTextField().setText("");
+			this.getRand_typeTextField().setText("");
+			this.getPositions_PathTextField().setText("");
+		}
 
 	}
 

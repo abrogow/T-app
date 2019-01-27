@@ -54,9 +54,10 @@ public class FilesTableDBManager {
 			statement.execute(
 					"INSERT INTO pliki (name, description, id_DB, version_DB,sequence_id, sequence_name,rand_sequence,"
 							+ "prefix, rand_type, positions_path) " + " VALUES('" + fastaFile.getName() + "', '"
-							+ fastaFile.getDescription() + "', '" + fastaFile.getId_DB() + "', '" + fastaFile.getVersion_DB() + "', '"
-							+ fastaFile.getSequence_id() + "', '" + fastaFile.getSequence_name() + "', " + fastaFile.getRand_sequence()
-							+ ", '" + fastaFile.getPrefix() + "', " + fastaFile.getRand_type() + ", '" + fastaFile.getDstPath()
+							+ fastaFile.getDescription() + "', '" + fastaFile.getId_DB() + "', '"
+							+ fastaFile.getVersion_DB() + "', '" + fastaFile.getSequence_id() + "', '"
+							+ fastaFile.getSequence_name() + "', " + fastaFile.getRand_sequence() + ", '"
+							+ fastaFile.getPrefix() + "', " + fastaFile.getRand_type() + ", '" + fastaFile.getDstPath()
 							+ "')");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,12 +67,20 @@ public class FilesTableDBManager {
 	public void editFile(FastaFile fastaFile) {
 
 		try {
+			System.out.println("UPDATE pliki " + "SET name='" + fastaFile.getName() + "'," + "description='"
+					+ fastaFile.getDescription() + "'," + "id_DB='" + fastaFile.getId_DB() + "'," + "version_DB='"
+					+ fastaFile.getVersion_DB() + "'," + "sequence_id='" + fastaFile.getSequence_id() + "',"
+					+ "sequence_name='" + fastaFile.getSequence_name() + "'," + "rand_sequence="
+					+ fastaFile.getRand_sequence() + "," + "prefix='" + fastaFile.getPrefix() + "'," + "rand_type="
+					+ fastaFile.getRand_type() + ", " + "positions_path='" + fastaFile.getDstPath() + " WHERE id = "
+					+ fastaFile.getFileId());
 			statement.execute("UPDATE pliki " + "SET name='" + fastaFile.getName() + "'," + "description='"
 					+ fastaFile.getDescription() + "'," + "id_DB='" + fastaFile.getId_DB() + "'," + "version_DB='"
-					+ fastaFile.getVersion_DB() + "'," + "sequence_id='" + fastaFile.getSequence_id() + "'," + "sequence_name='"
-					+ fastaFile.getSequence_name() + "'," + "rand_sequence=" + fastaFile.getRand_sequence() + "," + "prefix='"
-					+ fastaFile.getPrefix() + "'," + "rand_type=" + fastaFile.getRand_type() + ", " + "positions_path='"
-					+ fastaFile.getDstPath() + " WHERE id = " + fastaFile.getFileId());
+					+ fastaFile.getVersion_DB() + "'," + "sequence_id='" + fastaFile.getSequence_id() + "',"
+					+ "sequence_name='" + fastaFile.getSequence_name() + "'," + "rand_sequence="
+					+ fastaFile.getRand_sequence() + "," + "prefix='" + fastaFile.getPrefix() + "'," + "rand_type="
+					+ fastaFile.getRand_type() + ", " + "positions_path='" + fastaFile.getDstPath() + "' WHERE id = "
+					+ fastaFile.getFileId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -105,8 +114,8 @@ public class FilesTableDBManager {
 				String positions_path = rs.getString("positions_path");
 				long id = Long.parseLong(rs.getString("id"));
 
-				fastaFile = new FastaFile(id, name, description, id_DB, version_DB, sequence_id, sequence_name, rand_sequence,
-						prefix, rand_type, positions_path);
+				fastaFile = new FastaFile(id, name, description, id_DB, version_DB, sequence_id, sequence_name,
+						rand_sequence, prefix, rand_type, positions_path);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,8 +144,8 @@ public class FilesTableDBManager {
 				String positions_path = rs.getString("positions_path");
 				long id = Long.parseLong(rs.getString("id"));
 
-				FastaFile fastaFile = new FastaFile(id, name, description, id_DB, version_DB, sequence_id, sequence_name,
-						rand_sequence, prefix, rand_type, positions_path);
+				FastaFile fastaFile = new FastaFile(id, name, description, id_DB, version_DB, sequence_id,
+						sequence_name, rand_sequence, prefix, rand_type, positions_path);
 				fastaFiles.add(fastaFile);
 			}
 		} catch (Exception e) {

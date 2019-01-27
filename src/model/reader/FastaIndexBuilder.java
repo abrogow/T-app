@@ -79,9 +79,11 @@ public class FastaIndexBuilder {
 					this.idHashMap.put(record.getIdentyfier(), position);
 					this.nameHashMap.put(record.getEnteryName(), position);
 					ArrayList<Long> list = null;
-					if ((list = this.organismNameHashMap.get(record.getOrganismName())) == null)
-						this.organismNameHashMap.put(record.getOrganismName(), (list = new ArrayList<>()));
-					list.add(position);
+					if (record.getOrganismName() != null) {
+						if ((list = this.organismNameHashMap.get(record.getOrganismName())) == null)
+							this.organismNameHashMap.put(record.getOrganismName(), (list = new ArrayList<>()));
+						list.add(position);
+					}
 				}
 			}
 			processedChars += line.length() + lineSeparator.length();

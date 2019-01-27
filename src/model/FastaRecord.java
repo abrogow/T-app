@@ -31,12 +31,11 @@ public class FastaRecord {
 
 	}
 
-	public FastaRecord(String identifier, String enteryName, String organismName, String sequence) {
+	public FastaRecord(String identifier, String enteryName, String sequence) {
 
 		this.identifier = identifier;
 		this.enteryName = enteryName;
 		this.sequence = sequence;
-		this.organismName = organismName;
 	}
 
 	public String getIdentyfier() {
